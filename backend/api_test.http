@@ -1,0 +1,99 @@
+# TravelGraph API Test Dosyası
+# VS Code: REST Client eklentisi ile kullan
+# Her ### bloğu ayrı bir istek
+# {{değişken}} → gerçek ID ile değiştir
+# Token almak için önce Login isteğini çalıştır
+
+### 1. Health Check
+GET http://localhost:8000/health
+
+### 2. Register
+POST http://localhost:8000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "demo@travelgraph.com",
+  "name": "Demo Kullanici",
+  "password": "Demo1234!"
+}
+
+### 3. Login
+# NOT: OAuth2PasswordRequestForm — form-urlencoded formatı gereklidir
+POST http://localhost:8000/api/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+username=demo@travelgraph.com&password=Demo1234!
+
+### 4. Tüm Destinasyonlar
+GET http://localhost:8000/api/destinations
+
+### 5. Destinasyon Detay (Istanbul)
+GET http://localhost:8000/api/destinations/{{istanbul_id}}
+
+### 6. Aktiviteler (Istanbul)
+GET http://localhost:8000/api/destinations/{{istanbul_id}}/activities
+
+### 7. Restoranlar (Istanbul)
+GET http://localhost:8000/api/destinations/{{istanbul_id}}/restaurants
+
+### 8. Festivaller (Istanbul)
+GET http://localhost:8000/api/destinations/{{istanbul_id}}/festivals
+
+### 9. Graf Önerisi — Bütçe Filtreli
+GET http://localhost:8000/api/destinations/{{istanbul_id}}/recommend?max_price=150
+
+### 10. Graf Önerisi — Kişiselleştirilmiş
+GET http://localhost:8000/api/destinations/{{istanbul_id}}/recommend?max_price=300&user_id={{user_id}}
+
+### 11. Graf Route — İki Şehir Arası
+GET http://localhost:8000/api/destinations/route?from={{istanbul_id}}&to={{paris_id}}
+
+### 12. İtinerary Oluştur (auth gerekli)
+POST http://localhost:8000/api/itineraries
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Avrupa Turu",
+  "start_date": "2026-06-01",
+  "end_date": "2026-06-15",
+  "is_public": true
+}
+
+### 13. İtinerary'ye Durak Ekle
+POST http://localhost:8000/api/itineraries/{{itinerary_id}}/stops
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "destination_id": "{{istanbul_id}}",
+  "day_number": 1,
+  "order": 1,
+  "notes": "Galata Kulesi sabah ziyareti"
+}
+
+### 14. Yorum Yaz (auth gerekli)
+POST http://localhost:8000/api/reviews
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "target_id": "{{activity_id}}",
+  "target_type": "activity",
+  "rating": 5,
+  "comment": "Harika bir deneyimdi!"
+}
+
+### 15. Bütçe Planı Oluştur
+POST http://localhost:8000/api/itineraries/{{itinerary_id}}/budget
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "total_budget": 1500,
+  "currency": "EUR",
+  "hotel_budget": 600,
+  "food_budget": 300,
+  "transport_budget": 400,
+  "activity_budget": 200
+}

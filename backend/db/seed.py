@@ -459,6 +459,20 @@ _USERS: list[dict] = [
     {"name": "Elena Novak",    "email": "elena@example.com"},
 ]
 
+# Transport routes: realistic connections between seed destinations
+_TRANSPORTS: list[dict] = [
+    {"dep": "Istanbul",  "arr": "Paris",     "type": "flight", "provider": "Turkish Airlines",  "dur": 3.5, "price": 120.0},
+    {"dep": "Paris",     "arr": "Barcelona", "type": "train",  "provider": "SNCF Renfe",         "dur": 6.5, "price": 80.0},
+    {"dep": "Barcelona", "arr": "Rome",      "type": "flight", "provider": "Vueling",            "dur": 2.0, "price": 95.0},
+    {"dep": "Rome",      "arr": "Prague",    "type": "flight", "provider": "Ryanair",            "dur": 2.0, "price": 110.0},
+    {"dep": "Prague",    "arr": "Amsterdam", "type": "train",  "provider": "RegioJet",           "dur": 8.0, "price": 70.0},
+    {"dep": "Amsterdam", "arr": "Lisbon",    "type": "flight", "provider": "KLM",                "dur": 2.5, "price": 130.0},
+    {"dep": "Tokyo",     "arr": "Bali",      "type": "flight", "provider": "ANA",                "dur": 7.0, "price": 200.0},
+    {"dep": "New York",  "arr": "Lisbon",    "type": "flight", "provider": "TAP Air Portugal",   "dur": 7.5, "price": 350.0},
+    {"dep": "Istanbul",  "arr": "Barcelona", "type": "flight", "provider": "Pegasus Airlines",   "dur": 3.0, "price": 100.0},
+    {"dep": "Paris",     "arr": "Rome",      "type": "train",  "provider": "TGV Italo",          "dur": 3.0, "price": 90.0},
+]
+
 # VISITED edges: user email → list of destination names
 _VISITED: dict[str, list[str]] = {
     "alice@example.com":  ["Istanbul", "Paris", "Barcelona"],
@@ -818,6 +832,61 @@ def _create_reviews(
     print(f"✓ {total} Review oluşturuldu (WROTE ve RATES kenarları dahil)")
 
 
+def _create_transports(db: Any, dest_ids: dict[str, str]) -> None:  # noqa: ARG001
+    """Create Transport nodes and bidirectional CONNECTED_BY edges.
+
+    Pattern: (a:Destination)-[:CONNECTED_BY]->(t:Transport)-[:CONNECTED_BY]->(b:Destination)
+    Both directions are created so shortestPath works regardless of query orientation.
+    """
+    total = 0
+    for route in _TRANSPORTS:
+        # Skip routes whose endpoints are not in the seed
+        if route["dep"] not in dest_ids or route["arr"] not in dest_ids:
+            print(f"  ! '{route['dep']}' veya '{route['arr']}' bulunamadı — atlandı")
+            continue
+
+        tid = str(uuid4())
+
+        # 1. Transport node
+        _run(
+            db,
+            "CREATE (:Transport {id: $id, type: $type, provider: $provider, "
+            "duration_hours: $dur, price: $price, "
+            "departure_city: $dep, arrival_city: $arr})",
+            {
+                "id": tid,
+                "type": route["type"],
+                "provider": route["provider"],
+                "dur": route["dur"],
+                "price": route["price"],
+                "dep": route["dep"],
+                "arr": route["arr"],
+            },
+        )
+
+        # 2a. Forward edge: dep → transport → arr
+        _run(
+            db,
+            "MATCH (a:Destination {name: $dep}), (b:Destination {name: $arr}), "
+            "(t:Transport {id: $tid}) "
+            "CREATE (a)-[:CONNECTED_BY]->(t)-[:CONNECTED_BY]->(b)",
+            {"dep": route["dep"], "arr": route["arr"], "tid": tid},
+        )
+
+        # 2b. Reverse edge: arr → transport → dep  (enables directed shortestPath both ways)
+        _run(
+            db,
+            "MATCH (a:Destination {name: $dep}), (b:Destination {name: $arr}), "
+            "(t:Transport {id: $tid}) "
+            "CREATE (b)-[:CONNECTED_BY]->(t)-[:CONNECTED_BY]->(a)",
+            {"dep": route["dep"], "arr": route["arr"], "tid": tid},
+        )
+
+        total += 1
+
+    print(f"✓ {total} Transport oluşturuldu (çift yönlü CONNECTED_BY kenarları dahil)")
+
+
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 def seed() -> None:
@@ -838,6 +907,7 @@ def seed() -> None:
     user_ids = _create_users(db)
     _create_visited_edges(db, user_ids, dest_ids)
     _create_reviews(db, user_ids, act_ids, acc_ids)
+    _create_transports(db, dest_ids)
 
     print("\n✓ Seed tamamlandı.")
 
