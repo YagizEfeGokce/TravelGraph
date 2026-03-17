@@ -1,8 +1,5 @@
 """Application configuration loaded from environment variables via pydantic-settings."""
 
-from typing import Any
-
-from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -29,16 +26,13 @@ class Settings(BaseSettings):
     JWT_EXPIRE_MINUTES: int = 60
     JWT_REFRESH_EXPIRE_DAYS: int = 7
 
-    # CORS — stored as comma-separated string in .env, exposed as list[str]
-    CORS_ORIGINS: list[str] = ["http://localhost:5173"]
+    # CORS — stored as comma-separated string in .env
+    CORS_ORIGINS: str = "http://localhost:5173"
 
-    @field_validator("CORS_ORIGINS", mode="before")
-    @classmethod
-    def parse_cors_origins(cls, v: Any) -> list[str]:
-        """Accept either a comma-separated string or an already-parsed list."""
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",") if origin.strip()]
-        return v
+    @property
+    def cors_origins_list(self) -> list[str]:
+        """Return CORS_ORIGINS as a list, split on commas."""
+        return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
 
 
 settings = Settings()

@@ -6,6 +6,13 @@ Run from the backend directory:
 
 import logging
 import sys
+
+# Ensure Unicode output works on Windows consoles
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 from datetime import date, datetime, timezone
 from typing import Any
 from uuid import uuid4
