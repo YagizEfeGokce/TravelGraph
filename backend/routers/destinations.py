@@ -1,4 +1,4 @@
-"""Destination routes: listing, detail, sub-resources, recommendations, and creation."""
+"""Destination routes: listing, detail, sub-resources, recommendations, route, and creation."""
 
 from datetime import datetime, timezone
 from typing import Any
@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from core.dependencies import get_current_user, get_optional_user
 from db.connection import get_db
 from models.destination import DestinationCreate, DestinationResponse
+from services.recommendation import find_route, recommend
 
 router = APIRouter(prefix="/destinations", tags=["destinations"])
 
@@ -58,7 +59,9 @@ def _build_list_query(
         params["country"] = country
 
     if season:
-        conditions.append("d.best_season = $season")
+        conditions.append(
+            "EXISTS { MATCH (d)-[:BEST_IN]->(:Season {name: $season}) }"
+        )
         params["season"] = season
 
     if min_rating is not None:
@@ -72,7 +75,28 @@ def _build_list_query(
     return query, params
 
 
-# ── Endpoints ──────────────────────────────────────────────────────────────────
+# ── Endpoints (fixed paths first, then parameterised) ─────────────────────────
+
+@router.get("/route")
+def destination_route(
+    from_id: str = Query(alias="from"),
+    to_id: str = Query(alias="to"),
+    db: Any = Depends(get_db),
+    _user: dict | None = Depends(get_optional_user),
+) -> dict:
+    """Find the shortest path between two destinations via CONNECTED_BY edges.
+
+    Uses FalkorDB's ``shortestPath`` function traversing ``CONNECTED_BY``
+    relationships (e.g. Transport nodes that link cities).
+
+    Returns:
+        ``hops``: number of relationship hops (-1 when no path exists).
+        ``nodes``: ordered list of nodes (Destination + Transport) in the path.
+    """
+    _get_destination_or_404(db, from_id)
+    _get_destination_or_404(db, to_id)
+    return find_route(db, from_id, to_id)
+
 
 @router.get("", response_model=list[DestinationResponse])
 def list_destinations(
@@ -94,6 +118,34 @@ def list_destinations(
         DestinationResponse.from_node(row[0].properties)
         for row in result.result_set
     ]
+
+
+@router.post("", response_model=DestinationResponse, status_code=status.HTTP_201_CREATED)
+def create_destination(
+    body: DestinationCreate,
+    db: Any = Depends(get_db),
+    _user: dict = Depends(get_current_user),
+) -> DestinationResponse:
+    """Create a new destination node.  Requires authentication."""
+    destination_id = str(uuid4())
+    created_at = datetime.now(timezone.utc).isoformat()
+
+    result = db.query(
+        "CREATE (d:Destination {"
+        "id: $id, name: $name, country: $country, description: $description, "
+        "lat: $lat, lng: $lng, created_at: $ca"
+        "}) RETURN d",
+        {
+            "id": destination_id,
+            "name": body.name,
+            "country": body.country,
+            "description": body.description,
+            "lat": body.lat,
+            "lng": body.lng,
+            "ca": created_at,
+        },
+    )
+    return DestinationResponse.from_node(result.result_set[0][0].properties)
 
 
 @router.get("/{destination_id}", response_model=DestinationResponse)
@@ -188,56 +240,30 @@ def get_destination_festivals(
 @router.get("/{destination_id}/recommend", response_model=list[DestinationResponse])
 def recommend_destinations(
     destination_id: str,
+    user_id: str | None = Query(default=None),
     max_price: float = Query(default=500.0, ge=0.0),
+    season: str | None = Query(default=None),
     db: Any = Depends(get_db),
     _user: dict | None = Depends(get_optional_user),
 ) -> list[DestinationResponse]:
-    """Return up to 5 destinations similar to *destination_id*.
+    """Return up to 5 recommended destinations for *destination_id*.
 
-    Similarity is measured by category diversity and bounded by accommodation price.
+    Recommendation strategy:
+    - **Without** ``user_id``: budget + category diversity only.
+    - **With** ``user_id``: personalised via user visit history (budget + category)
+      merged with collaborative filtering (similar-user preferences).
+      Results from both strategies are combined and scored, then the top 5 returned.
+
+    Query params:
+        user_id: Optional user id for personalised recommendations.
+        max_price: Max accommodation price per night (default 500).
+        season: Optional season name filter (Spring/Summer/Autumn/Winter).
     """
     _get_destination_or_404(db, destination_id)
-
-    result = db.query(
-        "MATCH (d:Destination)<-[:LOCATED_IN]-(a:Activity)"
-        "-[:IN_CATEGORY]->(c:Category)"
-        "\nWHERE d.id <> $current_id"
-        "\nWITH d, count(DISTINCT c) AS diversity"
-        "\nMATCH (d)<-[:LOCATED_IN]-(acc:Accommodation)"
-        "\nWHERE acc.price_per_night <= $max_price"
-        "\nRETURN d, diversity, avg(acc.price_per_night) AS avg_price"
-        "\nORDER BY diversity DESC LIMIT 5",
-        {"current_id": destination_id, "max_price": max_price},
+    return recommend(
+        db,
+        current_id=destination_id,
+        max_price=max_price,
+        user_id=user_id,
+        season=season,
     )
-    return [
-        DestinationResponse.from_node(row[0].properties)
-        for row in result.result_set
-    ]
-
-
-@router.post("", response_model=DestinationResponse, status_code=status.HTTP_201_CREATED)
-def create_destination(
-    body: DestinationCreate,
-    db: Any = Depends(get_db),
-    _user: dict = Depends(get_current_user),
-) -> DestinationResponse:
-    """Create a new destination node.  Requires authentication."""
-    destination_id = str(uuid4())
-    created_at = datetime.now(timezone.utc).isoformat()
-
-    result = db.query(
-        "CREATE (d:Destination {"
-        "id: $id, name: $name, country: $country, description: $description, "
-        "lat: $lat, lng: $lng, created_at: $ca"
-        "}) RETURN d",
-        {
-            "id": destination_id,
-            "name": body.name,
-            "country": body.country,
-            "description": body.description,
-            "lat": body.lat,
-            "lng": body.lng,
-            "ca": created_at,
-        },
-    )
-    return DestinationResponse.from_node(result.result_set[0][0].properties)
