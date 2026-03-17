@@ -176,6 +176,122 @@ Bu tek sorgu; User, Destination, Activity, Category, Festival, Season ve Accommo
 
 **Graf algoritmaları**: İki destinasyon arasındaki en kısa ulaşım rotası için Cypher `shortestPath()` fonksiyonu kullanılır.
 
+### 3.3.1 FalkorDB Graf Sorgusu Örnekleri
+
+Aşağıdaki üç sorgu `backend/services/recommendation.py` dosyasında canlı olarak çalışmakta ve seed verisiyle test edilmiştir. Her sorguda ilişkisel veritabanı karşılığının kaç JOIN gerektireceği hesaplanmıştır.
+
+---
+
+#### Sorgu 1 — Bütçe + Kategori Eşleşmesi (Budget & Category Match)
+
+```cypher
+MATCH (u:User {id: $user_id})-[:VISITED]->(visited:Destination)
+MATCH (visited)<-[:LOCATED_IN]-(a:Activity)-[:IN_CATEGORY]->(c:Category)
+MATCH (d:Destination)<-[:LOCATED_IN]-(a2:Activity)-[:IN_CATEGORY]->(c)
+MATCH (d)<-[:LOCATED_IN]-(acc:Accommodation)
+WHERE d.id <> $current_id
+  AND NOT (u)-[:VISITED]->(d)
+  AND acc.price_per_night <= $max_price
+WITH d, count(DISTINCT c) AS category_match, avg(acc.price_per_night) AS avg_price
+RETURN d, category_match, avg_price
+ORDER BY category_match DESC LIMIT 5
+```
+
+**Ne yapar?** Kullanıcının daha önce ziyaret ettiği destinasyonlardaki aktivitelerin kategorilerini belirler; aynı kategorilerde aktivitesi olan ve bütçeye uygun konaklaması bulunan henüz ziyaret edilmemiş destinasyonları sıralar.
+
+**SQL karşılığı:**
+
+| # | JOIN |
+|---|------|
+| 1 | `users` → `user_visited_destinations` (VISITED M:N ara tablo) |
+| 2 | `user_visited_destinations` → `destinations` (visited) |
+| 3 | `destinations` → `activities` a (LOCATED_IN — ziyaret edilen dest. aktiviteleri) |
+| 4 | `activities` → `activity_categories` (IN_CATEGORY M:N ara tablo) |
+| 5 | `activity_categories` → `categories` c |
+| 6 | `activity_categories` ac2 → `categories` c (aynı kategori, aday aktiviteler) |
+| 7 | `activity_categories` ac2 → `activities` a2 |
+| 8 | `activities` a2 → `destinations` d (LOCATED_IN — aday destinasyon) |
+| 9 | `destinations` d → `accommodations` (LOCATED_IN — fiyat filtresi) |
+| + | `NOT EXISTS` alt sorgusu: `user_visited_destinations` (NOT VISITED kontrolü) |
+
+> **Bu sorgu ilişkisel veritabanında 9 adet JOIN gerektirir** (+ 1 NOT EXISTS alt sorgusu).
+> FalkorDB'de tek bir Cypher traversal ile milisaniyeler içinde yanıtlanır.
+
+---
+
+#### Sorgu 2 — İşbirlikçi Filtreleme (Collaborative Filtering)
+
+```cypher
+MATCH (u:User {id: $user_id})-[:VISITED]->(d:Destination)
+      <-[:VISITED]-(similar:User)-[:VISITED]->(rec:Destination)
+WHERE NOT (u)-[:VISITED]->(rec)
+  AND rec.id <> $current_id
+RETURN rec, count(similar) AS overlap
+ORDER BY overlap DESC LIMIT 5
+```
+
+**Ne yapar?** Kullanıcıyla en az bir ortak ziyaret destinasyonu paylaşan "benzer" kullanıcıları bulur; bu kullanıcıların gittiği, asıl kullanıcının henüz görmediği destinasyonları ortak kullanıcı sayısına göre sıralar.
+
+**SQL karşılığı:**
+
+| # | JOIN |
+|---|------|
+| 1 | `users` u → `user_visited_destinations` uvd1 (u'nun ziyaretleri) |
+| 2 | `user_visited_destinations` uvd1 → `destinations` d (ortak destinasyon) |
+| 3 | `user_visited_destinations` uvd2 → `destinations` d (aynı destinasyonu ziyaret eden diğerleri) |
+| 4 | `user_visited_destinations` uvd2 → `users` similar (benzer kullanıcılar) |
+| 5 | `users` similar → `user_visited_destinations` uvd3 (similar'ın ziyaretleri) |
+| 6 | `user_visited_destinations` uvd3 → `destinations` rec (önerilecek destinasyon) |
+| + | `NOT EXISTS` alt sorgusu: `user_visited_destinations` (NOT VISITED kontrolü) |
+
+> **Bu sorgu ilişkisel veritabanında 6 adet JOIN gerektirir** (+ 1 NOT EXISTS alt sorgusu).
+> Graf modelinde ise üç `VISITED` kenarı tek bir MATCH satırında zincirlenir.
+
+---
+
+#### Sorgu 3 — En Kısa Rota (ShortestPath)
+
+```cypher
+MATCH (a:Destination {id: $from_id}), (b:Destination {id: $to_id})
+RETURN shortestPath((a)-[:CONNECTED_BY*]->(b)) AS path
+```
+
+**Ne yapar?** İki destinasyon arasındaki `CONNECTED_BY` (Transport) kenarları üzerinden minimum aktarmalı rotayı bulur. `shortestPath()` BFS (Breadth-First Search) algoritmasını dahili olarak çalıştırır; sonuç tam node ve edge listesini içeren bir Path nesnesidir.
+
+**SQL karşılığı:**
+
+Sabit derinlikte bir yol biliniyorsa N JOIN yeterlidir; ancak `CONNECTED_BY*` ifadesi **bilinmeyen derinlikte** yinelemeli traversal demektir. SQL'de bu zorunlu olarak Recursive CTE gerektirir:
+
+```sql
+WITH RECURSIVE route AS (
+  SELECT from_destination_id, to_destination_id, 1 AS hops,
+         ARRAY[from_destination_id] AS path
+  FROM transports WHERE from_destination_id = :from_id
+  UNION ALL
+  SELECT t.from_destination_id, t.to_destination_id, r.hops + 1,
+         r.path || t.from_destination_id
+  FROM transports t
+  JOIN route r ON t.from_destination_id = r.to_destination_id   -- her hop'ta 1 JOIN
+  WHERE NOT t.from_destination_id = ANY(r.path) AND r.hops < 20
+)
+SELECT r.*, d1.name, d2.name
+FROM route r
+JOIN destinations d1 ON r.from_destination_id = d1.id           -- JOIN (başlangıç adı)
+JOIN destinations d2 ON r.to_destination_id   = d2.id           -- JOIN (bitiş adı)
+WHERE r.to_destination_id = :to_id
+ORDER BY r.hops ASC LIMIT 1;
+```
+
+| Hop Sayısı | Toplam JOIN Eşdeğeri |
+|------------|----------------------|
+| 1 hop | 3 JOIN |
+| 2 hop | 4 JOIN |
+| 3 hop | 5 JOIN |
+| N hop | N + 2 JOIN |
+
+> **Bu sorgu ilişkisel veritabanında hop başına 1 JOIN + 2 sabit JOIN gerektirir; derinlik bilinmediğinden recursive CTE zorunludur (10+ hop'ta 12+ JOIN eşdeğeri).**
+> FalkorDB'de `shortestPath()` tek satır Cypher ile native BFS olarak çalışır; ek JOIN ya da recursive yapı gerekmez.
+
 ### 3.4 React + Vite Frontend
 
 - **React Query**: Sunucu durumu yönetimi, otomatik cache geçersizleştirme
