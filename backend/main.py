@@ -13,7 +13,7 @@ from slowapi.util import get_remote_address
 
 from core.config import settings
 from db.connection import check_connection, create_indexes
-from routers import activities, auth, destinations, itineraries, users
+from routers import activities, auth, destinations, festivals, itineraries, reviews, users
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +80,8 @@ def create_app() -> FastAPI:
     app.include_router(destinations.router, prefix="/api")
     app.include_router(activities.router, prefix="/api")
     app.include_router(itineraries.router, prefix="/api")
+    app.include_router(reviews.router, prefix="/api")
+    app.include_router(festivals.router, prefix="/api")
 
     # ── Health endpoint ────────────────────────────────────────────────────────
     @app.get("/api/health", tags=["health"])

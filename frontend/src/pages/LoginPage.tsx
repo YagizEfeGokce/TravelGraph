@@ -1,30 +1,47 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { loginUser } from "../api/auth";
 import { useAuth } from "../contexts/AuthContext";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleLogin() {
+    if (!email || !password) {
+      setError("Please enter your email and password.");
+      return;
+    }
+    setLoading(true);
+    setError("");
     try {
       const data = await loginUser({ email, password });
-
-      if (data?.token) {
-        localStorage.setItem("token", data.token);
-      }
-
-      login(email);
-      navigate("/planner");
-    } catch (error) {
-      console.error("Login failed:", error);
-      alert("Login failed. Please check your email and password.");
+      login(data.access_token, data.user);
+      const next = searchParams.get("next") || "/";
+      navigate(next);
+    } catch (err: any) {
+      const detail = err?.response?.data?.detail;
+      setError(detail || "Login failed. Please check your email and password.");
+    } finally {
+      setLoading(false);
     }
   }
+
+  const inputStyle = {
+    width: "100%",
+    padding: "14px 16px",
+    borderRadius: "10px",
+    border: "1px solid #d1d5db",
+    outline: "none",
+    fontSize: "15px",
+    boxSizing: "border-box" as const,
+  };
 
   return (
     <div
@@ -47,36 +64,17 @@ function LoginPage() {
           boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
         }}
       >
-        <h1
-          style={{
-            fontSize: "32px",
-            marginBottom: "10px",
-            color: "#1f2937",
-          }}
-        >
+        <h1 style={{ fontSize: "32px", marginBottom: "10px", color: "#1f2937" }}>
           Welcome Back
         </h1>
 
-        <p
-          style={{
-            color: "#6b7280",
-            marginBottom: "28px",
-            lineHeight: 1.5,
-          }}
-        >
+        <p style={{ color: "#6b7280", marginBottom: "28px", lineHeight: 1.5 }}>
           Sign in to continue planning your trips with TravelGraph.
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div>
-            <label
-              style={{
-                display: "block",
-                marginBottom: "8px",
-                fontWeight: 600,
-                color: "#374151",
-              }}
-            >
+            <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, color: "#374151" }}>
               Email
             </label>
             <input
@@ -84,27 +82,13 @@ function LoginPage() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "14px 16px",
-                borderRadius: "10px",
-                border: "1px solid #d1d5db",
-                outline: "none",
-                fontSize: "15px",
-                boxSizing: "border-box",
-              }}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+              style={inputStyle}
             />
           </div>
 
           <div>
-            <label
-              style={{
-                display: "block",
-                marginBottom: "8px",
-                fontWeight: 600,
-                color: "#374151",
-              }}
-            >
+            <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, color: "#374151" }}>
               Password
             </label>
             <input
@@ -112,21 +96,29 @@ function LoginPage() {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "14px 16px",
-                borderRadius: "10px",
-                border: "1px solid #d1d5db",
-                outline: "none",
-                fontSize: "15px",
-                boxSizing: "border-box",
-              }}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+              style={inputStyle}
             />
           </div>
+
+          {error && (
+            <div
+              style={{
+                background: "#fee2e2",
+                color: "#dc2626",
+                padding: "12px",
+                borderRadius: "8px",
+                fontSize: "14px",
+              }}
+            >
+              {error}
+            </div>
+          )}
 
           <button
             type="button"
             onClick={handleLogin}
+            disabled={loading}
             style={{
               marginTop: "8px",
               background: "#14b8a6",
@@ -136,29 +128,17 @@ function LoginPage() {
               borderRadius: "10px",
               fontSize: "16px",
               fontWeight: 600,
-              cursor: "pointer",
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.7 : 1,
             }}
           >
-            Login
+            {loading ? "Signing in..." : "Login"}
           </button>
         </div>
 
-        <p
-          style={{
-            marginTop: "22px",
-            textAlign: "center",
-            color: "#6b7280",
-          }}
-        >
+        <p style={{ marginTop: "22px", textAlign: "center", color: "#6b7280" }}>
           Don&apos;t have an account?{" "}
-          <Link
-            to="/register"
-            style={{
-              color: "#14b8a6",
-              textDecoration: "none",
-              fontWeight: 600,
-            }}
-          >
+          <Link to="/register" style={{ color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}>
             Register
           </Link>
         </p>

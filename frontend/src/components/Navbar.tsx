@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-
-const isLoggedIn = false;
+import { useAuth } from "../contexts/AuthContext";
 
 const navStyle: React.CSSProperties = {
   display: "flex",
@@ -62,6 +61,8 @@ const logoutButtonStyle: React.CSSProperties = {
 };
 
 function Navbar() {
+  const { user, logout } = useAuth();
+
   return (
     <nav style={navStyle}>
       <Link to="/" style={brandStyle}>
@@ -85,20 +86,23 @@ function Navbar() {
           Festivals
         </Link>
 
-        {isLoggedIn ? (
+        {user ? (
           <>
+            <span style={{ color: "#6b7280", fontSize: "14px" }}>
+              {user.name}
+            </span>
             <Link to="/profile" style={linkStyle}>
               Profile
             </Link>
-
-            <button style={logoutButtonStyle}>Logout</button>
+            <button style={logoutButtonStyle} onClick={logout}>
+              Logout
+            </button>
           </>
         ) : (
           <>
             <Link to="/login" style={loginButtonStyle}>
               Login
             </Link>
-
             <Link to="/register" style={registerButtonStyle}>
               Register
             </Link>

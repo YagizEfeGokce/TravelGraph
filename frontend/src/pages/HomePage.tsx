@@ -67,20 +67,6 @@ function HomePage() {
             border: "1px solid rgba(255,255,255,0.24)",
           }}
         >
-          <div
-            style={{
-              display: "inline-block",
-              padding: "8px 14px",
-              borderRadius: "999px",
-              background: "rgba(255,255,255,0.18)",
-              fontSize: "13px",
-              fontWeight: 700,
-              marginBottom: "18px",
-            }}
-          >
-            TravelGraph • Turkey Demo
-          </div>
-
           <h1
             style={{
               fontSize: "clamp(34px, 6vw, 60px)",

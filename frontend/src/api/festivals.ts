@@ -1,11 +1,7 @@
 import apiClient from "./client";
 
-export async function getFestivals() {
-  const response = await apiClient.get("/festivals");
-  return response.data;
-}
-
-export async function getFestivalsBySeason(season: string) {
-  const response = await apiClient.get(`/festivals?season=${season}`);
+export async function getFestivals(city?: string) {
+  const params = city ? `?city=${encodeURIComponent(city)}` : "";
+  const response = await apiClient.get(`/festivals${params}`);
   return response.data;
 }
