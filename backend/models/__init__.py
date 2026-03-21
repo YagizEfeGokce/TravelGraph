@@ -1,4 +1,5 @@
 """Models package: Pydantic schemas for request/response validation."""
+from __future__ import annotations
 
 from models.accommodation import (
     AccommodationCreate,

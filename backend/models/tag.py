@@ -1,4 +1,5 @@
 """Pydantic v2 schemas for Tag entities."""
+from __future__ import annotations
 
 import re
 from typing import Any

@@ -325,16 +325,24 @@ ORDER BY r.hops ASC LIMIT 1;
 | GET | /api/destinations/{id}/recommend | — | Graf tabanlı öneri |
 | GET | /api/destinations/{id}/activities | — | Aktiviteler |
 | GET | /api/destinations/{id}/restaurants | — | Restoranlar |
+| POST | /api/restaurants | — | Yeni restoran ekle |
 | GET | /api/destinations/{id}/festivals | — | Festival takvimi |
 | GET | /api/destinations/{id}/accommodations | — | Konaklamalar |
 | POST | /api/itineraries | ✓ | Seyahat planı oluştur |
 | POST | /api/itineraries/{id}/stops | ✓ | Durak ekle |
 | POST | /api/itineraries/{id}/budget | ✓ | Bütçe planı oluştur |
+| GET | /api/itineraries/{id}/budget | ✓ | Bütçe planı görüntüle |
+| PUT | /api/itineraries/{id}/budget | ✓ | Bütçe planı güncelle |
 | POST | /api/reviews | ✓ | Yorum yaz |
+| GET | /api/reviews | — | Yorumları listele |
+| DELETE | /api/reviews/{id} | ✓ | Yorumu sil |
 | GET | /api/restaurants | — | Restoran listesi |
 | GET | /api/festivals | — | Festival listesi (tarih filtreli) |
+| POST | /api/festivals | — | Yeni festival ekle |
 | GET | /api/tags | — | Etiketler |
 | GET | /api/categories | — | Kategoriler |
+| POST | /api/activities/{id}/tags | — | Aktiviteye etiket ekle |
+| GET | /api/categories/{id}/activities | — | Kategoriye göre aktiviteler |
 | GET | /api/seasons | — | Sezonlar |
 
 ---

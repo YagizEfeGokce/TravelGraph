@@ -1,4 +1,5 @@
 """Destination routes: listing, detail, sub-resources, recommendations, route, and creation."""
+from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any
