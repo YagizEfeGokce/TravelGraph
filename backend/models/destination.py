@@ -67,6 +67,7 @@ class DestinationResponse(BaseModel):
     description: str
     lat: float
     lng: float
+    image_url: str = ""
     avg_rating: float | None = None
 
     @classmethod
@@ -83,5 +84,6 @@ class DestinationResponse(BaseModel):
             description=properties.get("description", ""),
             lat=properties.get("lat", 0.0),
             lng=properties.get("lng", 0.0),
+            image_url=properties.get("image_url", ""),
             avg_rating=avg_rating,
         )

@@ -2,9 +2,13 @@ import { Link } from "react-router-dom";
 import { useDestinations } from "../hooks/useDestinations";
 import DestinationCard from "../components/DestinationCard";
 
+const ISTANBUL_IMG =
+  "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800";
+
 function HomePage() {
   const { destinations, loading } = useDestinations();
   const featuredDestinations = destinations.slice(0, 6);
+  const heroCity = destinations[0]?.name || "Istanbul";
 
   return (
     <div className="bg-background min-h-screen">
@@ -20,8 +24,9 @@ function HomePage() {
               <span className="text-primary italic">Soul's Journey.</span>
             </h1>
             <p className="text-xl text-on-surface-variant max-w-xl mb-10 leading-relaxed">
-              Transcend standard itineraries. TravelGraph turns complex logistics into a fluid network
-              of discovery, connecting you to the world's most intentional paths.
+              Transcend standard itineraries. TravelGraph turns complex logistics
+              into a fluid network of discovery, connecting you to Turkey's most
+              intentional paths.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
@@ -39,27 +44,33 @@ function HomePage() {
             </div>
           </div>
 
+          {/* Hero image card */}
           <div className="lg:col-span-5 relative">
             <div className="relative rounded-[2rem] overflow-hidden aspect-[4/5] shadow-2xl bg-surface-container-high">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20" />
-              <div className="absolute inset-0 node-edge-motif" />
+              <img
+                src={ISTANBUL_IMG}
+                alt="Istanbul"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
               <div className="absolute bottom-8 left-8 right-8 p-6 glass-nav rounded-2xl border border-white/20">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs font-bold text-primary tracking-widest uppercase mb-1 font-label">
+                    <p className="text-xs font-bold text-white/80 tracking-widest uppercase mb-1 font-label">
                       Current Hotspot
                     </p>
-                    <h3 className="text-2xl font-bold font-headline text-on-surface">
-                      {loading ? "Loading..." : destinations[0]?.name || "Discover the World"}
+                    <h3 className="text-2xl font-bold font-headline text-white">
+                      {loading ? "Loading..." : heroCity}
                     </h3>
+                    <p className="text-xs text-white/60 mt-1">Turkey · Featured Destination</p>
                   </div>
-                  <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary">
+                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white border border-white/30">
                     <span className="material-symbols-outlined">north_east</span>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="absolute -top-6 -right-6 w-32 h-32 node-edge-motif rounded-full" />
+            <div className="absolute -top-6 -right-6 w-32 h-32 node-edge-motif rounded-full opacity-30" />
           </div>
         </div>
       </section>
@@ -68,24 +79,31 @@ function HomePage() {
       <section className="px-6 mb-24">
         <div className="max-w-screen-2xl mx-auto">
           <div className="bg-surface-container-low rounded-[2.5rem] p-10 flex flex-wrap justify-between items-center gap-8 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-full node-edge-motif pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-full node-edge-motif pointer-events-none opacity-30" />
             {[
-              { label: "Active Explorers", value: "1.2M+" },
-              { label: "Global Nodes", value: "45.8K" },
-              { label: "Success Rate", value: "99.4%" },
-              { label: "Co2 Offset", value: "240T", green: true },
+              { label: "Destinations", value: "10", icon: "location_on" },
+              { label: "Entity Types", value: "14", icon: "hub" },
+              { label: "Graph DB", value: "FalkorDB", icon: "account_tree" },
+              { label: "Festivals", value: "10+", icon: "celebration", green: true },
             ].map((stat) => (
-              <div key={stat.label} className="flex-1 min-w-[180px]">
-                <p className="text-sm font-bold text-outline uppercase tracking-[0.2em] mb-2 font-label">
-                  {stat.label}
-                </p>
-                <h4
-                  className={`text-5xl font-black font-headline ${
-                    stat.green ? "text-secondary" : "text-on-surface"
-                  }`}
-                >
-                  {stat.value}
-                </h4>
+              <div key={stat.label} className="flex-1 min-w-[160px] flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <span className="material-symbols-outlined text-primary text-xl">
+                    {stat.icon}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-outline uppercase tracking-[0.15em] mb-1 font-label">
+                    {stat.label}
+                  </p>
+                  <h4
+                    className={`text-3xl font-black font-headline ${
+                      stat.green ? "text-secondary" : "text-on-surface"
+                    }`}
+                  >
+                    {stat.value}
+                  </h4>
+                </div>
               </div>
             ))}
           </div>
@@ -97,11 +115,14 @@ function HomePage() {
         <div className="max-w-screen-2xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
             <div className="max-w-xl">
+              <span className="inline-block px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold tracking-widest uppercase mb-3 font-label">
+                Turkey's Finest
+              </span>
               <h2 className="text-4xl md:text-5xl font-black font-headline text-on-surface tracking-tight">
                 Featured Destinations
               </h2>
               <p className="text-on-surface-variant mt-4 leading-relaxed">
-                Dynamic nodes currently trending across the global graph.
+                Top graph nodes trending across the TravelGraph network.
               </p>
             </div>
             <Link
@@ -116,7 +137,10 @@ function HomePage() {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="h-56 rounded-3xl bg-surface-container-low animate-pulse" />
+                <div
+                  key={i}
+                  className="h-64 rounded-3xl bg-surface-container-low animate-pulse"
+                />
               ))}
             </div>
           ) : (
@@ -128,8 +152,7 @@ function HomePage() {
                   name={destination.name}
                   country={destination.country}
                   description={destination.description}
-                  category={destination.category}
-                  season={destination.season}
+                  imageUrl={(destination as any).image_url}
                 />
               ))}
             </div>
@@ -146,7 +169,8 @@ function HomePage() {
               Ready to Map Your Journey?
             </h2>
             <p className="text-on-primary/80 max-w-lg mx-auto mb-8 relative z-10">
-              Join 1.2M+ explorers navigating the world with intelligence.
+              Discover Turkey's finest destinations, festivals, and hidden gems
+              powered by graph intelligence.
             </p>
             <Link
               to="/register"
@@ -166,7 +190,7 @@ function HomePage() {
               TravelGraph
             </span>
             <p className="text-xs text-outline">
-              © 2024 TravelGraph. Mapping the world's possibilities.
+              © 2025 TravelGraph. Mapping Turkey's possibilities.
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-8">
