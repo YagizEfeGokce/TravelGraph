@@ -4,7 +4,7 @@ export async function getReviews(targetId: string, targetType: string) {
   const response = await apiClient.get(
     `/reviews?target_id=${encodeURIComponent(targetId)}&target_type=${encodeURIComponent(targetType)}`,
   );
-  return response.data;
+  return Array.isArray(response.data) ? response.data : response.data.reviews ?? [];
 }
 
 export async function createReview(data: {
