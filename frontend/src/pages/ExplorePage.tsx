@@ -1,243 +1,148 @@
 import { useMemo, useState } from "react";
+import { useDestinations } from "../hooks/useDestinations";
 import DestinationCard from "../components/DestinationCard";
 
 function ExplorePage() {
-  const destinations = [
-    { name: "İstanbul", city: "İstanbul", category: "Culture", season: "Spring", description: "Historic mosques, Bosphorus views and endless city energy." },
-    { name: "Ankara", city: "Ankara", category: "History", season: "Autumn", description: "Capital city with museums, memorials and political heritage." },
-    { name: "İzmir", city: "İzmir", category: "City", season: "Summer", description: "Aegean lifestyle, sea breeze and vibrant coastal living." },
-    { name: "Antalya", city: "Antalya", category: "Beach", season: "Summer", description: "Sunny beaches, resorts and perfect Mediterranean holidays." },
-    { name: "Muğla", city: "Muğla", category: "Beach", season: "Summer", description: "Bodrum, Marmaris and turquoise bays for summer escapes." },
-    { name: "Nevşehir", city: "Nevşehir", category: "Nature", season: "Autumn", description: "Fairy chimneys, cave hotels and balloon-filled skies." },
-    { name: "Trabzon", city: "Trabzon", category: "Nature", season: "Spring", description: "Green plateaus, rain-kissed mountains and Black Sea beauty." },
-    { name: "Bursa", city: "Bursa", category: "History", season: "Winter", description: "Ottoman heritage, thermal history and mountain views." },
-    { name: "Çanakkale", city: "Çanakkale", category: "History", season: "Spring", description: "Gallipoli history and routes filled with meaning." },
-    { name: "Mardin", city: "Mardin", category: "Culture", season: "Autumn", description: "Stone architecture, local heritage and Mesopotamian views." },
-    { name: "Gaziantep", city: "Gaziantep", category: "Food", season: "Winter", description: "Baklava, kebab and one of Turkey’s richest food scenes." },
-    { name: "Eskişehir", city: "Eskişehir", category: "City", season: "Spring", description: "Student city charm, canals and modern social life." },
-    { name: "Rize", city: "Rize", category: "Nature", season: "Summer", description: "Tea gardens, lush forests and cool mountain air." },
-    { name: "Aydın", city: "Aydın", category: "Beach", season: "Summer", description: "Aegean beaches, warm weather and relaxed coastal vibes." },
-    { name: "Şanlıurfa", city: "Şanlıurfa", category: "Culture", season: "Autumn", description: "Sacred history, ancient sites and deep cultural roots." },
-    { name: "Konya", city: "Konya", category: "Culture", season: "Winter", description: "Spiritual heritage, Mevlana and calm cultural atmosphere." },
-    { name: "Kayseri", city: "Kayseri", category: "History", season: "Winter", description: "Traditional food, Erciyes mountain and central Anatolian history." },
-    { name: "Adana", city: "Adana", category: "Food", season: "Spring", description: "Famous cuisine, bold flavors and lively southern energy." },
-    { name: "Samsun", city: "Samsun", category: "City", season: "Summer", description: "Coastal Black Sea city with parks and urban comfort." },
-    { name: "Balıkesir", city: "Balıkesir", category: "Beach", season: "Summer", description: "Ayvalık coastlines and island-style seaside escapes." },
-    { name: "Denizli", city: "Denizli", category: "Nature", season: "Spring", description: "Pamukkale terraces and world-famous thermal landscapes." },
-    { name: "Kastamonu", city: "Kastamonu", category: "Nature", season: "Autumn", description: "Forests, canyons and underrated northern beauty." },
-    { name: "Van", city: "Van", category: "Nature", season: "Summer", description: "Lake views, island church and eastern Anatolian scenery." },
-    { name: "Artvin", city: "Artvin", category: "Nature", season: "Summer", description: "High mountains, green valleys and trekking routes." },
-    { name: "Bolu", city: "Bolu", category: "Nature", season: "Winter", description: "Abant, forest retreats and peaceful seasonal escapes." },
-    { name: "Kars", city: "Kars", category: "History", season: "Winter", description: "Snowy landscapes, Ani ruins and eastern frontier history." },
-    { name: "Edirne", city: "Edirne", category: "History", season: "Spring", description: "Ottoman monuments and cultural gateway to Europe." },
-    { name: "Hatay", city: "Hatay", category: "Food", season: "Spring", description: "Unique flavors, multicultural heritage and warm hospitality." },
-    { name: "Ordu", city: "Ordu", category: "Nature", season: "Summer", description: "Black Sea coast, cable car views and green hills." },
-    { name: "Sinop", city: "Sinop", category: "Beach", season: "Summer", description: "Quiet coastal charm and northern seaside beauty." },
-    { name: "Fethiye", city: "Muğla", category: "Beach", season: "Summer", description: "Blue Lagoon, boat tours and postcard-perfect beaches." },
-    { name: "Bodrum", city: "Muğla", category: "Beach", season: "Summer", description: "Luxury coastal vibe, nightlife and sea-view escapes." },
-    { name: "Marmaris", city: "Muğla", category: "Beach", season: "Summer", description: "Marina life, beaches and classic holiday atmosphere." },
-    { name: "Kuşadası", city: "Aydın", category: "Beach", season: "Summer", description: "Cruise stop, beaches and access to ancient ruins." },
-    { name: "Safranbolu", city: "Karabük", category: "History", season: "Autumn", description: "Historic Ottoman houses and timeless town streets." },
-    { name: "Amasya", city: "Amasya", category: "History", season: "Spring", description: "Riverside old town and royal tombs in the cliffs." },
-    { name: "Uzungöl", city: "Trabzon", category: "Nature", season: "Summer", description: "Lake views, misty mountains and green tranquility." },
-    { name: "Alaçatı", city: "İzmir", category: "Beach", season: "Summer", description: "Windy streets, stone houses and boutique summer energy." },
-    { name: "Kaş", city: "Antalya", category: "Beach", season: "Summer", description: "Diving spots, calm sea and boutique holiday mood." },
-    { name: "Side", city: "Antalya", category: "History", season: "Summer", description: "Ancient ruins mixed with resort-style beach travel." },
-  ];
+  const { destinations, loading } = useDestinations();
 
   const [category, setCategory] = useState("All");
   const [season, setSeason] = useState("All");
   const [city, setCity] = useState("All");
 
-  const filteredDestinations = useMemo(() => {
-    return destinations.filter((dest) => {
-      const categoryMatch = category === "All" || dest.category === category;
-      const seasonMatch = season === "All" || dest.season === season;
-      const cityMatch = city === "All" || dest.city === city;
+  const categories = ["All", "Culture", "History", "Beach", "Nature", "Food", "City"];
+  const seasons = ["All", "Spring", "Summer", "Autumn", "Winter"];
 
-      return categoryMatch && seasonMatch && cityMatch;
+  const cities = useMemo(() => {
+    const unique = Array.from(new Set(destinations.map((d) => d.city).filter(Boolean))).sort();
+    return unique as string[];
+  }, [destinations]);
+
+  const filtered = useMemo(() => {
+    return destinations.filter((dest) => {
+      const catOk = category === "All" || dest.category === category;
+      const seaOk = season === "All" || dest.season === season;
+      const citOk = city === "All" || dest.city === city;
+      return catOk && seaOk && citOk;
     });
-  }, [category, season, city]);
+  }, [destinations, category, season, city]);
 
   return (
-    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "40px 20px 70px" }}>
-      <div style={{ marginBottom: "28px" }}>
-        <p
-          style={{
-            margin: "0 0 8px 0",
-            color: "#14b8a6",
-            fontWeight: 700,
-            fontSize: "14px",
-          }}
-        >
-          DESTINATION DISCOVERY
-        </p>
-
-        <h1 style={{ fontSize: "38px", margin: "0 0 10px 0", color: "#111827" }}>
-          Explore Destinations
-        </h1>
-
-        <p style={{ color: "#6b7280", maxWidth: "760px", lineHeight: 1.7 }}>
-          Filter destinations across Turkey by travel category, best season and
-          city to discover the places that fit your travel style.
-        </p>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
-          gap: "16px",
-          marginBottom: "24px",
-          background: "rgba(255,255,255,0.88)",
-          backdropFilter: "blur(10px)",
-          padding: "22px",
-          borderRadius: "22px",
-          boxShadow: "0 10px 24px rgba(0,0,0,0.05)",
-          border: "1px solid rgba(255,255,255,0.7)",
-        }}
-      >
-        <div>
-          <label style={{ fontWeight: 700, color: "#374151" }}>Category</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginTop: "8px",
-              borderRadius: "12px",
-              border: "1px solid #d1d5db",
-              background: "white",
-            }}
-          >
-            <option>All</option>
-            <option>Culture</option>
-            <option>History</option>
-            <option>Beach</option>
-            <option>Nature</option>
-            <option>Food</option>
-            <option>City</option>
-          </select>
+    <div className="bg-background min-h-screen pt-24 pb-16 px-6">
+      <div className="max-w-screen-2xl mx-auto">
+        {/* Header */}
+        <div className="mb-10">
+          <span className="inline-block px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold tracking-widest uppercase mb-3 font-label">
+            Destination Discovery
+          </span>
+          <h1 className="text-5xl md:text-6xl font-black font-headline text-on-surface tracking-tight mb-4">
+            Explore Destinations
+          </h1>
+          <p className="text-on-surface-variant max-w-2xl leading-relaxed text-lg">
+            Filter destinations across Turkey by travel category, best season
+            and city to discover the places that fit your travel style.
+          </p>
         </div>
 
-        <div>
-          <label style={{ fontWeight: 700, color: "#374151" }}>Season</label>
-          <select
-            value={season}
-            onChange={(e) => setSeason(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginTop: "8px",
-              borderRadius: "12px",
-              border: "1px solid #d1d5db",
-              background: "white",
-            }}
-          >
-            <option>All</option>
-            <option>Spring</option>
-            <option>Summer</option>
-            <option>Autumn</option>
-            <option>Winter</option>
-          </select>
+        {/* Filters */}
+        <div className="bg-surface-container-lowest rounded-3xl p-6 border border-outline-variant/30 shadow-card mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-xs font-bold text-outline uppercase tracking-widest mb-2 font-label">
+                Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-surface-container text-on-surface border border-outline-variant/30 font-medium text-sm focus:outline-none focus:border-primary transition-colors"
+              >
+                {categories.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-outline uppercase tracking-widest mb-2 font-label">
+                Season
+              </label>
+              <select
+                value={season}
+                onChange={(e) => setSeason(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-surface-container text-on-surface border border-outline-variant/30 font-medium text-sm focus:outline-none focus:border-primary transition-colors"
+              >
+                {seasons.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-outline uppercase tracking-widest mb-2 font-label">
+                City
+              </label>
+              <select
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-surface-container text-on-surface border border-outline-variant/30 font-medium text-sm focus:outline-none focus:border-primary transition-colors"
+              >
+                <option key="__all" value="All">All</option>
+                {cities.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label style={{ fontWeight: 700, color: "#374151" }}>City</label>
-          <select
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginTop: "8px",
-              borderRadius: "12px",
-              border: "1px solid #d1d5db",
-              background: "white",
-            }}
-          >
-            <option>All</option>
-            <option>İstanbul</option>
-            <option>Ankara</option>
-            <option>İzmir</option>
-            <option>Antalya</option>
-            <option>Muğla</option>
-            <option>Nevşehir</option>
-            <option>Trabzon</option>
-            <option>Bursa</option>
-            <option>Çanakkale</option>
-            <option>Mardin</option>
-            <option>Gaziantep</option>
-            <option>Eskişehir</option>
-            <option>Rize</option>
-            <option>Aydın</option>
-            <option>Şanlıurfa</option>
-            <option>Konya</option>
-            <option>Kayseri</option>
-            <option>Adana</option>
-            <option>Samsun</option>
-            <option>Balıkesir</option>
-            <option>Denizli</option>
-            <option>Kastamonu</option>
-            <option>Van</option>
-            <option>Artvin</option>
-            <option>Bolu</option>
-            <option>Kars</option>
-            <option>Edirne</option>
-            <option>Hatay</option>
-            <option>Ordu</option>
-            <option>Sinop</option>
-            <option>Karabük</option>
-          </select>
-        </div>
-      </div>
-
-      <div
-        style={{
-          marginBottom: "24px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: "14px",
-          flexWrap: "wrap",
-        }}
-      >
-        <div
-          style={{
-            background: "rgba(20,184,166,0.1)",
-            color: "#0f766e",
-            padding: "10px 16px",
-            borderRadius: "999px",
-            fontWeight: 700,
-            fontSize: "14px",
-          }}
-        >
-          {filteredDestinations.length} destinations found
+        {/* Result count */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="px-4 py-2 rounded-full bg-primary/10 text-primary font-bold text-sm font-label">
+              {loading ? "..." : filtered.length} destinations found
+            </span>
+            {(category !== "All" || season !== "All" || city !== "All") && (
+              <button
+                onClick={() => { setCategory("All"); setSeason("All"); setCity("All"); }}
+                className="px-3 py-1.5 rounded-full border border-outline-variant text-on-surface-variant text-xs font-medium hover:bg-surface-container-low transition-colors"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
+          <p className="text-on-surface-variant text-sm">
+            Filter results update instantly according to your selection.
+          </p>
         </div>
 
-        <p style={{ margin: 0, color: "#6b7280", fontSize: "14px" }}>
-          Filter results update instantly according to your selection.
-        </p>
-      </div>
+        {/* Grid */}
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="h-56 rounded-3xl bg-surface-container-low animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filtered.map((dest) => (
+              <DestinationCard
+                key={dest.id}
+                id={dest.id}
+                name={dest.name}
+                country={dest.country}
+                description={dest.description}
+                category={dest.category}
+                season={dest.season}
+              />
+            ))}
+          </div>
+        )}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
-          gap: "22px",
-        }}
-      >
-        {filteredDestinations.map((dest) => (
-          <DestinationCard
-            key={dest.name}
-            name={dest.name}
-            country="Turkey"
-            description={dest.description}
-            category={dest.category}
-            season={dest.season}
-          />
-        ))}
+        {!loading && filtered.length === 0 && (
+          <div className="text-center py-20 text-on-surface-variant">
+            <p className="text-lg font-medium">No destinations match your filters.</p>
+            <p className="text-sm mt-2">Try adjusting the category, season or city.</p>
+          </div>
+        )}
       </div>
     </div>
   );

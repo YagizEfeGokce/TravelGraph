@@ -29,15 +29,18 @@ def _connect_with_retry() -> Any:
 
     for attempt in range(1, _MAX_RETRIES + 1):
         try:
-            client = falkordb.FalkorDB(
-                host=settings.FALKORDB_HOST,
-                port=settings.FALKORDB_PORT,
-            )
+            connect_kwargs: dict = {
+                "host": settings.falkordb_host,
+                "port": settings.falkordb_port,
+            }
+            if settings.falkordb_password:
+                connect_kwargs["password"] = settings.falkordb_password
+            client = falkordb.FalkorDB(**connect_kwargs)
             graph = client.select_graph(settings.FALKORDB_GRAPH)
             logger.info(
                 "FalkorDB connected (host=%s port=%s graph=%s)",
-                settings.FALKORDB_HOST,
-                settings.FALKORDB_PORT,
+                settings.falkordb_host,
+                settings.falkordb_port,
                 settings.FALKORDB_GRAPH,
             )
             return graph
@@ -81,10 +84,13 @@ def check_connection() -> bool:
         ``True`` if the database responds correctly, ``False`` otherwise.
     """
     try:
-        client = falkordb.FalkorDB(
-            host=settings.FALKORDB_HOST,
-            port=settings.FALKORDB_PORT,
-        )
+        connect_kwargs: dict = {
+            "host": settings.falkordb_host,
+            "port": settings.falkordb_port,
+        }
+        if settings.falkordb_password:
+            connect_kwargs["password"] = settings.falkordb_password
+        client = falkordb.FalkorDB(**connect_kwargs)
         graph = client.select_graph(settings.FALKORDB_GRAPH)
         graph.query("RETURN 1")
         return True
@@ -113,10 +119,13 @@ def create_indexes() -> None:
     ]
 
     try:
-        client = falkordb.FalkorDB(
-            host=settings.FALKORDB_HOST,
-            port=settings.FALKORDB_PORT,
-        )
+        connect_kwargs: dict = {
+            "host": settings.falkordb_host,
+            "port": settings.falkordb_port,
+        }
+        if settings.falkordb_password:
+            connect_kwargs["password"] = settings.falkordb_password
+        client = falkordb.FalkorDB(**connect_kwargs)
         graph = client.select_graph(settings.FALKORDB_GRAPH)
     except Exception as exc:  # noqa: BLE001
         logger.error("Could not connect to FalkorDB to create indexes: %s", exc)

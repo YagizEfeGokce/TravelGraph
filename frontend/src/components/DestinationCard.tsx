@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 type DestinationCardProps = {
+  id: string;
   name: string;
   country: string;
   description?: string;
@@ -9,120 +10,49 @@ type DestinationCardProps = {
 };
 
 function DestinationCard({
+  id,
   name,
   country,
   description,
   category,
   season,
 }: DestinationCardProps) {
-  const slug = name.toLowerCase().replace(/\s+/g, "-");
-
   return (
-    <Link
-      to={`/destinations/${slug}`}
-      style={{ textDecoration: "none", color: "inherit" }}
-    >
-      <div
-        style={{
-          background: "rgba(255,255,255,0.92)",
-          backdropFilter: "blur(10px)",
-          borderRadius: "22px",
-          padding: "22px",
-          boxShadow: "0 10px 30px rgba(15, 23, 42, 0.08)",
-          border: "1px solid rgba(255,255,255,0.7)",
-          transition: "transform 0.2s ease, box-shadow 0.2s ease",
-          minHeight: "220px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        <div>
-          <div
-            style={{
-              display: "inline-block",
-              padding: "6px 12px",
-              borderRadius: "999px",
-              background: "rgba(20,184,166,0.12)",
-              color: "#0f766e",
-              fontSize: "12px",
-              fontWeight: 700,
-              marginBottom: "14px",
-            }}
-          >
-            {country}
-          </div>
+    <Link to={`/destinations/${id}`} className="block group">
+      <div className="relative rounded-3xl overflow-hidden bg-surface-container-high border border-outline-variant/30 shadow-card hover:shadow-2xl transition-shadow min-h-[220px] flex flex-col justify-between p-6">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 opacity-60 group-hover:opacity-80 transition-opacity" />
+        <div className="absolute inset-0 node-edge-motif pointer-events-none" />
 
-          <h3
-            style={{
-              margin: "0 0 10px 0",
-              fontSize: "24px",
-              color: "#111827",
-            }}
-          >
+        <div className="relative z-10">
+          <span className="inline-block px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed text-[11px] font-bold tracking-widest uppercase mb-3 font-label">
+            {country}
+          </span>
+
+          <h3 className="text-2xl font-black font-headline text-on-surface mb-2 tracking-tight">
             {name}
           </h3>
 
-          <p
-            style={{
-              margin: 0,
-              color: "#6b7280",
-              lineHeight: 1.6,
-              fontSize: "14px",
-            }}
-          >
+          <p className="text-sm text-on-surface-variant leading-relaxed">
             {description || "Explore local culture, food, activities and hidden gems."}
           </p>
         </div>
 
-        <div style={{ marginTop: "18px" }}>
-          <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              flexWrap: "wrap",
-              marginBottom: "16px",
-            }}
-          >
+        <div className="relative z-10 mt-4">
+          <div className="flex flex-wrap gap-2 mb-3">
             {category && (
-              <span
-                style={{
-                  padding: "6px 10px",
-                  borderRadius: "999px",
-                  background: "#ecfeff",
-                  color: "#0f766e",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                }}
-              >
+              <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
                 {category}
               </span>
             )}
-
             {season && (
-              <span
-                style={{
-                  padding: "6px 10px",
-                  borderRadius: "999px",
-                  background: "#f0fdfa",
-                  color: "#115e59",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                }}
-              >
+              <span className="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-bold">
                 Best in {season}
               </span>
             )}
           </div>
-
-          <div
-            style={{
-              color: "#14b8a6",
-              fontWeight: 700,
-              fontSize: "14px",
-            }}
-          >
-            View Details →
+          <div className="flex items-center gap-1 text-primary font-bold text-sm group-hover:gap-2 transition-all">
+            View Details
+            <span className="material-symbols-outlined text-base">arrow_forward</span>
           </div>
         </div>
       </div>

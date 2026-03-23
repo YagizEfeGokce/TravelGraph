@@ -33,55 +33,6 @@ type Destination = {
   country: string;
 };
 
-const s = {
-  card: {
-    background: "white",
-    borderRadius: "14px",
-    padding: "18px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
-    border: "1px solid #e5e7eb",
-  } as React.CSSProperties,
-  input: {
-    width: "100%",
-    padding: "10px 12px",
-    borderRadius: "8px",
-    border: "1px solid #d1d5db",
-    fontSize: "14px",
-    boxSizing: "border-box" as const,
-    outline: "none",
-  } as React.CSSProperties,
-  btnPrimary: {
-    background: "#14b8a6",
-    color: "white",
-    border: "none",
-    padding: "10px 18px",
-    borderRadius: "8px",
-    fontWeight: 600,
-    cursor: "pointer",
-    fontSize: "14px",
-  } as React.CSSProperties,
-  btnGhost: {
-    background: "#e5e7eb",
-    color: "#374151",
-    border: "none",
-    padding: "10px 18px",
-    borderRadius: "8px",
-    fontWeight: 600,
-    cursor: "pointer",
-    fontSize: "14px",
-  } as React.CSSProperties,
-  btnDanger: {
-    background: "#fee2e2",
-    color: "#dc2626",
-    border: "none",
-    padding: "6px 10px",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontSize: "13px",
-    fontWeight: 500,
-  } as React.CSSProperties,
-};
-
 function PlannerPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -211,369 +162,294 @@ function PlannerPage() {
 
   if (loading) {
     return (
-      <div style={{ padding: "60px", textAlign: "center", color: "#6b7280" }}>
-        Loading your plans...
+      <div className="min-h-screen bg-background flex items-center justify-center pt-24">
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4" />
+          <p className="text-on-surface-variant font-medium">Loading your plans...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "40px", maxWidth: "1100px", margin: "0 auto" }}>
-      {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "28px",
-        }}
-      >
-        <div>
-          <h1 style={{ fontSize: "32px", marginBottom: "6px", color: "#1f2937" }}>
-            Trip Planner
-          </h1>
-          <p style={{ color: "#6b7280" }}>
-            Create and manage your travel itineraries.
-          </p>
-        </div>
-        <button style={s.btnPrimary} onClick={() => setShowCreateForm(!showCreateForm)}>
-          + New Plan
-        </button>
-      </div>
-
-      {/* Error */}
-      {error && (
-        <div
-          style={{
-            background: "#fee2e2",
-            color: "#dc2626",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            marginBottom: "16px",
-            fontSize: "14px",
-          }}
-        >
-          {error}
-        </div>
-      )}
-
-      {/* Create form */}
-      {showCreateForm && (
-        <div style={{ ...s.card, marginBottom: "24px" }}>
-          <h2 style={{ fontSize: "18px", marginBottom: "16px" }}>New Itinerary</h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              gap: "12px",
-              marginBottom: "14px",
-            }}
-          >
-            <div>
-              <label style={{ display: "block", marginBottom: "6px", fontSize: "13px", fontWeight: 600 }}>
-                Title
-              </label>
-              <input
-                style={s.input}
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. Turkey Summer 2025"
-              />
-            </div>
-            <div>
-              <label style={{ display: "block", marginBottom: "6px", fontSize: "13px", fontWeight: 600 }}>
-                Start Date
-              </label>
-              <input
-                style={s.input}
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </div>
-            <div>
-              <label style={{ display: "block", marginBottom: "6px", fontSize: "13px", fontWeight: 600 }}>
-                End Date
-              </label>
-              <input
-                style={s.input}
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-            </div>
+    <div className="bg-background min-h-screen pt-24 pb-16 px-6">
+      <div className="max-w-screen-xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-start mb-10 gap-4 flex-wrap">
+          <div>
+            <span className="inline-block px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold tracking-widest uppercase mb-3 font-label">
+              Route Planner
+            </span>
+            <h1 className="text-5xl font-black font-headline text-on-surface tracking-tight">
+              Trip Planner
+            </h1>
+            <p className="text-on-surface-variant mt-2">
+              Create and manage your travel itineraries.
+            </p>
           </div>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <button style={s.btnPrimary} onClick={handleCreate}>
-              Create
-            </button>
-            <button style={s.btnGhost} onClick={() => setShowCreateForm(false)}>
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Two-column layout */}
-      <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: "24px" }}>
-        {/* Plans list */}
-        <div>
-          <h2
-            style={{
-              fontSize: "15px",
-              fontWeight: 700,
-              marginBottom: "12px",
-              color: "#374151",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-            }}
+          <button
+            onClick={() => setShowCreateForm(!showCreateForm)}
+            className="px-6 py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-xl shadow-card hover:opacity-90 transition-all mt-4 md:mt-0"
           >
-            My Plans
-          </h2>
-          {itineraries.length === 0 ? (
-            <div
-              style={{
-                ...s.card,
-                textAlign: "center",
-                color: "#9ca3af",
-                fontSize: "14px",
-                padding: "30px",
-              }}
-            >
-              No plans yet.
-              <br />
-              Create one to get started!
-            </div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              {itineraries.map((it) => (
-                <div
-                  key={it.id}
-                  style={{
-                    ...s.card,
-                    cursor: "pointer",
-                    borderColor: selected?.id === it.id ? "#14b8a6" : "#e5e7eb",
-                    borderWidth: "2px",
-                  }}
-                  onClick={() => setSelected(it)}
-                >
-                  <div style={{ fontWeight: 600, fontSize: "14px", marginBottom: "4px" }}>
-                    {it.title}
-                  </div>
-                  <div style={{ fontSize: "12px", color: "#6b7280" }}>
-                    {it.start_date} → {it.end_date}
-                  </div>
-                  <div style={{ fontSize: "12px", color: "#9ca3af", marginTop: "2px" }}>
-                    {it.stops?.length ?? 0} stop{it.stops?.length !== 1 ? "s" : ""}
-                  </div>
-                  <button
-                    style={{ ...s.btnDanger, marginTop: "8px", fontSize: "12px" }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteItinerary(it.id);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+            + New Plan
+          </button>
         </div>
 
-        {/* Plan detail */}
-        <div>
-          {!selected ? (
-            <div
-              style={{
-                ...s.card,
-                textAlign: "center",
-                color: "#9ca3af",
-                padding: "60px",
-                fontSize: "15px",
-              }}
-            >
-              Select a plan from the left to manage its stops.
-            </div>
-          ) : (
-            <>
-              {/* Plan header */}
-              <div style={{ ...s.card, marginBottom: "16px" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
-                    marginBottom: "16px",
-                  }}
-                >
-                  <div>
-                    <h2 style={{ fontSize: "22px", fontWeight: 700, margin: 0 }}>
-                      {selected.title}
-                    </h2>
-                    <p style={{ color: "#6b7280", fontSize: "14px", margin: "4px 0 0" }}>
-                      {selected.start_date} → {selected.end_date}
-                    </p>
-                  </div>
-                  <Link
-                    to={`/planner/${selected.id}/budget`}
-                    style={{
-                      background: "#0f766e",
-                      color: "white",
-                      textDecoration: "none",
-                      padding: "10px 16px",
-                      borderRadius: "8px",
-                      fontWeight: 600,
-                      fontSize: "14px",
-                    }}
-                  >
-                    Budget Planner
-                  </Link>
-                </div>
+        {/* Error */}
+        {error && (
+          <div className="bg-error-container text-on-error-container px-4 py-3 rounded-xl text-sm mb-6">
+            {error}
+          </div>
+        )}
 
-                {/* Stops */}
-                {selected.stops.length === 0 ? (
-                  <p style={{ color: "#9ca3af", fontSize: "14px" }}>
-                    No stops yet. Add your first destination!
-                  </p>
-                ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                    {selected.stops.map((stop) => (
-                      <div
-                        key={stop.id}
-                        style={{
-                          padding: "12px 16px",
-                          borderRadius: "10px",
-                          background: "#f8fafc",
-                          border: "1px solid #e5e7eb",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        <div>
-                          <span
-                            style={{
-                              fontWeight: 700,
-                              color: "#14b8a6",
-                              marginRight: "8px",
-                              fontSize: "13px",
-                            }}
-                          >
-                            Day {stop.day_number}
-                          </span>
-                          <span style={{ fontWeight: 600 }}>{stop.destination_name}</span>
-                          {stop.notes && (
-                            <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#6b7280" }}>
-                              {stop.notes}
-                            </p>
-                          )}
-                        </div>
-                        <button
-                          style={s.btnDanger}
-                          onClick={() => handleDeleteStop(stop.id)}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
+        {/* Create form */}
+        {showCreateForm && (
+          <div className="bg-surface-container-lowest rounded-3xl p-6 border border-outline-variant/30 shadow-card mb-8">
+            <h2 className="text-xl font-black font-headline text-on-surface mb-5">
+              New Itinerary
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+              <div>
+                <label className="block text-xs font-bold text-outline uppercase tracking-widest mb-2 font-label">
+                  Title
+                </label>
+                <input
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container text-on-surface border border-outline-variant/30 text-sm focus:outline-none focus:border-primary transition-colors"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Turkey Summer 2025"
+                />
               </div>
+              <div>
+                <label className="block text-xs font-bold text-outline uppercase tracking-widest mb-2 font-label">
+                  Start Date
+                </label>
+                <input
+                  type="date"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container text-on-surface border border-outline-variant/30 text-sm focus:outline-none focus:border-primary transition-colors"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-outline uppercase tracking-widest mb-2 font-label">
+                  End Date
+                </label>
+                <input
+                  type="date"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container text-on-surface border border-outline-variant/30 text-sm focus:outline-none focus:border-primary transition-colors"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={handleCreate}
+                className="px-6 py-2.5 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-xl text-sm hover:opacity-90 transition-all"
+              >
+                Create
+              </button>
+              <button
+                onClick={() => setShowCreateForm(false)}
+                className="px-6 py-2.5 bg-surface-container text-on-surface-variant font-bold rounded-xl text-sm hover:bg-surface-container-high transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
 
-              {/* Add stop */}
-              {showStopForm ? (
-                <div style={s.card}>
-                  <h3 style={{ fontSize: "16px", marginBottom: "14px" }}>Add a Stop</h3>
+        {/* Two-column layout */}
+        <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6">
+          {/* Plans list */}
+          <div>
+            <p className="text-xs font-bold text-outline uppercase tracking-widest mb-4 font-label">
+              My Plans
+            </p>
+            {itineraries.length === 0 ? (
+              <div className="bg-surface-container-lowest rounded-2xl p-8 text-center border border-outline-variant/30 shadow-card">
+                <p className="text-on-surface-variant text-sm">
+                  No plans yet.
+                  <br />
+                  Create one to get started!
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {itineraries.map((it) => (
                   <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "12px",
-                      marginBottom: "12px",
-                    }}
+                    key={it.id}
+                    onClick={() => setSelected(it)}
+                    className={`bg-surface-container-lowest rounded-2xl p-4 border-2 cursor-pointer transition-all shadow-card hover:shadow-ambient ${
+                      selected?.id === it.id
+                        ? "border-primary"
+                        : "border-outline-variant/30 hover:border-primary/30"
+                    }`}
                   >
-                    <div>
-                      <label
-                        style={{
-                          display: "block",
-                          marginBottom: "6px",
-                          fontSize: "13px",
-                          fontWeight: 600,
-                        }}
-                      >
-                        Destination
-                      </label>
-                      <select
-                        style={s.input}
-                        value={selectedDestId}
-                        onChange={(e) => setSelectedDestId(e.target.value)}
-                      >
-                        <option value="">Select city...</option>
-                        {destinations.map((d) => (
-                          <option key={d.id} value={d.id}>
-                            {d.name}
-                          </option>
-                        ))}
-                      </select>
+                    <div className="font-bold text-on-surface text-sm mb-1">{it.title}</div>
+                    <div className="text-xs text-on-surface-variant mb-1">
+                      {it.start_date} → {it.end_date}
                     </div>
+                    <div className="text-xs text-outline mb-3">
+                      {it.stops?.length ?? 0} stop{it.stops?.length !== 1 ? "s" : ""}
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteItinerary(it.id);
+                      }}
+                      className="px-3 py-1 text-xs font-bold text-error bg-error-container/50 rounded-lg hover:bg-error-container transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Plan detail */}
+          <div>
+            {!selected ? (
+              <div className="bg-surface-container-lowest rounded-3xl p-16 text-center border border-outline-variant/30 shadow-card">
+                <span className="material-symbols-outlined text-5xl text-outline mb-4 block">
+                  map
+                </span>
+                <p className="text-on-surface-variant">
+                  Select a plan from the left to manage its stops.
+                </p>
+              </div>
+            ) : (
+              <>
+                {/* Plan header */}
+                <div className="bg-surface-container-lowest rounded-3xl p-6 border border-outline-variant/30 shadow-card mb-5">
+                  <div className="flex justify-between items-start mb-5 gap-4">
                     <div>
-                      <label
-                        style={{
-                          display: "block",
-                          marginBottom: "6px",
-                          fontSize: "13px",
-                          fontWeight: 600,
-                        }}
-                      >
-                        Day Number
+                      <h2 className="text-2xl font-black font-headline text-on-surface tracking-tight">
+                        {selected.title}
+                      </h2>
+                      <p className="text-sm text-on-surface-variant mt-1">
+                        {selected.start_date} → {selected.end_date}
+                      </p>
+                    </div>
+                    <Link
+                      to={`/planner/${selected.id}/budget`}
+                      className="px-4 py-2 bg-gradient-to-br from-secondary to-on-secondary-container text-on-secondary font-bold rounded-xl text-sm shadow-card hover:opacity-90 transition-all"
+                    >
+                      Budget Planner
+                    </Link>
+                  </div>
+
+                  {/* Stops */}
+                  {selected.stops.length === 0 ? (
+                    <p className="text-on-surface-variant text-sm">
+                      No stops yet. Add your first destination!
+                    </p>
+                  ) : (
+                    <div className="flex flex-col gap-3">
+                      {selected.stops.map((stop) => (
+                        <div
+                          key={stop.id}
+                          className="flex justify-between items-center px-4 py-3 rounded-xl bg-surface-container border border-outline-variant/20"
+                        >
+                          <div>
+                            <span className="font-bold text-primary text-xs mr-2 font-label uppercase tracking-widest">
+                              Day {stop.day_number}
+                            </span>
+                            <span className="font-bold text-on-surface text-sm">
+                              {stop.destination_name}
+                            </span>
+                            {stop.notes && (
+                              <p className="text-xs text-on-surface-variant mt-1">{stop.notes}</p>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => handleDeleteStop(stop.id)}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg bg-error-container/50 text-error hover:bg-error-container transition-colors text-xs font-bold"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Add stop */}
+                {showStopForm ? (
+                  <div className="bg-surface-container-lowest rounded-3xl p-6 border border-outline-variant/30 shadow-card">
+                    <h3 className="font-black font-headline text-on-surface mb-5">
+                      Add a Stop
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label className="block text-xs font-bold text-outline uppercase tracking-widest mb-2 font-label">
+                          Destination
+                        </label>
+                        <select
+                          className="w-full px-4 py-3 rounded-xl bg-surface-container text-on-surface border border-outline-variant/30 text-sm focus:outline-none focus:border-primary transition-colors"
+                          value={selectedDestId}
+                          onChange={(e) => setSelectedDestId(e.target.value)}
+                        >
+                          <option value="">Select city...</option>
+                          {destinations.map((d) => (
+                            <option key={d.id} value={d.id}>
+                              {d.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-outline uppercase tracking-widest mb-2 font-label">
+                          Day Number
+                        </label>
+                        <input
+                          type="number"
+                          min={1}
+                          className="w-full px-4 py-3 rounded-xl bg-surface-container text-on-surface border border-outline-variant/30 text-sm focus:outline-none focus:border-primary transition-colors"
+                          value={dayNumber}
+                          onChange={(e) => setDayNumber(Number(e.target.value))}
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-xs font-bold text-outline uppercase tracking-widest mb-2 font-label">
+                        Notes (optional)
                       </label>
                       <input
-                        style={s.input}
-                        type="number"
-                        min={1}
-                        value={dayNumber}
-                        onChange={(e) => setDayNumber(Number(e.target.value))}
+                        className="w-full px-4 py-3 rounded-xl bg-surface-container text-on-surface border border-outline-variant/30 text-sm focus:outline-none focus:border-primary transition-colors"
+                        value={stopNotes}
+                        onChange={(e) => setStopNotes(e.target.value)}
+                        placeholder="e.g. Arrive by train, check in early"
                       />
                     </div>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleAddStop}
+                        className="px-6 py-2.5 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-xl text-sm hover:opacity-90 transition-all"
+                      >
+                        Add Stop
+                      </button>
+                      <button
+                        onClick={() => setShowStopForm(false)}
+                        className="px-6 py-2.5 bg-surface-container text-on-surface-variant font-bold rounded-xl text-sm hover:bg-surface-container-high transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </div>
-                  <div style={{ marginBottom: "12px" }}>
-                    <label
-                      style={{
-                        display: "block",
-                        marginBottom: "6px",
-                        fontSize: "13px",
-                        fontWeight: 600,
-                      }}
-                    >
-                      Notes (optional)
-                    </label>
-                    <input
-                      style={s.input}
-                      value={stopNotes}
-                      onChange={(e) => setStopNotes(e.target.value)}
-                      placeholder="e.g. Arrive by train, check in early"
-                    />
-                  </div>
-                  <div style={{ display: "flex", gap: "8px" }}>
-                    <button style={s.btnPrimary} onClick={handleAddStop}>
-                      Add Stop
-                    </button>
-                    <button
-                      style={s.btnGhost}
-                      onClick={() => setShowStopForm(false)}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <button style={s.btnPrimary} onClick={() => setShowStopForm(true)}>
-                  + Add Stop
-                </button>
-              )}
-            </>
-          )}
+                ) : (
+                  <button
+                    onClick={() => setShowStopForm(true)}
+                    className="px-6 py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-xl shadow-card hover:opacity-90 transition-all"
+                  >
+                    + Add Stop
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

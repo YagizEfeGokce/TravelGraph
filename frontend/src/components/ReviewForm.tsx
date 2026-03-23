@@ -41,34 +41,21 @@ function ReviewForm({ targetId, targetType, onSuccess, onCancel }: Props) {
   }
 
   return (
-    <div
-      style={{
-        background: "#f8fafc",
-        borderRadius: "12px",
-        padding: "16px",
-        border: "1px solid #e5e7eb",
-        marginTop: "10px",
-      }}
-    >
-      <h4 style={{ margin: "0 0 12px", color: "#1f2937" }}>Write a Review</h4>
+    <div className="bg-surface-container-low rounded-2xl p-4 border border-outline-variant/30 mt-3">
+      <h4 className="font-black font-headline text-on-surface text-sm mb-4">Write a Review</h4>
 
-      <div style={{ marginBottom: "10px" }}>
-        <label style={{ display: "block", marginBottom: "6px", fontSize: "13px", fontWeight: 600 }}>
+      <div className="mb-4">
+        <label className="block text-xs font-bold text-outline uppercase tracking-widest mb-2 font-label">
           Rating
         </label>
-        <div style={{ display: "flex", gap: "6px" }}>
+        <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
               onClick={() => setRating(star)}
-              style={{
-                background: "none",
-                border: "none",
-                fontSize: "22px",
-                cursor: "pointer",
-                color: star <= rating ? "#f59e0b" : "#d1d5db",
-                padding: "0",
-              }}
+              className={`text-2xl p-0 bg-transparent border-none cursor-pointer transition-colors ${
+                star <= rating ? "text-amber-400" : "text-outline-variant"
+              }`}
             >
               ★
             </button>
@@ -76,8 +63,8 @@ function ReviewForm({ targetId, targetType, onSuccess, onCancel }: Props) {
         </div>
       </div>
 
-      <div style={{ marginBottom: "12px" }}>
-        <label style={{ display: "block", marginBottom: "6px", fontSize: "13px", fontWeight: 600 }}>
+      <div className="mb-4">
+        <label className="block text-xs font-bold text-outline uppercase tracking-widest mb-2 font-label">
           Comment
         </label>
         <textarea
@@ -85,52 +72,25 @@ function ReviewForm({ targetId, targetType, onSuccess, onCancel }: Props) {
           onChange={(e) => setComment(e.target.value)}
           placeholder="Share your experience..."
           rows={3}
-          style={{
-            width: "100%",
-            padding: "10px",
-            borderRadius: "8px",
-            border: "1px solid #d1d5db",
-            fontSize: "14px",
-            resize: "vertical",
-            boxSizing: "border-box",
-          }}
+          className="w-full px-4 py-3 rounded-xl bg-surface-container text-on-surface border border-outline-variant/30 text-sm resize-vertical focus:outline-none focus:border-primary transition-colors placeholder:text-outline"
         />
       </div>
 
       {error && (
-        <p style={{ color: "#dc2626", fontSize: "13px", marginBottom: "10px" }}>{error}</p>
+        <p className="text-error text-xs mb-3 font-medium">{error}</p>
       )}
 
-      <div style={{ display: "flex", gap: "8px" }}>
+      <div className="flex gap-2">
         <button
           onClick={handleSubmit}
           disabled={submitting}
-          style={{
-            background: "#14b8a6",
-            color: "white",
-            border: "none",
-            padding: "8px 16px",
-            borderRadius: "8px",
-            fontWeight: 600,
-            cursor: submitting ? "not-allowed" : "pointer",
-            fontSize: "14px",
-            opacity: submitting ? 0.7 : 1,
-          }}
+          className="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-lg text-sm hover:opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {submitting ? "Submitting..." : "Submit Review"}
         </button>
         <button
           onClick={onCancel}
-          style={{
-            background: "#e5e7eb",
-            color: "#374151",
-            border: "none",
-            padding: "8px 16px",
-            borderRadius: "8px",
-            fontWeight: 600,
-            cursor: "pointer",
-            fontSize: "14px",
-          }}
+          className="px-4 py-2 bg-surface-container text-on-surface-variant font-bold rounded-lg text-sm hover:bg-surface-container-high transition-colors"
         >
           Cancel
         </button>

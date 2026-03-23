@@ -58,7 +58,7 @@ type Review = {
 
 function StarRow({ rating }: { rating: number }) {
   return (
-    <span style={{ color: "#f59e0b", fontSize: "15px" }}>
+    <span className="text-amber-400 text-sm">
       {"★".repeat(rating)}{"☆".repeat(5 - rating)}
     </span>
   );
@@ -84,26 +84,20 @@ function ReviewList({
   if (reviews.length === 0) return null;
 
   return (
-    <div style={{ marginTop: "12px" }}>
+    <div className="mt-3 space-y-2">
       {reviews.map((r) => (
         <div
           key={r.id}
-          style={{
-            background: "#f8fafc",
-            borderRadius: "8px",
-            padding: "10px 12px",
-            marginBottom: "8px",
-            border: "1px solid #e5e7eb",
-          }}
+          className="bg-surface-container-low rounded-xl px-4 py-3 border border-outline-variant/20"
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+          <div className="flex items-center gap-2 mb-1">
             <StarRow rating={r.rating} />
-            <span style={{ fontWeight: 600, fontSize: "13px" }}>{r.user_name}</span>
-            <span style={{ fontSize: "12px", color: "#9ca3af" }}>
+            <span className="font-bold text-xs text-on-surface">{r.user_name}</span>
+            <span className="text-xs text-outline">
               {new Date(r.created_at).toLocaleDateString()}
             </span>
           </div>
-          <p style={{ margin: 0, fontSize: "13px", color: "#374151" }}>{r.comment}</p>
+          <p className="text-sm text-on-surface-variant">{r.comment}</p>
         </div>
       ))}
     </div>
@@ -133,7 +127,7 @@ function ReviewSection({
   }
 
   return (
-    <div style={{ marginTop: "8px" }}>
+    <div className="mt-3">
       <ReviewList targetId={item.id} targetType={type} refreshKey={refreshKey} />
       {showForm ? (
         <ReviewForm
@@ -148,17 +142,7 @@ function ReviewSection({
       ) : (
         <button
           onClick={handleWriteReview}
-          style={{
-            background: "none",
-            border: "1px solid #14b8a6",
-            color: "#14b8a6",
-            padding: "6px 12px",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontSize: "13px",
-            fontWeight: 500,
-            marginTop: "6px",
-          }}
+          className="mt-2 px-3 py-1.5 text-xs font-bold text-primary border border-primary/30 rounded-lg hover:bg-primary/5 transition-colors"
         >
           Write a Review
         </button>
@@ -206,187 +190,202 @@ function DestinationDetailPage() {
 
   if (loading) {
     return (
-      <div style={{ padding: "60px", textAlign: "center", color: "#6b7280" }}>
-        Loading...
+      <div className="min-h-screen bg-background flex items-center justify-center pt-24">
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4" />
+          <p className="text-on-surface-variant font-medium">Loading destination...</p>
+        </div>
       </div>
     );
   }
 
   if (error || !destination) {
     return (
-      <div style={{ padding: "60px", textAlign: "center", color: "#dc2626" }}>
-        {error || "Destination not found."}
+      <div className="min-h-screen bg-background flex items-center justify-center pt-24">
+        <div className="text-center">
+          <p className="text-error font-medium text-lg">{error || "Destination not found."}</p>
+        </div>
       </div>
     );
   }
 
-  const sectionTitle = (text: string) => (
-    <h2
-      style={{
-        fontSize: "24px",
-        fontWeight: 700,
-        marginBottom: "16px",
-        color: "#1f2937",
-        borderBottom: "2px solid #f0fafa",
-        paddingBottom: "8px",
-      }}
-    >
+  const priceLabel = (price: number) =>
+    price === 0 ? "Free" : `₺${price.toFixed(0)}`;
+
+  const SectionTitle = ({ text }: { text: string }) => (
+    <h2 className="text-2xl font-black font-headline text-on-surface tracking-tight mb-6 pb-2 border-b border-outline-variant/30">
       {text}
     </h2>
   );
 
-  const card = {
-    background: "white",
-    borderRadius: "14px",
-    padding: "18px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
-    border: "1px solid #e5e7eb",
-  };
-
-  const grid = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-    gap: "16px",
-  };
-
-  const priceLabel = (price: number) =>
-    price === 0 ? "Free" : `₺${price.toFixed(0)}`;
-
   return (
-    <div style={{ padding: "40px", maxWidth: "1100px", margin: "0 auto" }}>
-      {/* Hero */}
-      <section style={{ marginBottom: "40px" }}>
-        <h1 style={{ fontSize: "40px", fontWeight: 800, marginBottom: "6px", color: "#1f2937" }}>
-          {destination.name}
-        </h1>
-        <p style={{ color: "#14b8a6", fontWeight: 600, marginBottom: "10px" }}>
-          {destination.country}
-        </p>
-        <p style={{ color: "#6b7280", lineHeight: 1.7, maxWidth: "700px" }}>
-          {destination.description}
-        </p>
-      </section>
+    <div className="bg-background min-h-screen pt-24 pb-16 px-6">
+      <div className="max-w-screen-xl mx-auto">
+        {/* Hero */}
+        <section className="mb-12">
+          <div className="relative rounded-3xl overflow-hidden bg-surface-container-high p-10 border border-outline-variant/20 shadow-ambient">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10" />
+            <div className="absolute inset-0 node-edge-motif pointer-events-none" />
+            <div className="relative z-10">
+              <span className="inline-block px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold tracking-widest uppercase mb-4 font-label">
+                {destination.country}
+              </span>
+              <h1 className="text-5xl md:text-7xl font-black font-headline text-on-surface tracking-tight mb-4">
+                {destination.name}
+              </h1>
+              <p className="text-on-surface-variant leading-relaxed max-w-2xl text-lg">
+                {destination.description}
+              </p>
+            </div>
+          </div>
+        </section>
 
-      {/* Activities */}
-      {activities.length > 0 && (
-        <section style={{ marginBottom: "40px" }}>
-          {sectionTitle(`Activities (${activities.length})`)}
-          <div style={grid}>
-            {activities.map((act) => (
-              <div key={act.id} style={card}>
-                <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "6px" }}>
-                  {act.name}
-                </h3>
-                <p style={{ fontSize: "13px", color: "#6b7280", marginBottom: "10px", lineHeight: 1.5 }}>
-                  {act.description}
-                </p>
-                <div style={{ fontSize: "13px", color: "#374151", display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                  <span>⏱ {act.duration_hours}h</span>
-                  <span>💰 {priceLabel(act.price)}</span>
+        {/* Activities */}
+        {activities.length > 0 && (
+          <section className="mb-12">
+            <SectionTitle text={`Activities (${activities.length})`} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {activities.map((act) => (
+                <div
+                  key={act.id}
+                  className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card"
+                >
+                  <h3 className="font-black font-headline text-on-surface text-base mb-2">
+                    {act.name}
+                  </h3>
+                  <p className="text-sm text-on-surface-variant leading-relaxed mb-3">
+                    {act.description}
+                  </p>
+                  <div className="flex flex-wrap gap-3 text-xs font-bold mb-2">
+                    <span className="px-2 py-1 rounded-lg bg-surface-container text-on-surface-variant">
+                      {act.duration_hours}h
+                    </span>
+                    <span className="px-2 py-1 rounded-lg bg-primary/10 text-primary">
+                      {priceLabel(act.price)}
+                    </span>
+                  </div>
+                  {act.address && (
+                    <p className="text-xs text-outline mt-1 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-xs">location_on</span>
+                      {act.address}
+                    </p>
+                  )}
+                  <ReviewSection item={act} type="activity" />
                 </div>
-                {act.address && (
-                  <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "6px" }}>
-                    📍 {act.address}
-                  </p>
-                )}
-                <ReviewSection item={act} type="activity" />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Restaurants */}
-      {restaurants.length > 0 && (
-        <section style={{ marginBottom: "40px" }}>
-          {sectionTitle(`Restaurants (${restaurants.length})`)}
-          <div style={grid}>
-            {restaurants.map((r) => (
-              <div key={r.id} style={card}>
-                <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "6px" }}>
-                  {r.name}
-                </h3>
-                <p style={{ fontSize: "13px", color: "#14b8a6", fontWeight: 600, marginBottom: "6px" }}>
-                  {r.cuisine_type}
-                </p>
-                <div style={{ fontSize: "13px", color: "#374151", display: "flex", gap: "12px" }}>
-                  <span style={{ textTransform: "capitalize" }}>💲 {r.price_range}</span>
-                  {r.rating && <span>⭐ {r.rating.toFixed(1)}</span>}
-                </div>
-                {r.address && (
-                  <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "6px" }}>
-                    📍 {r.address}
-                  </p>
-                )}
-                <ReviewSection item={r} type="restaurant" />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Accommodations */}
-      {accommodations.length > 0 && (
-        <section style={{ marginBottom: "40px" }}>
-          {sectionTitle(`Where to Stay (${accommodations.length})`)}
-          <div style={grid}>
-            {accommodations.map((acc) => (
-              <div key={acc.id} style={card}>
-                <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "6px" }}>
-                  {acc.name}
-                </h3>
-                <p style={{ fontSize: "13px", color: "#6b7280", marginBottom: "8px", textTransform: "capitalize" }}>
-                  {acc.type.replace("_", " ")} {"★".repeat(acc.star_rating)}
-                </p>
-                <p style={{ fontSize: "15px", fontWeight: 700, color: "#14b8a6" }}>
-                  ₺{acc.price_per_night.toFixed(0)} / night
-                </p>
-                {acc.address && (
-                  <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "6px" }}>
-                    📍 {acc.address}
-                  </p>
-                )}
-                <ReviewSection item={acc} type="accommodation" />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Festivals */}
-      {festivals.length > 0 && (
-        <section style={{ marginBottom: "40px" }}>
-          {sectionTitle(`Festivals & Events (${festivals.length})`)}
-          <div style={grid}>
-            {festivals.map((f) => (
-              <div key={f.id} style={card}>
-                <h3 style={{ fontSize: "16px", fontWeight: 700, marginBottom: "6px" }}>
-                  {f.name}
-                </h3>
-                <p style={{ fontSize: "13px", color: "#6b7280", marginBottom: "8px", lineHeight: 1.5 }}>
-                  {f.description}
-                </p>
-                <p style={{ fontSize: "13px", color: "#374151" }}>
-                  📅 {f.start_date} → {f.end_date}
-                </p>
-                {f.ticket_price != null && (
-                  <p style={{ fontSize: "13px", color: "#374151", marginTop: "4px" }}>
-                    🎟 {f.ticket_price === 0 ? "Free" : `₺${f.ticket_price}`}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {activities.length === 0 &&
-        restaurants.length === 0 &&
-        accommodations.length === 0 && (
-          <p style={{ color: "#9ca3af", textAlign: "center", padding: "40px" }}>
-            No details available for this destination yet.
-          </p>
+              ))}
+            </div>
+          </section>
         )}
+
+        {/* Restaurants */}
+        {restaurants.length > 0 && (
+          <section className="mb-12">
+            <SectionTitle text={`Restaurants (${restaurants.length})`} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {restaurants.map((r) => (
+                <div
+                  key={r.id}
+                  className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card"
+                >
+                  <h3 className="font-black font-headline text-on-surface text-base mb-1">
+                    {r.name}
+                  </h3>
+                  <p className="text-sm font-bold text-secondary mb-2">{r.cuisine_type}</p>
+                  <div className="flex flex-wrap gap-3 text-xs font-bold mb-2">
+                    <span className="px-2 py-1 rounded-lg bg-surface-container text-on-surface-variant capitalize">
+                      {r.price_range}
+                    </span>
+                    {r.rating && (
+                      <span className="px-2 py-1 rounded-lg bg-amber-50 text-amber-700">
+                        ★ {r.rating.toFixed(1)}
+                      </span>
+                    )}
+                  </div>
+                  {r.address && (
+                    <p className="text-xs text-outline flex items-center gap-1">
+                      <span className="material-symbols-outlined text-xs">location_on</span>
+                      {r.address}
+                    </p>
+                  )}
+                  <ReviewSection item={r} type="restaurant" />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Accommodations */}
+        {accommodations.length > 0 && (
+          <section className="mb-12">
+            <SectionTitle text={`Where to Stay (${accommodations.length})`} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {accommodations.map((acc) => (
+                <div
+                  key={acc.id}
+                  className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card"
+                >
+                  <h3 className="font-black font-headline text-on-surface text-base mb-1">
+                    {acc.name}
+                  </h3>
+                  <p className="text-sm text-on-surface-variant mb-2 capitalize">
+                    {acc.type.replace("_", " ")} {"★".repeat(acc.star_rating)}
+                  </p>
+                  <p className="text-lg font-black text-primary font-headline">
+                    ₺{acc.price_per_night.toFixed(0)}{" "}
+                    <span className="text-sm font-normal text-on-surface-variant">/ night</span>
+                  </p>
+                  {acc.address && (
+                    <p className="text-xs text-outline mt-2 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-xs">location_on</span>
+                      {acc.address}
+                    </p>
+                  )}
+                  <ReviewSection item={acc} type="accommodation" />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Festivals */}
+        {festivals.length > 0 && (
+          <section className="mb-12">
+            <SectionTitle text={`Festivals & Events (${festivals.length})`} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {festivals.map((f) => (
+                <div
+                  key={f.id}
+                  className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card"
+                >
+                  <h3 className="font-black font-headline text-on-surface text-base mb-2">
+                    {f.name}
+                  </h3>
+                  <p className="text-sm text-on-surface-variant leading-relaxed mb-3">
+                    {f.description}
+                  </p>
+                  <p className="text-xs text-on-surface-variant flex items-center gap-1 mb-1">
+                    <span className="material-symbols-outlined text-xs text-primary">calendar_month</span>
+                    {f.start_date} → {f.end_date}
+                  </p>
+                  {f.ticket_price != null && (
+                    <p className="text-xs font-bold text-primary">
+                      {f.ticket_price === 0 ? "Free entry" : `₺${f.ticket_price}`}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {activities.length === 0 &&
+          restaurants.length === 0 &&
+          accommodations.length === 0 && (
+            <div className="text-center py-20 text-on-surface-variant">
+              <p className="text-lg font-medium">No details available for this destination yet.</p>
+            </div>
+          )}
+      </div>
     </div>
   );
 }

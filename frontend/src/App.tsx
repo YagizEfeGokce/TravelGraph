@@ -17,18 +17,22 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/explore" element={<ExplorePage />} />
-          <Route path="/destinations/:id" element={<DestinationDetailPage />} />
-          <Route path="/planner" element={<PlannerPage />} />
-          <Route path="/planner/:id/budget" element={<BudgetPlannerPage />} />
-          <Route path="/festivals" element={<FestivalsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-        </Routes>
+        <div className="flex flex-col min-h-screen bg-background">
+          <Navbar />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/explore" element={<ExplorePage />} />
+              <Route path="/destinations/:id" element={<DestinationDetailPage />} />
+              <Route path="/planner" element={<PlannerPage />} />
+              <Route path="/planner/:id/budget" element={<BudgetPlannerPage />} />
+              <Route path="/festivals" element={<FestivalsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+            </Routes>
+          </main>
+        </div>
       </BrowserRouter>
     </AuthProvider>
   );
