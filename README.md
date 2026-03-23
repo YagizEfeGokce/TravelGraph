@@ -1,41 +1,41 @@
 # TravelGraph 🌍
 
-> Graf tabanlı akıllı seyahat rota planlama ve destinasyon keşif platformu.
+> A graph-based intelligent travel route planning and destination discovery platform.
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react)](https://react.dev)
-[![FalkorDB](https://img.shields.io/badge/FalkorDB-Graf%20DB-FF4B4B?style=flat)](https://falkordb.com)
+[![FalkorDB](https://img.shields.io/badge/FalkorDB-Graph%20DB-FF4B4B?style=flat)](https://falkordb.com)
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat&logo=vite)](https://vitejs.dev)
 
-## 📸 Ekran Görüntüleri
+## 📸 Screenshots
 
-| Ana Sayfa | Rota Planlayıcı | Destinasyon Detay |
-|-----------|----------------|-------------------|
+| Home | Route Planner | Destination Detail |
+|------|---------------|--------------------|
 | ![Home](screenshots/home.png) | ![Planner](screenshots/planner.png) | ![Detail](screenshots/destination-detail.png) |
 
-| Bütçe Planlayıcı | Festival Takvimi | API Docs |
-|-----------------|-----------------|---------|
+| Budget Planner | Festival Calendar | API Docs |
+|----------------|-------------------|----------|
 | ![Budget](screenshots/budget.png) | ![Festival](screenshots/festivals.png) | ![API](screenshots/api-docs.png) |
 
-## ✨ Özellikler
+## ✨ Features
 
-- 🗺️ **Destinasyon Keşfi** — Şehir bilgisi, önemli noktalar, giriş gerektirmez
-- 🏨 **Konaklama Önerileri** — Bütçeye göre otel/hostel filtreleme
-- 🍽️ **Yemek Önerileri** — Restoran + mutfak türü keşfi
-- 🎯 **Aktivite Planlama** — Turistik yerler, özel aktiviteler
-- 🎉 **Festival Takvimi** — Tarihe göre etkinlik keşfi
-- 💶 **Bütçe Planlayıcı** — Otel / yemek / ulaşım / aktivite kalemleri
-- 🔗 **Graf Tabanlı Öneri** — FalkorDB Cypher traversal ile kişisel öneri
-- 💬 **Kullanıcı Yorumları** — Giriş yapanlar için opsiyonel
+- 🗺️ **Destination Discovery** — City info, points of interest, no login required
+- 🏨 **Accommodation Suggestions** — Hotel/hostel filtering by budget
+- 🍽️ **Restaurant Recommendations** — Restaurant + cuisine type discovery
+- 🎯 **Activity Planning** — Tourist attractions and custom activities
+- 🎉 **Festival Calendar** — Event discovery by date
+- 💶 **Budget Planner** — Hotel / food / transport / activity line items
+- 🔗 **Graph-Based Recommendations** — Personalized suggestions via FalkorDB Cypher traversal
+- 💬 **User Reviews** — Optional reviews for logged-in users
 
-## 🚀 Hızlı Başlangıç
+## 🚀 Quick Start
 
-### Gereksinimler
+### Requirements
 - Python 3.11+
 - Node.js 20+
 - Docker Desktop
 
-### 1. FalkorDB'yi Başlat
+### 1. Start FalkorDB
 ```bash
 docker compose up -d
 ```
@@ -50,10 +50,10 @@ pip install -r requirements.txt
 cp .env.example .env
 uvicorn main:app --reload
 ```
-API: http://localhost:8000  
+API: http://localhost:8000
 Swagger Docs: http://localhost:8000/docs
 
-### 3. Seed Verisi Yükle
+### 3. Load Seed Data
 ```bash
 cd backend
 python -m db.seed
@@ -66,49 +66,49 @@ npm install
 cp .env.example .env
 npm run dev
 ```
-Uygulama: http://localhost:5173
+App: http://localhost:5173
 
-## 🏗️ Mimari
+## 🏗️ Architecture
 
 ```
 TravelGraph
 ├── backend/                  # FastAPI + FalkorDB
-│   ├── routers/              # API endpoint'leri
-│   ├── models/               # Pydantic şemaları (14 entity)
-│   ├── db/                   # FalkorDB bağlantısı & seed
-│   └── services/             # Öneri motoru & Cypher sorguları
+│   ├── routers/              # API endpoints
+│   ├── models/               # Pydantic schemas (14 entities)
+│   ├── db/                   # FalkorDB connection & seed
+│   └── services/             # Recommendation engine & Cypher queries
 └── frontend/                 # React + Vite
     └── src/
-        ├── pages/            # 8 sayfa
-        ├── components/       # UI bileşenleri
-        ├── hooks/            # Custom React hook'lar
-        ├── api/              # Axios istek katmanı
+        ├── pages/            # 9 pages
+        ├── components/       # UI components
+        ├── hooks/            # Custom React hooks
+        ├── api/              # Axios request layer
         └── contexts/         # Auth state
 ```
 
-## 🗂️ Varlıklar (14 Entity)
+## 🗂️ Entities (14 Entity Types)
 
-| Entity | Açıklama | İlişki Türü |
-|--------|----------|-------------|
-| User | Gezgin / üye | — |
-| Destination | Şehir & ülke | — |
-| Itinerary | Seyahat planı | User'a ait |
-| ItineraryStop | Plan ↔ Durak köprüsü | M:N |
-| Activity | Turistik yer & özel aktivite | Destination'da |
-| Accommodation | Otel / hostel | Destination'da |
-| Transport | Uçuş / tren / otobüs | Destination bağlar |
-| Restaurant | Restoran + mutfak türü | Destination'da |
-| Festival | Etkinlik + tarih aralığı | Destination'da |
-| BudgetPlan | Kullanıcı bütçesi + kalemleri | Itinerary'ye ait |
-| Review | Yorum & puan (opsiyonel) | User yazar |
-| Season | Hava & sezon bilgisi | Destination için |
-| Category | Müze, Doğa, Yemek... | M:N Activity ile |
-| Tag | Etiket & filtre | M:N Activity ile |
+| Entity | Description | Relationship |
+|--------|-------------|--------------|
+| User | Traveler / member | — |
+| Destination | City & country | — |
+| Itinerary | Travel plan | Owned by User |
+| ItineraryStop | Plan ↔ Stop bridge | M:N |
+| Activity | Tourist attractions & custom activities | Located in Destination |
+| Accommodation | Hotel / hostel | Located in Destination |
+| Transport | Flight / train / bus | Connects Destinations |
+| Restaurant | Restaurant + cuisine type | Located in Destination |
+| Festival | Event + date range | Located in Destination |
+| BudgetPlan | User budget + line items | Belongs to Itinerary |
+| Review | Comment & rating (optional) | Written by User |
+| Season | Weather & season info | For Destination |
+| Category | Museum, Nature, Food... | M:N with Activity |
+| Tag | Label & filter | M:N with Activity |
 
-## 🔗 FalkorDB Graf Sorgusu Örneği
+## 🔗 FalkorDB Graph Query Example
 
 ```cypher
-// Bütçesi 500€, müze seven, Nisan'da gidecek kullanıcıya öneri
+// Recommendation for a user with €500 budget, loves museums, travelling in April
 MATCH (u:User {id: $user_id})-[:VISITED]->(visited:Destination)
 MATCH (d:Destination)<-[:LOCATED_IN]-(a:Activity)-[:IN_CATEGORY]->(c:Category {name: "Museum"})
 MATCH (d)<-[:HELD_IN]-(f:Festival)-[:IN_SEASON]->(s:Season {name: "Spring"})
@@ -120,14 +120,20 @@ ORDER BY museum_count DESC
 LIMIT 5
 ```
 
-## 👥 Ekip
+## 👥 Team
 
-| İsim | Rol |
-|------|-----|
-| Yağız Efe Gökçe | Mimar & Backend |
+| Name | Role |
+|------|------|
+| Yağız Efe Gökçe | Architect & Backend Lead |
 | Berfin Aksoy | Frontend |
-| Emirhan Polat | Feature & Dokümantasyon |
+| Emirhan Polat | Features & Documentation |
 
-## 📄 Lisans
+## 🌐 Live URLs
+
+- Frontend: https://travel-graph.vercel.app
+- Backend API: https://travelgraph-production-069c.up.railway.app
+- GitHub: https://github.com/YagizEfeGokce/TravelGraph
+
+## 📄 License
 
 MIT
