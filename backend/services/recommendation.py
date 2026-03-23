@@ -9,6 +9,7 @@ Three strategies are implemented:
 3. **Shortest path** — uses FalkorDB's ``shortestPath`` to find the fewest-hop
    connection between two destinations via ``CONNECTED_BY`` edges.
 """
+from __future__ import annotations
 
 from typing import Any
 

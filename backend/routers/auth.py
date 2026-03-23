@@ -1,4 +1,5 @@
 """Authentication routes: register, login, token refresh, and current-user lookup."""
+from __future__ import annotations
 
 import time
 from datetime import datetime, timezone

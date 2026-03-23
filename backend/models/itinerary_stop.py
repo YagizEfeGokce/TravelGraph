@@ -1,4 +1,5 @@
 """Pydantic v2 schemas for ItineraryStop entities."""
+from __future__ import annotations
 
 from typing import Any
 

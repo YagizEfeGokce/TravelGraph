@@ -1,4 +1,5 @@
 """Pydantic v2 schemas for Review entities."""
+from __future__ import annotations
 
 from typing import Any, Literal
 

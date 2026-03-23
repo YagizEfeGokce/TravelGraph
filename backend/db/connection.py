@@ -1,4 +1,5 @@
 """FalkorDB connection management: factory, dependency, health check, and index creation."""
+from __future__ import annotations
 
 import logging
 import time
