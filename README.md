@@ -2,10 +2,10 @@
 
 > A graph-based intelligent travel route planning and destination discovery platform.
 
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react)](https://react.dev)
-[![FalkorDB](https://img.shields.io/badge/FalkorDB-Graph%20DB-FF4B4B?style=flat)](https://falkordb.com)
-[![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat&logo=vite)](https://vitejs.dev)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat&logo=fastapi)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react)
+![FalkorDB](https://img.shields.io/badge/FalkorDB-Graph%20DB-FF4B4B?style=flat)
+![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat&logo=vite)
 
 ## 📸 Screenshots
 
@@ -130,9 +130,8 @@ LIMIT 5
 
 ## 🌐 Live URLs
 
-- Frontend: https://travel-graph.vercel.app
-- Backend API: https://travelgraph-production-069c.up.railway.app
-- GitHub: https://github.com/YagizEfeGokce/TravelGraph
+- **Frontend:** https://travel-graph.vercel.app
+- **Backend API:** https://travelgraph-production-069c.up.railway.app
 
 ## 📄 License
 
