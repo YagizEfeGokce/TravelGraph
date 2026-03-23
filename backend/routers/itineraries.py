@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
 
-from fastapi import APIRouter, Body, Depends, HTTPException, status
+from fastapi import APIRouter, Body, Depends, HTTPException, Response, status
 
 from core.dependencies import get_current_user, get_optional_user
 from db.connection import get_db
@@ -141,7 +141,7 @@ def delete_itinerary(
     itinerary_id: str,
     db: Any = Depends(get_db),
     current_user: dict = Depends(get_current_user),
-) -> None:
+) -> Response:
     """Delete an itinerary and all its stops.  Only the owner may delete."""
     props, owner_id = _get_itinerary_props(db, itinerary_id)
     _require_owner(owner_id, current_user)
@@ -152,6 +152,7 @@ def delete_itinerary(
         "\nDETACH DELETE i, s",
         {"id": itinerary_id},
     )
+    return Response(status_code=204)
 
 
 # ── Stop endpoints ─────────────────────────────────────────────────────────────
@@ -249,7 +250,7 @@ def delete_stop(
     stop_id: str,
     db: Any = Depends(get_db),
     current_user: dict = Depends(get_current_user),
-) -> None:
+) -> Response:
     """Delete a single stop from an itinerary.  Only the owner may delete."""
     _, owner_id = _get_itinerary_props(db, itinerary_id)
     _require_owner(owner_id, current_user)
@@ -270,6 +271,7 @@ def delete_stop(
         "\nDETACH DELETE s",
         {"iid": itinerary_id, "sid": stop_id},
     )
+    return Response(status_code=204)
 
 
 @router.put("/{itinerary_id}/stops/{stop_id}/reorder")

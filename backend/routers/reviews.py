@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from pydantic import BaseModel, Field
 
 from core.dependencies import get_current_user, get_optional_user
@@ -104,7 +104,7 @@ def delete_review(
     review_id: str,
     db: Any = Depends(get_db),
     current_user: dict = Depends(get_current_user),
-) -> None:
+) -> Response:
     """Delete a review (only the author can delete it)."""
     res = db.query(
         "MATCH (u:User)-[:WROTE]->(r:Review {id: $id}) RETURN u.id",
@@ -121,3 +121,4 @@ def delete_review(
         "MATCH (r:Review {id: $id}) DETACH DELETE r",
         {"id": review_id}
     )
+    return Response(status_code=204)
