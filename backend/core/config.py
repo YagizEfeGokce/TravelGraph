@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     # CORS — stored as comma-separated string in .env
     CORS_ORIGINS: str = (
         "http://localhost:5173,"
+        "https://travel-graph.vercel.app,"
         "https://travelgraph.vercel.app"
     )
 
