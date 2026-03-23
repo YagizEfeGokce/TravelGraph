@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TravelGraph | Kinetic Explorer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed-dim": "#bbc7dd",
+                        "on-secondary-container": "#00734c",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "outline": "#737685",
+                        "on-background": "#041b3c",
+                        "on-surface-variant": "#434654",
+                        "surface-dim": "#cadaff",
+                        "primary-fixed": "#dae2ff",
+                        "on-surface": "#041b3c",
+                        "on-secondary": "#ffffff",
+                        "background": "#f9f9ff",
+                        "surface-container": "#e8edff",
+                        "error": "#ba1a1a",
+                        "tertiary": "#394456",
+                        "secondary-container": "#82f9be",
+                        "tertiary-fixed": "#d7e3fa",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#c8d4ea",
+                        "surface-container-high": "#e0e8ff",
+                        "outline-variant": "#c3c6d6",
+                        "secondary-fixed": "#82f9be",
+                        "on-tertiary-fixed": "#101c2c",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f1f3ff",
+                        "surface-bright": "#f9f9ff",
+                        "on-tertiary-fixed-variant": "#3c4759",
+                        "surface-variant": "#d7e2ff",
+                        "tertiary-container": "#505c6f",
+                        "secondary-fixed-dim": "#65dca4",
+                        "on-primary-container": "#c4d2ff",
+                        "surface-container-highest": "#d7e2ff",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#edf0ff",
+                        "on-secondary-fixed-variant": "#005235",
+                        "surface-tint": "#0c56d0",
+                        "inverse-primary": "#b2c5ff",
+                        "on-primary-fixed": "#001848",
+                        "primary": "#003d9b",
+                        "inverse-surface": "#1d3052",
+                        "secondary": "#006c47",
+                        "primary-container": "#0052cc",
+                        "surface": "#f9f9ff"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-extrabold text-blue-700 dark:text-blue-400 tracking-tighter">TravelGraph</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-200" href="#">Explore</a>
+<a class="text-blue-700 dark:text-blue-400 font-bold border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Plan</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-high border-none rounded-lg text-sm focus:ring-2 focus:ring-primary w-64" placeholder="Search destinations..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-on-surface hover:bg-slate-50 p-2 rounded-full transition-all">account_circle</button>
+</div>
+</div>
+<div class="bg-slate-100 dark:bg-slate-800 h-px w-full absolute bottom-0"></div>
+</header>
+<main class="flex-grow flex flex-col lg:flex-row max-w-screen-2xl mx-auto w-full">
+<!-- SideNavBar (Desktop Only) -->
+<aside class="hidden lg:flex flex-col h-[calc(100vh-72px)] w-64 p-4 sticky top-[72px] bg-white border-r border-slate-100">
+<div class="mb-8 px-4">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-white">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="font-headline font-bold text-sm">Kinetic Explorer</p>
+<p class="text-xs text-outline">Kyoto Expedition</p>
+</div>
+</div>
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-3 rounded-lg font-bold text-sm shadow-lg shadow-primary/20 hover:scale-105 duration-300 ease-out flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span> Start Your Graph
+                </button>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-semibold">Home</span>
+</a>
+<a class="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg px-4 py-3 font-semibold" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+<span>My Graphs</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-semibold">Budget</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-semibold">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<div class="flex-grow p-6 lg:p-10 flex flex-col md:flex-row gap-8 overflow-hidden">
+<!-- Left: Chronological Itinerary -->
+<section class="flex-1 space-y-8 overflow-y-auto pr-2 custom-scrollbar">
+<div class="flex justify-between items-end">
+<div>
+<span class="text-[10px] uppercase tracking-widest text-primary font-bold">Day 04 — Kyoto</span>
+<h1 class="text-4xl font-headline font-extrabold tracking-tight mt-1">The Zen Circuit</h1>
+</div>
+<button class="text-sm font-bold text-primary flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-base">calendar_today</span> Edit Date
+                    </button>
+</div>
+<div class="space-y-6">
+<!-- Morning Slot -->
+<div class="group relative pl-8 border-l-2 border-primary-fixed hover:border-primary transition-colors pb-6">
+<div class="absolute -left-2 top-0 w-4 h-4 rounded-full bg-primary border-4 border-background"></div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold text-outline">08:30 AM — 10:00 AM</span>
+<span class="px-3 py-1 bg-surface-container text-primary text-[10px] font-bold rounded-full">TRANSPORT</span>
+</div>
+<div class="bg-surface-container-low p-5 rounded-xl transition-all group-hover:bg-surface-container-high group-hover:shadow-sm">
+<h3 class="font-headline font-bold text-lg">Private Shinkansen Transfer</h3>
+<p class="text-sm text-outline mt-1">Tokyo Station to Kyoto Central. Luxury cabin reserved.</p>
+<div class="mt-4 flex items-center justify-between">
+<span class="text-sm font-bold text-on-surface">$142.00</span>
+<button class="text-primary material-symbols-outlined text-lg">more_horiz</button>
+</div>
+</div>
+</div>
+<!-- Activity Slot -->
+<div class="group relative pl-8 border-l-2 border-primary-fixed hover:border-primary transition-colors pb-6">
+<div class="absolute -left-2 top-0 w-4 h-4 rounded-full bg-primary border-4 border-background"></div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold text-outline">11:30 AM — 02:00 PM</span>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold rounded-full">ACTIVITIES</span>
+</div>
+<div class="relative overflow-hidden rounded-xl group-hover:shadow-lg transition-all">
+<img class="w-full h-48 object-cover" data-alt="Golden Pavilion temple in Kyoto reflecting in water" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMg6unl_LOpw6TK2SBLFDwVvuoGNxx7fpj5ES4cZWRZcNj1O9W6BkmOyJ_gtUBvLOVaRCRMnPcY3BFUSjzfLWBNCu-14-r6SLR4UV5ZiM9rts41mD4rgsJTG9nDhtMeHdyZ0HYKN5FcaisrKW0leC6DLfctwYlIUM8D4koekMgaxbY4k1Te6RjPf3yJKJzqbqCiqm_ZvdMAvXMjmw5aPNUY8e13EHFlWWpz0wSWdTLTMbYvxYarQo2ArbqiDS6Vm28aGiia6wrMf8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-5">
+<h3 class="font-headline font-bold text-xl text-white">Kinkaku-ji Zen Meditation</h3>
+<div class="flex items-center justify-between mt-2">
+<span class="text-sm font-medium text-white/90">Entry &amp; Guided Tour</span>
+<span class="text-sm font-bold text-secondary-fixed">$45.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Accommodation Swap Spot -->
+<div class="group relative pl-8 border-l-2 border-primary-fixed hover:border-primary transition-colors">
+<div class="absolute -left-2 top-0 w-4 h-4 rounded-full bg-primary border-4 border-background"></div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold text-outline">04:00 PM CHECK-IN</span>
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold rounded-full">ACCOMMODATION</span>
+</div>
+<div class="bg-white border border-outline-variant/20 p-5 rounded-xl flex items-center justify-between hover:border-primary/40 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-lg bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Minimalist Japanese Ryokan room with tatami" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkfhTv8YJ4SbLY0oLdCVIXaE56Tx8oqygK7ZuOO90YqNQW2jKJDSW6EEJ6bodaxk6eH-iz8gwSn8cDCsH4NQTex24XgZ6p8eIoWgunHTmbbkbo_t9czJ6BIXGMzIwJzzFIJLBIBz4_HbdGoYUsy_JlQSkHUGS4kXOC4aGfWeum0e6K8ZLuM3q6bn-JgMANHMVo9ctt0P7C8oB9_H5Yf5AJ1xZQvr4WKkKkdYY--nId3nt9EcNSIgN-HLhXvIqSKjIhc2cnqxTjX_o"/>
+</div>
+<div>
+<h3 class="font-headline font-bold text-base">Hoshinoya Kyoto Ryokan</h3>
+<p class="text-xs text-outline">3 Nights • Deluxe River View</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-on-surface">$1,250.00</p>
+<button class="text-[10px] font-bold text-primary underline">SWAP STAY</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right: Real-Time Budget Breakdown -->
+<section class="w-full md:w-[400px] space-y-6">
+<div class="bg-surface-container-lowest p-8 rounded-[2rem] shadow-xl shadow-on-surface/5 border border-outline-variant/10">
+<div class="mb-8">
+<span class="text-[10px] font-bold uppercase tracking-widest text-outline">Current Forecast</span>
+<h2 class="text-3xl font-headline font-extrabold mt-1">$4,820.50</h2>
+<div class="flex items-center gap-2 mt-2">
+<span class="text-xs font-semibold text-secondary flex items-center">
+<span class="material-symbols-outlined text-sm">trending_down</span> 12% under budget
+                            </span>
+<span class="text-xs text-outline">of $5,500 target</span>
+</div>
+</div>
+<!-- Budget Bar Graphs (Visual Analytics Style) -->
+<div class="space-y-6">
+<div class="space-y-2">
+<div class="flex justify-between items-center text-xs font-bold">
+<span class="text-on-surface">Accommodation</span>
+<span class="text-outline">$2,400.00</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 43%;"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between items-center text-xs font-bold">
+<span class="text-on-surface">Transport</span>
+<span class="text-outline">$850.00</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 15%;"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between items-center text-xs font-bold">
+<span class="text-on-surface">Food &amp; Dining</span>
+<span class="text-outline">$620.50</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary-fixed-dim rounded-full" style="width: 11%;"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between items-center text-xs font-bold">
+<span class="text-on-surface">Activities</span>
+<span class="text-outline">$950.00</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container rounded-full" style="width: 17%;"></div>
+</div>
+</div>
+</div>
+<div class="mt-10 pt-6 border-t border-outline-variant/10">
+<h4 class="text-xs font-bold text-on-surface mb-4 uppercase tracking-tighter">Budget Alerts</h4>
+<div class="flex gap-3 items-start bg-secondary/5 p-4 rounded-xl">
+<span class="material-symbols-outlined text-secondary text-lg">info</span>
+<p class="text-xs leading-relaxed text-on-secondary-fixed-variant">
+                                Swapping your hotel to <span class="font-bold">Park Hyatt Kyoto</span> would increase total budget by <span class="font-bold">$420.00</span>.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Contextual Card: Map Preview -->
+<div class="bg-surface-container-high rounded-3xl overflow-hidden relative h-40 group cursor-pointer">
+<img class="w-full h-full object-cover grayscale opacity-40 group-hover:scale-110 transition-transform duration-700" data-alt="Stylized topographic map of Kyoto city" data-location="Kyoto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDhmXWqxzUrNhUy_Tqd2CAhX9OGmdzV2hBGb9Uw2IXAxshUBEY7OdkOdLGZ6H2bNW2dslakVRkaa3_MMU1tMACH-WLRExoLU5JJ1gQ4S-XrTWoisRF4qqfrmuObNkEFQ9UMrQjLNE9MLGu22TUGXA2Iv5-rlSP7evDrEtJ4I19dyH9WMjfhZmIqbNm1FuVRHgRF0tsBJTs084g8a0QqOHudMJf_3gt5iCiSXNVXR2_LLSPq4nhNo9ZkrKCDyOVuzWoUo16IQ1tnq0"/>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+<p class="font-headline font-bold text-primary">View Interactive Graph</p>
+<p class="text-[10px] text-outline mt-1">12 connected nodes in Kyoto</p>
+<span class="material-symbols-outlined mt-2 text-primary">open_in_new</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 w-full py-12 px-6 mt-auto border-t border-slate-200 dark:border-slate-800">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+<div class="space-y-4">
+<span class="text-lg font-bold text-blue-800 dark:text-blue-300">TravelGraph</span>
+<p class="font-['Inter'] text-sm text-slate-500 dark:text-slate-400">© 2024 TravelGraph. The Intelligent Cartographer.</p>
+</div>
+<div class="flex flex-col gap-2">
+<h4 class="font-bold text-slate-800 dark:text-slate-200 text-sm mb-2">Platform</h4>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all hover:underline" href="#">About</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all hover:underline" href="#">Blog</a>
+</div>
+<div class="flex flex-col gap-2">
+<h4 class="font-bold text-slate-800 dark:text-slate-200 text-sm mb-2">Support</h4>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all hover:underline" href="#">Contact</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all hover:underline" href="#">Privacy Policy</a>
+</div>
+<div class="space-y-4">
+<h4 class="font-bold text-slate-800 dark:text-slate-200 text-sm">Newsletter</h4>
+<div class="flex items-center bg-white dark:bg-slate-900 rounded-lg p-1 border border-slate-200 dark:border-slate-800">
+<input class="bg-transparent border-none text-xs focus:ring-0 flex-grow" placeholder="Your email" type="email"/>
+<button class="bg-primary text-white p-2 rounded-md"><span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+</div>
+</div>
+</div>
+</footer>
+<!-- Mobile Bottom Navigation -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 glass-panel border-t border-slate-200/50 z-50 flex justify-around items-center py-3 px-6">
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-[10px] font-bold">Explore</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="text-[10px] font-bold">Plan</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="text-[10px] font-bold">Budget</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-bold">Profile</span>
+</a>
+</div>
+</body></html>

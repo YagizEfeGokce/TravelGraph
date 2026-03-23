@@ -1,0 +1,37 @@
+INFO:     Started server process [2660]
+INFO:     Waiting for application startup.
+Index statement skipped (CREATE INDEX FOR (u:User) ON (u.email)): Attribute 'email' is already indexed
+Index statement skipped (CREATE INDEX FOR (u:User) ON (u.id)): Attribute 'id' is already indexed
+Index statement skipped (CREATE INDEX FOR (d:Destination) ON (d.id)): Attribute 'id' is already indexed
+Index statement skipped (CREATE INDEX FOR (d:Destination) ON (d.name)): Attribute 'name' is already indexed
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:49410 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49414 - "POST /api/itineraries HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49426 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49430 - "POST /api/itineraries HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49433 - "GET /api/itineraries HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49436 - "POST /api/itineraries//stops HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49438 - "PUT /api/itineraries//stops//reorder HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49440 - "GET /api/itineraries//stops HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49442 - "DELETE /api/itineraries//stops/ HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49444 - "DELETE /api/itineraries/ HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:49446 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49453 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49457 - "POST /api/itineraries HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49460 - "GET /api/itineraries HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49463 - "POST /api/itineraries//stops HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49465 - "PUT /api/itineraries//stops//reorder HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49467 - "GET /api/itineraries//stops HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49469 - "DELETE /api/itineraries//stops/ HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49471 - "DELETE /api/itineraries/ HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:49474 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49478 - "POST /api/itineraries HTTP/1.1" 201 Created
+INFO:     127.0.0.1:49481 - "GET /api/itineraries HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49484 - "POST /api/itineraries/9fbc38cc-aa1e-499b-a8b9-a6ca5a502497/stops HTTP/1.1" 201 Created
+INFO:     127.0.0.1:49487 - "PUT /api/itineraries/9fbc38cc-aa1e-499b-a8b9-a6ca5a502497/stops/85e590dd-7c04-4069-8563-125afb59bf19/reorder HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49490 - "GET /api/itineraries/9fbc38cc-aa1e-499b-a8b9-a6ca5a502497/stops HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49493 - "DELETE /api/itineraries/9fbc38cc-aa1e-499b-a8b9-a6ca5a502497/stops/85e590dd-7c04-4069-8563-125afb59bf19 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:49496 - "DELETE /api/itineraries/9fbc38cc-aa1e-499b-a8b9-a6ca5a502497 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62735 - "GET /api/destinations/route?from=3b76e408-774d-4d86-9252-e8ec032c29a1&to=9a39f123-7422-4884-880a-f542e28ce078 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62739 - "GET /api/destinations/route?from=3b76e408-774d-4d86-9252-e8ec032c29a1&to=f7f451da-3a19-487a-89ed-c86123622eac HTTP/1.1" 200 OK

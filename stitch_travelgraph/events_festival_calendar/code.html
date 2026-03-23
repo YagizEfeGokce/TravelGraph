@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TravelGraph | Events &amp; Festival Calendar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed-dim": "#bbc7dd",
+                        "on-secondary-container": "#00734c",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "outline": "#737685",
+                        "on-background": "#041b3c",
+                        "on-surface-variant": "#434654",
+                        "surface-dim": "#cadaff",
+                        "primary-fixed": "#dae2ff",
+                        "on-surface": "#041b3c",
+                        "on-secondary": "#ffffff",
+                        "background": "#f9f9ff",
+                        "surface-container": "#e8edff",
+                        "error": "#ba1a1a",
+                        "tertiary": "#394456",
+                        "secondary-container": "#82f9be",
+                        "tertiary-fixed": "#d7e3fa",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#c8d4ea",
+                        "surface-container-high": "#e0e8ff",
+                        "outline-variant": "#c3c6d6",
+                        "secondary-fixed": "#82f9be",
+                        "on-tertiary-fixed": "#101c2c",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f1f3ff",
+                        "surface-bright": "#f9f9ff",
+                        "on-tertiary-fixed-variant": "#3c4759",
+                        "surface-variant": "#d7e2ff",
+                        "tertiary-container": "#505c6f",
+                        "secondary-fixed-dim": "#65dca4",
+                        "on-primary-container": "#c4d2ff",
+                        "surface-container-highest": "#d7e2ff",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#edf0ff",
+                        "on-secondary-fixed-variant": "#005235",
+                        "surface-tint": "#0c56d0",
+                        "inverse-primary": "#b2c5ff",
+                        "on-primary-fixed": "#001848",
+                        "primary": "#003d9b",
+                        "inverse-surface": "#1d3052",
+                        "secondary": "#006c47",
+                        "primary-container": "#0052cc",
+                        "surface": "#f9f9ff"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-extrabold text-blue-700 dark:text-blue-400 tracking-tighter">TravelGraph</span>
+<div class="hidden md:flex gap-6">
+<a class="text-blue-700 dark:text-blue-400 font-bold border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Explore</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-200" href="#">Plan</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary w-64" placeholder="Search events..." type="text"/>
+</div>
+<button class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-200 p-2 rounded-full">
+<span class="material-symbols-outlined text-on-surface" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+<div class="bg-slate-100 dark:bg-slate-800 h-px w-full absolute bottom-0"></div>
+</nav>
+<main class="flex-grow flex">
+<!-- Sidebar Navigation -->
+<aside class="hidden lg:flex flex-col h-[calc(100vh-73px)] w-64 fixed left-0 top-[73px] border-r border-slate-100 dark:border-slate-800 p-4 bg-white dark:bg-slate-900 z-40">
+<div class="mb-8 px-4">
+<p class="text-xs font-bold uppercase tracking-widest text-outline mb-4">Navigation</p>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all scale-105 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-semibold">Home</span>
+</a>
+<a class="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg px-4 py-3" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="font-semibold">My Graphs</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-semibold">Budget</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-semibold">Settings</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto px-4 pb-4">
+<button class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
+                    Start Your Graph
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-grow lg:ml-64 p-6 lg:p-10">
+<!-- Header Section -->
+<header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<span class="label-md uppercase tracking-[0.05rem] text-primary font-bold text-xs">Event Explorer</span>
+<h1 class="text-4xl lg:text-5xl font-extrabold tracking-tight mt-2 text-on-background">Festival Calendar</h1>
+<p class="text-outline mt-3 max-w-xl">Intelligent mapping of global culture. Align your travel dates with the world's most vibrant celebrations.</p>
+</div>
+<!-- View Switcher -->
+<div class="flex bg-surface-container-low p-1 rounded-full w-fit">
+<button class="px-6 py-2 bg-white shadow-sm rounded-full text-sm font-bold text-primary">Monthly</button>
+<button class="px-6 py-2 text-sm font-medium text-outline hover:text-on-background">Weekly</button>
+</div>
+</header>
+<!-- Filters & Stats Bento -->
+<section class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-12">
+<div class="lg:col-span-3 bg-surface-container-low rounded-2xl p-6 flex flex-wrap gap-4 items-center">
+<span class="material-symbols-outlined text-primary">filter_list</span>
+<div class="flex flex-wrap gap-2">
+<span class="px-4 py-1.5 bg-primary text-white rounded-full text-sm font-medium cursor-pointer">All Events</span>
+<span class="px-4 py-1.5 bg-white border border-outline-variant text-on-surface-variant rounded-full text-sm font-medium hover:bg-surface-container-high transition-colors cursor-pointer">Music</span>
+<span class="px-4 py-1.5 bg-white border border-outline-variant text-on-surface-variant rounded-full text-sm font-medium hover:bg-surface-container-high transition-colors cursor-pointer">Art</span>
+<span class="px-4 py-1.5 bg-white border border-outline-variant text-on-surface-variant rounded-full text-sm font-medium hover:bg-surface-container-high transition-colors cursor-pointer">Food &amp; Drink</span>
+<span class="px-4 py-1.5 bg-white border border-outline-variant text-on-surface-variant rounded-full text-sm font-medium hover:bg-surface-container-high transition-colors cursor-pointer">Tech</span>
+</div>
+<div class="h-8 w-px bg-outline-variant mx-2 hidden md:block"></div>
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-outline">Budget:</span>
+<select class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer">
+<option>All Prices</option>
+<option>Free</option>
+<option>Under $100</option>
+<option>$100 - $500</option>
+</select>
+</div>
+</div>
+<div class="bg-primary-container text-white rounded-2xl p-6 flex flex-col justify-center">
+<span class="text-xs font-bold uppercase tracking-widest opacity-80">Next Major Node</span>
+<p class="text-xl font-bold mt-1">Sónar Festival</p>
+<p class="text-sm opacity-90">Barcelona • June 13-15</p>
+</div>
+</section>
+<!-- Calendar Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Event Card 1 -->
+<div class="group flex flex-col bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border-b-4 border-primary/10">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Vibrant night music festival with neon lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTvq7zBnjQyFrZKPGUMPKLTvHJIx8QhcDhyfzHhOvQd67Qv60Hq7fHARD-6IOjda4PQyyh_zy7Z_8o7C-hnB05MkmXH0greNg8zCycsC1HhQNRBVerTscGauW5f6M2_WHxXZCKk37-HextuRROzNXd3a2GFyI4_2CiPzdaHv3aHt6kdACuPGjU_vznKE8mJOU4W-MwmUYJtQKoOQ07WKF4wLwd6h8m0hwmEJz-9DrZ51iMIvW_93PeJpdjc-m-QiyQ9lug5uh2R9c"/>
+<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-lg text-center">
+<span class="block text-xs font-bold text-primary uppercase">Jun</span>
+<span class="block text-xl font-extrabold text-on-surface leading-none">13</span>
+</div>
+<div class="absolute top-4 right-4">
+<span class="bg-secondary-container text-on-secondary-fixed-variant text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Trending</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-on-surface leading-tight">Sónar Barcelona</h3>
+<span class="text-primary font-bold text-sm">$180+</span>
+</div>
+<div class="flex items-center gap-2 text-outline text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Fira Montjuïc, Barcelona, Spain</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">Music, Creativity &amp; Technology. A three-day event that transforms the city into a hub of sonic innovation.</p>
+<div class="mt-auto flex items-center justify-between">
+<button class="flex items-center gap-2 text-primary font-bold text-sm hover:translate-x-1 transition-transform">
+<span>View Details</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<button class="bg-surface-container-high hover:bg-primary hover:text-white text-primary p-2 rounded-lg transition-colors group/btn">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Event Card 2 -->
+<div class="group flex flex-col bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border-b-4 border-primary/10">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Artistic food plating at an outdoor festival" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ6ICdCcm30RDHJQponlfqOlGy4omS-GapjZ7WehGzfM_SNPVUxbNNTzw5SkycTAUyak6yPrpmmTbpGDZ9lkltcsoixISNyDdKBFjG1rDpVVWz8iQNhCEjF_O2OZQr7YyJxRgwcT9qeMBJLfRmJxGET7B6U477zy_3n4SUIA44akIOSWbnossQqHRVL_4SRcl9m7rZ01TVuaAKgeg8_kl4WUIUK5CPGKOiX3ih5o-oY_0XrC2exop4FrOWJ7lq-1-xx-m52Ks_hu4"/>
+<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-lg text-center">
+<span class="block text-xs font-bold text-primary uppercase">Jun</span>
+<span class="block text-xl font-extrabold text-on-surface leading-none">21</span>
+</div>
+<div class="absolute top-4 right-4">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Boutique</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-on-surface leading-tight">Taste of London</h3>
+<span class="text-secondary font-bold text-sm">$24+</span>
+</div>
+<div class="flex items-center gap-2 text-outline text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Regent's Park, London, UK</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">The ultimate summer garden party for foodies. World-class chefs and signature dishes from top restaurants.</p>
+<div class="mt-auto flex items-center justify-between">
+<button class="flex items-center gap-2 text-primary font-bold text-sm hover:translate-x-1 transition-transform">
+<span>View Details</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<button class="bg-primary text-white p-2 rounded-lg transition-colors flex items-center gap-2 px-4 shadow-md shadow-primary/10">
+<span class="material-symbols-outlined text-sm" data-icon="add_circle" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="text-xs font-bold">Add to Route</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Event Card 3 -->
+<div class="group flex flex-col bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border-b-4 border-primary/10">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Abstract colorful light installation in an art gallery" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2FUqzCNlLHJTDa7KJgdwB3JUIkkqH3SCKfYJX7moSCSnVjr2oiRpUgrz62YJGWEDe329S3ohn8esbmZ2bVc7R3jgsUawvwXsiixwoZrgKRI8x91XQhIjekqm5ZhKaov4gDZTqJMt3BCo-ybIYwR1HbMbAzU6FrfbL48nAOvfSJAyZKf3JVyxNaZ69YiFppRl4UctomYzYNZPMtnSuNXoroubpDiAF1nQKAUHKPYgJljDZQ9Toc--P4oo7JD9LQ6oncGjySwSvDTo"/>
+<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-lg text-center">
+<span class="block text-xs font-bold text-primary uppercase">Jul</span>
+<span class="block text-xl font-extrabold text-on-surface leading-none">05</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-on-surface leading-tight">Art Basel</h3>
+<span class="text-primary font-bold text-sm">$65+</span>
+</div>
+<div class="flex items-center gap-2 text-outline text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Messe Basel, Basel, Switzerland</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">The premier international art show of its kind, presenting 20th and 21st-century art from across the globe.</p>
+<div class="mt-auto flex items-center justify-between">
+<button class="flex items-center gap-2 text-primary font-bold text-sm hover:translate-x-1 transition-transform">
+<span>View Details</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<button class="bg-surface-container-high hover:bg-primary hover:text-white text-primary p-2 rounded-lg transition-colors group/btn">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Event Card 4 -->
+<div class="group flex flex-col bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border-b-4 border-primary/10">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Huge crowd at a tech conference keynote" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6zqsL57_dmbspg_SWGTleGdhoQJZLuYsutQgGys44wRsv9YiHAjzRqmVJnf0XFnOg745Hor0AGgEfYrn77GL52wRv_sKN09EgtdzlTvrcQoOqtYwFsTym99Wm8zLVRHfiGZdlvlyWn0ADPF7h27AD5OA_7Z3FnEffcEL5RTBc3IFa8zL7j0QuTA_Dj5GEtjziC3C0_NkAX6_BtxdWLxlZuu7Js7eHqO7KIaYMUPRBepUl1wJwBwhX0yX09ZbDk9LavQ0w8hQDj08"/>
+<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-lg text-center">
+<span class="block text-xs font-bold text-primary uppercase">Jul</span>
+<span class="block text-xl font-extrabold text-on-surface leading-none">12</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-on-surface leading-tight">VivaTech Paris</h3>
+<span class="text-on-secondary-container font-bold text-sm">Free</span>
+</div>
+<div class="flex items-center gap-2 text-outline text-xs mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Porte de Versailles, Paris, France</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">Europe's biggest startup and tech event. Celebrate innovation with the brightest minds in tech.</p>
+<div class="mt-auto flex items-center justify-between">
+<button class="flex items-center gap-2 text-primary font-bold text-sm hover:translate-x-1 transition-transform">
+<span>View Details</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<button class="bg-surface-container-high hover:bg-primary hover:text-white text-primary p-2 rounded-lg transition-colors group/btn">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Empty "Discover More" Bento -->
+<div class="lg:col-span-2 bg-gradient-to-br from-surface-container-low to-white p-8 rounded-xl border border-dashed border-outline-variant flex items-center justify-center text-center">
+<div class="max-w-md">
+<div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+<span class="material-symbols-outlined text-primary text-3xl">map</span>
+</div>
+<h4 class="text-xl font-bold mb-2">Find more at your next destination</h4>
+<p class="text-outline text-sm mb-6">Our Intelligent Cartographer is scanning 400+ cities for upcoming local gems based on your past routes.</p>
+<button class="px-8 py-3 bg-white text-primary font-bold border border-primary/20 rounded-full hover:bg-primary hover:text-white transition-all">
+                            Scan Specific City
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 w-full py-12 px-6 mt-auto border-t border-slate-200 dark:border-slate-800">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+<div class="col-span-1 lg:col-span-1">
+<span class="text-lg font-bold text-blue-800 dark:text-blue-300">TravelGraph</span>
+<p class="mt-4 font-['Inter'] text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                    The Intelligent Cartographer. We map the intersection of geography and human experience.
+                </p>
+</div>
+<div>
+<h4 class="font-bold text-on-surface mb-4">Product</h4>
+<div class="flex flex-col gap-2">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all hover:underline" href="#">About</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all hover:underline" href="#">Blog</a>
+</div>
+</div>
+<div>
+<h4 class="font-bold text-on-surface mb-4">Support</h4>
+<div class="flex flex-col gap-2">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all hover:underline" href="#">Contact</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all hover:underline" href="#">Privacy Policy</a>
+</div>
+</div>
+<div class="flex flex-col items-start">
+<p class="font-['Inter'] text-sm text-slate-500 dark:text-slate-400 mb-4">© 2024 TravelGraph. The Intelligent Cartographer.</p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary">language</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary">share</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

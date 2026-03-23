@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TravelGraph | Landing &amp; Discovery Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-primary": "#b2c5ff",
+                        "secondary-container": "#82f9be",
+                        "on-background": "#041b3c",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#0052cc",
+                        "surface-container-high": "#e0e8ff",
+                        "primary-fixed": "#dae2ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#c4d2ff",
+                        "tertiary-fixed-dim": "#bbc7dd",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "tertiary": "#394456",
+                        "primary": "#003d9b",
+                        "surface-container-highest": "#d7e2ff",
+                        "error": "#ba1a1a",
+                        "background": "#f9f9ff",
+                        "surface-dim": "#cadaff",
+                        "surface": "#f9f9ff",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f1f3ff",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "on-surface-variant": "#434654",
+                        "on-secondary-container": "#00734c",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#82f9be",
+                        "secondary": "#006c47",
+                        "outline-variant": "#c3c6d6",
+                        "outline": "#737685",
+                        "inverse-on-surface": "#edf0ff",
+                        "on-tertiary-fixed": "#101c2c",
+                        "tertiary-container": "#505c6f",
+                        "surface-tint": "#0c56d0",
+                        "secondary-fixed-dim": "#65dca4",
+                        "surface-variant": "#d7e2ff",
+                        "on-surface": "#041b3c",
+                        "on-primary-fixed": "#001848",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#e8edff",
+                        "inverse-surface": "#1d3052",
+                        "on-tertiary-container": "#c8d4ea",
+                        "on-secondary-fixed-variant": "#005235",
+                        "on-tertiary-fixed-variant": "#3c4759",
+                        "on-secondary-fixed": "#002113",
+                        "surface-bright": "#f9f9ff",
+                        "tertiary-fixed": "#d7e3fa"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+        .node-edge-motif {
+            background-image: radial-gradient(circle, #c3c6d6 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.1;
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-background antialiased">
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/50 shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold tracking-tighter text-blue-700 dark:text-blue-400 font-headline">TravelGraph</span>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-blue-700 dark:text-blue-400 font-bold border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-headline font-medium text-sm tracking-tight" href="#">Explore</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-headline font-medium text-sm tracking-tight" href="#">Itineraries</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-headline font-medium text-sm tracking-tight" href="#">Map</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-headline font-medium text-sm tracking-tight" href="#">Community</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 rounded-lg transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 rounded-lg transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">favorite</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border-2 border-primary-container/20">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="Portrait of a smiling young male traveler" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAldESs670W2WyQ4Q4PqyH4onF-4bG3mXwyIH-J1Z-8LEwknemBsKXoVFUKARfK4qpGTQgJVhvtjevc1Q2LGaQKitwkFHN_OBbeB2ScSj25HeDJCUMk59DJD5Wc2BD8hbHVCGOFls-xYKCuZ04sIlVeBDPBpaTSYEovl9V3BUp8bc0LCa4wkx4LcuL72MyoXjEoyDGfbr_3vZ4fseuXra-UITpNBSaCIk632TtxSWZ1a_WahhkwHnjNKN5axVbyK31DMq83TQyoKPk"/>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-12">
+<!-- Hero Section -->
+<section class="relative px-6 mb-20 overflow-hidden">
+<div class="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+<div class="lg:col-span-7 z-10">
+<span class="inline-block px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold tracking-widest uppercase mb-4 font-label">The Intelligent Cartographer</span>
+<h1 class="text-6xl md:text-8xl font-black font-headline text-on-surface leading-[0.9] tracking-tighter mb-6">
+                        Map Your <br/><span class="text-primary italic">Soul's Journey.</span>
+</h1>
+<p class="text-xl text-on-surface-variant max-w-xl mb-10 leading-relaxed">
+                        Transcend standard itineraries. TravelGraph turns complex logistics into a fluid network of discovery, connecting you to the world's most intentional paths.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-lg shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
+                            Start Exploring
+                        </button>
+<button class="px-8 py-4 border border-outline-variant text-primary font-bold rounded-lg hover:bg-surface-container-low transition-colors">
+                            View Itineraries
+                        </button>
+</div>
+</div>
+<div class="lg:col-span-5 relative">
+<div class="relative rounded-[2rem] overflow-hidden aspect-[4/5] shadow-2xl">
+<img alt="Adventure travel" class="w-full h-full object-cover" data-alt="Off-road vehicle driving through scenic mountain canyon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuUpOHynhF_4JPBjnoW0Knh4z2-VPX1xoTPGKgaaJHcksetMe2O5JeBmskeV-np4NxoAP6WMO4dnTLlo_yEXzFBQAeVW0djnNdWBuFeJOZL8ZH8AhL5FFu1ogPJbiG05j4so6iKq1Y4GBJRzomsMwU51SncDXSK_fiYgXxEBhBS_t4SZYH_g9SJQxxS8jb76uBwlwTvZf5DO2--NmntxYNGYNuS2BK3FHaCmV8aqdElqdLSecSWAhbvz_QpoiPS5f380_ZuLZXpjo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-background/60 to-transparent"></div>
+<div class="absolute bottom-8 left-8 right-8 p-6 glass-nav rounded-2xl border border-white/20">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-xs font-bold text-primary tracking-widest uppercase mb-1 font-label">Current Hotspot</p>
+<h3 class="text-2xl font-bold font-headline text-on-surface">Icelandic Highland</h3>
+</div>
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-white">
+<span class="material-symbols-outlined">north_east</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Decorative Elements -->
+<div class="absolute -top-6 -right-6 w-32 h-32 node-edge-motif rounded-full"></div>
+</div>
+</div>
+</section>
+<!-- User Stats Section -->
+<section class="px-6 mb-24">
+<div class="max-w-screen-2xl mx-auto">
+<div class="bg-surface-container-low rounded-[2.5rem] p-10 flex flex-wrap justify-between items-center gap-8 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-full node-edge-motif pointer-events-none"></div>
+<div class="flex-1 min-w-[200px]">
+<p class="text-sm font-bold text-outline uppercase tracking-[0.2em] mb-2 font-label">Active Explorers</p>
+<h4 class="text-5xl font-black font-headline text-on-surface">1.2M+</h4>
+</div>
+<div class="flex-1 min-w-[200px]">
+<p class="text-sm font-bold text-outline uppercase tracking-[0.2em] mb-2 font-label">Global Nodes</p>
+<h4 class="text-5xl font-black font-headline text-on-surface">45.8K</h4>
+</div>
+<div class="flex-1 min-w-[200px]">
+<p class="text-sm font-bold text-outline uppercase tracking-[0.2em] mb-2 font-label">Success Rate</p>
+<h4 class="text-5xl font-black font-headline text-on-surface">99.4%</h4>
+</div>
+<div class="flex-1 min-w-[200px]">
+<p class="text-sm font-bold text-outline uppercase tracking-[0.2em] mb-2 font-label">Co2 Offset</p>
+<h4 class="text-5xl font-black font-headline text-on-surface text-secondary">240T</h4>
+</div>
+</div>
+</div>
+</section>
+<!-- RECENT COMMUNITY GRAPHS SECTION -->
+<section class="px-6 mb-24">
+<div class="max-w-screen-2xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+<div class="max-w-xl">
+<span class="inline-block px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold tracking-widest uppercase mb-4 font-label">Social Discovery</span>
+<h2 class="text-4xl md:text-5xl font-black font-headline text-on-surface tracking-tight">Recent Community Graphs</h2>
+<p class="text-on-surface-variant mt-4 leading-relaxed">Discover the most efficient and scenic routes created by our global community of expert navigators.</p>
+</div>
+<button class="flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all group">
+                        View All Graphs <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Graph Card 1 -->
+<div class="bg-surface-container-lowest rounded-3xl p-8 shadow-sm hover:shadow-xl transition-shadow border border-outline-variant/10 group">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="text-2xl font-bold font-headline text-on-surface mb-1 group-hover:text-primary transition-colors">The Nordic Loop</h3>
+<p class="text-sm text-on-surface-variant">by <span class="font-bold">@oslo_trekker</span></p>
+</div>
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded-full">14 NODES</span>
+</div>
+<!-- Mini-Graph Viz Mockup -->
+<div class="h-40 bg-surface-container-low rounded-2xl mb-6 relative overflow-hidden flex items-center justify-center">
+<div class="absolute inset-0 node-edge-motif"></div>
+<svg class="w-48 h-24" viewbox="0 0 200 100">
+<path d="M20,50 Q60,10 100,50 T180,50" fill="none" stroke="#003d9b" stroke-dasharray="4" stroke-width="2"></path>
+<circle cx="20" cy="50" fill="#003d9b" r="4"></circle>
+<circle cx="100" cy="50" fill="#003d9b" r="4"></circle>
+<circle cx="180" cy="50" fill="#003d9b" r="4"></circle>
+<circle cx="60" cy="25" fill="#65dca4" r="3"></circle>
+<circle cx="140" cy="75" fill="#65dca4" r="3"></circle>
+</svg>
+</div>
+<div class="flex justify-between items-center pt-6 border-t border-outline-variant/10">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">Est. Budget</span>
+<span class="text-lg font-black text-on-surface font-headline">$2,450</span>
+</div>
+<button class="p-3 bg-primary/5 text-primary rounded-xl hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">add_road</span>
+</button>
+</div>
+</div>
+<!-- Graph Card 2 -->
+<div class="bg-surface-container-lowest rounded-3xl p-8 shadow-sm hover:shadow-xl transition-shadow border border-outline-variant/10 group">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="text-2xl font-bold font-headline text-on-surface mb-1 group-hover:text-primary transition-colors">Zen Circuit</h3>
+<p class="text-sm text-on-surface-variant">by <span class="font-bold">@kyoto_soul</span></p>
+</div>
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded-full">8 NODES</span>
+</div>
+<!-- Mini-Graph Viz Mockup -->
+<div class="h-40 bg-surface-container-low rounded-2xl mb-6 relative overflow-hidden flex items-center justify-center">
+<div class="absolute inset-0 node-edge-motif"></div>
+<svg class="w-48 h-24" viewbox="0 0 200 100">
+<circle cx="100" cy="50" fill="none" r="30" stroke="#003d9b" stroke-dasharray="4" stroke-width="2"></circle>
+<circle cx="100" cy="20" fill="#003d9b" r="4"></circle>
+<circle cx="130" cy="50" fill="#003d9b" r="4"></circle>
+<circle cx="100" cy="80" fill="#003d9b" r="4"></circle>
+<circle cx="70" cy="50" fill="#003d9b" r="4"></circle>
+</svg>
+</div>
+<div class="flex justify-between items-center pt-6 border-t border-outline-variant/10">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">Est. Budget</span>
+<span class="text-lg font-black text-on-surface font-headline">$1,800</span>
+</div>
+<button class="p-3 bg-primary/5 text-primary rounded-xl hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">add_road</span>
+</button>
+</div>
+</div>
+<!-- Graph Card 3 -->
+<div class="bg-surface-container-lowest rounded-3xl p-8 shadow-sm hover:shadow-xl transition-shadow border border-outline-variant/10 group">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="text-2xl font-bold font-headline text-on-surface mb-1 group-hover:text-primary transition-colors">Patagonia Peak</h3>
+<p class="text-sm text-on-surface-variant">by <span class="font-bold">@andean_alpha</span></p>
+</div>
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded-full">21 NODES</span>
+</div>
+<!-- Mini-Graph Viz Mockup -->
+<div class="h-40 bg-surface-container-low rounded-2xl mb-6 relative overflow-hidden flex items-center justify-center">
+<div class="absolute inset-0 node-edge-motif"></div>
+<svg class="w-48 h-24" viewbox="0 0 200 100">
+<path d="M10,80 L50,20 L90,80 L130,10 L190,90" fill="none" stroke="#003d9b" stroke-dasharray="2" stroke-width="2"></path>
+<circle cx="50" cy="20" fill="#ba1a1a" r="4"></circle>
+<circle cx="130" cy="10" fill="#ba1a1a" r="4"></circle>
+</svg>
+</div>
+<div class="flex justify-between items-center pt-6 border-t border-outline-variant/10">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">Est. Budget</span>
+<span class="text-lg font-black text-on-surface font-headline">$3,200</span>
+</div>
+<button class="p-3 bg-primary/5 text-primary rounded-xl hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">add_road</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Destinations -->
+<section class="px-6 mb-24">
+<div class="max-w-screen-2xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+<div class="max-w-xl">
+<h2 class="text-4xl md:text-5xl font-black font-headline text-on-surface tracking-tight">Featured Hotspots</h2>
+<p class="text-on-surface-variant mt-4 leading-relaxed">Dynamic nodes currently trending across the global graph. Real-time logistical data at your fingertips.</p>
+</div>
+<div class="flex gap-2">
+<button class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary-container hover:text-white transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Bento Grid Layout Idea: Some large, some small -->
+<div class="lg:col-span-2 lg:row-span-2 group relative rounded-[2rem] overflow-hidden">
+<img alt="Lisbon city" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Tiled roofs of Lisbon seen at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEKrLBJvI9aniErJuABjfb0BEeHhXdhCtecdlQWYrGnGVDwkEjjMza7NMQe-xDjllcm-Crgsn8LfQeS76Bf0NizwAXXwlLm5tJz5mH8y82A9vynjSgqaIxTgkJizaCLOOnPtD7XFnY4Zzfc5KP6l7iwsmYdH_tanyWmNOSmrcJEbVzA2UvHDfRIJOmcrzoyNMN67LKJBHOnNIyLetRdK2E4HALIE9bl_Sb585xcwwqCAGds7HIfaGi11yBqRv3-VnAKz7A54oQYr4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<div class="flex items-center gap-2 mb-2">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="text-[10px] font-bold text-secondary-container uppercase tracking-widest font-label">Highly Connected</span>
+</div>
+<h3 class="text-3xl font-black font-headline text-white mb-2">Lisbon, PT</h3>
+<p class="text-slate-300 mb-6 text-sm">A major European node with increasing logistical connectivity to South America.</p>
+<button class="px-6 py-3 bg-white text-primary font-bold rounded-lg text-sm">Explore Map</button>
+</div>
+</div>
+<div class="group relative rounded-[2rem] overflow-hidden aspect-square">
+<img alt="India temple" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Golden Temple reflected in water at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACvvUkeehVemuglKZSeW2kAEQugaDzsEioOPjZatVBv6kloQZgyF3SP8bYT9p3eb7PR8-8GFxpaVeW4xc3RpHlsIFgnkmjoVl5yfpz6mTSwnWnt1uSMnCK491O6VSl8d5vW6kItrFxHw1yxc4Uvxwjwm5BJJ_BqfBGG0wr0SSA9SBaUscoTuahM70k2O60jbw-jcj7TRkS0acCLh2dHroEysudHY3cRN1Dmm-ZGlFRTNmkuGyvDlBNTDEsgb_MyzoYFF2tJNLxuPY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="text-xl font-bold font-headline text-white">Varanasi, IN</h3>
+<p class="text-slate-300 text-xs">Cultural heartland node</p>
+</div>
+</div>
+<div class="group relative rounded-[2rem] overflow-hidden aspect-square">
+<img alt="Maldives resort" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Luxury overwater bungalows in clear turquoise ocean" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqqwOogMTV1MmOOkdRTUkuOhCKKYWz_iNcb1EJ36I_W5ToITvpcPHWe_cfVy8t3W6AW0Ip13YeCavhPtnIprOlWzyZz74XksrwTGK_VY-XOjNJrFHWD_rhYqahcmMKAW0mIjnexhRJap8kavgLcjum13CDJymbSyA-GyJK8ylj4jRHk834go7aWr5HBCW0_8uvIs6sS_N35MegN-154q_xZC6wKx91pUpgssa-5pHVEQZt6qougkp_OkqY_BHNGjjk_WB1eQKlmA4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="text-xl font-bold font-headline text-white">Malé, MV</h3>
+<p class="text-slate-300 text-xs">Premium connectivity</p>
+</div>
+</div>
+<div class="lg:col-span-2 group relative rounded-[2rem] overflow-hidden aspect-[2/1]">
+<img alt="Kyoto street" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Traditional narrow street in Kyoto with hanging lanterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0CxQ13rPC8Q3ISAE06O8uYYwvqtOy2s6BjxaE_JBS2QoWrIxCCLSsPxt6ZptzbBCi6tKFRA-PUi7flA3u5byl-lw5I3jSPL_H1YDdRdOyneACdndF5_EyKLGhUXp3otO-EmXADki0a0Ibsgth6r4mXBugSFezegqbxPO5EhOoZU1BcZQ8Nr4ZbauiOBXYgEOGbtvV4Krx-OCL19-0wROqiN_6RWg7STpT-aML3aPjG7MG5KHBBvIRMnapSH9d1Wn_VOgi7nPF190"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 flex items-center justify-between w-full">
+<div>
+<h3 class="text-2xl font-bold font-headline text-white">Kyoto, JP</h3>
+<p class="text-slate-300 text-sm">High-speed rail link hub</p>
+</div>
+<span class="material-symbols-outlined text-white text-3xl">hub</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Editorial Footer -->
+<footer class="w-full rounded-t-3xl mt-20 bg-slate-50 dark:bg-slate-950">
+<div class="w-full py-12 px-8 flex flex-col md:flex-row justify-between items-center gap-6 max-w-screen-2xl mx-auto">
+<div class="flex flex-col gap-2">
+<span class="text-lg font-black text-slate-900 dark:text-slate-100 font-headline">TravelGraph</span>
+<p class="font-['Inter'] text-xs font-normal leading-relaxed text-slate-500 dark:text-slate-500">© 2024 TravelGraph. Mapping the world's possibilities.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="font-['Inter'] text-xs font-normal leading-relaxed text-slate-500 hover:text-blue-600 transition-all" href="#">Privacy Policy</a>
+<a class="font-['Inter'] text-xs font-normal leading-relaxed text-slate-500 hover:text-blue-600 transition-all" href="#">Terms of Service</a>
+<a class="font-['Inter'] text-xs font-normal leading-relaxed text-slate-500 hover:text-blue-600 transition-all" href="#">Cookie Settings</a>
+<a class="font-['Inter'] text-xs font-normal leading-relaxed text-slate-500 hover:text-blue-600 transition-all" href="#">Global Logistics API</a>
+<a class="font-['Inter'] text-xs font-normal leading-relaxed text-slate-500 hover:text-blue-600 transition-all" href="#">Careers</a>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-blue-700 dark:text-blue-400">language</span>
+<span class="font-['Inter'] text-xs font-normal leading-relaxed text-blue-700 dark:text-blue-400">EN-US</span>
+</div>
+</div>
+</footer>
+<!-- FAB for Global Search -->
+<button class="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-[60]">
+<span class="material-symbols-outlined text-3xl">travel_explore</span>
+</button>
+</body></html>

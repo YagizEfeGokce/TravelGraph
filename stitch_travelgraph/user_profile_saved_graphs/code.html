@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TravelGraph | User Profile &amp; Saved Graphs</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#ffffff",
+              "on-secondary": "#ffffff",
+              "on-background": "#041b3c",
+              "tertiary": "#394456",
+              "surface": "#f9f9ff",
+              "error": "#ba1a1a",
+              "on-tertiary-fixed": "#101c2c",
+              "on-tertiary": "#ffffff",
+              "on-surface-variant": "#434654",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "surface-container": "#e8edff",
+              "primary-container": "#0052cc",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#d7e3fa",
+              "tertiary-container": "#505c6f",
+              "primary-fixed-dim": "#b2c5ff",
+              "surface-dim": "#cadaff",
+              "surface-container-highest": "#d7e2ff",
+              "surface-container-high": "#e0e8ff",
+              "inverse-on-surface": "#edf0ff",
+              "outline": "#737685",
+              "secondary": "#006c47",
+              "on-secondary-container": "#00734c",
+              "on-primary-fixed-variant": "#0040a2",
+              "on-primary-fixed": "#001848",
+              "inverse-surface": "#1d3052",
+              "on-primary-container": "#c4d2ff",
+              "on-surface": "#041b3c",
+              "on-tertiary-container": "#c8d4ea",
+              "surface-container-low": "#f1f3ff",
+              "primary-fixed": "#dae2ff",
+              "outline-variant": "#c3c6d6",
+              "tertiary-fixed-dim": "#bbc7dd",
+              "background": "#f9f9ff",
+              "on-tertiary-fixed-variant": "#3c4759",
+              "on-secondary-fixed-variant": "#005235",
+              "secondary-container": "#82f9be",
+              "primary": "#003d9b",
+              "surface-variant": "#d7e2ff",
+              "surface-bright": "#f9f9ff",
+              "secondary-fixed": "#82f9be",
+              "surface-tint": "#0c56d0",
+              "inverse-primary": "#b2c5ff",
+              "secondary-fixed-dim": "#65dca4",
+              "on-error": "#ffffff",
+              "on-secondary-fixed": "#002113"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .node-pattern {
+        background-image: radial-gradient(circle, #c3c6d6 1px, transparent 1px);
+        background-size: 24px 24px;
+      }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- Sidebar Navigation (SideNavBar JSON) -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 z-40 hidden md:flex flex-col p-4">
+<div class="mb-10 px-4">
+<h1 class="text-xl font-black text-blue-700 dark:text-blue-400 font-headline tracking-tighter">TravelGraph</h1>
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-widest mt-1">Kinetic Explorer</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-semibold">Home</span>
+</a>
+<!-- Active State: Settings/Profile Page maps to Settings/My Graphs -->
+<a class="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg px-4 py-3 transition-all scale-105" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="font-semibold">My Graphs</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-semibold">Budget</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-semibold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-bold text-sm shadow-sm hover:opacity-90 transition-all">
+                Start Your Graph
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 min-h-screen">
+<!-- TopAppBar (Hybrid JSON/Design System) -->
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width top-0 sticky z-30 shadow-sm dark:shadow-none border-b border-slate-100 dark:border-slate-800">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="md:hidden text-2xl font-extrabold text-blue-700 tracking-tighter">TravelGraph</span>
+<div class="hidden md:flex gap-6">
+<a class="text-slate-600 font-medium hover:text-blue-600 transition-colors" href="#">Explore</a>
+<a class="text-slate-600 font-medium hover:text-blue-600 transition-colors" href="#">Plan</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="material-symbols-outlined text-slate-600 cursor-pointer" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</div>
+</header>
+<div class="max-w-7xl mx-auto px-6 py-12">
+<!-- Profile Header Section: Asymmetric Editorial Layout -->
+<section class="mb-16">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
+<!-- Profile Identity -->
+<div class="lg:col-span-5 space-y-6">
+<div class="flex items-center gap-6">
+<div class="relative">
+<img alt="Alex Rivera" class="w-32 h-32 rounded-xl object-cover shadow-2xl border-4 border-white" data-alt="Professional portrait of Alex Rivera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQAZWnewl8TuGgjdVN_nb9DgT8zT81Rvr6qBTL0WYYxCJTWph58Hl5d3K1HsXPiSZAeARO8nc1ROzCbzwRlcAKhZiX77w04na3W8P4qq5P9mqUBQiijo3nfXKcd40KnDOhZvmBf9JjZSk8UQNTconuk8ALCOgV6v4qJeZjJBWu-eAAWe4RFXOJkpfF11wFpZf8qxafOiwSvIaJtLT54Bb3K-yIum9yrUFr1CQJchHeoooXwi_CdMpgLcmHn5cHpSwm6TIriAE269M"/>
+<div class="absolute -bottom-2 -right-2 bg-secondary text-on-secondary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">
+                                    Pro Explorer
+                                </div>
+</div>
+<div>
+<h2 class="font-headline text-4xl font-extrabold text-on-background tracking-tight">Alex Rivera</h2>
+<p class="text-outline font-medium">Kinetic Architect &amp; Global Nomad</p>
+</div>
+</div>
+</div>
+<!-- Stats Bar: Tonal Depth instead of borders -->
+<div class="lg:col-span-7">
+<div class="bg-surface-container-low rounded-xl p-8 grid grid-cols-3 gap-8">
+<div class="text-center md:text-left">
+<p class="text-3xl font-headline font-extrabold text-primary">12</p>
+<p class="text-xs font-bold text-outline uppercase tracking-wider">Graphs Created</p>
+</div>
+<div class="text-center md:text-left">
+<p class="text-3xl font-headline font-extrabold text-primary">8</p>
+<p class="text-xs font-bold text-outline uppercase tracking-wider">Countries</p>
+</div>
+<div class="text-center md:text-left">
+<p class="text-3xl font-headline font-extrabold text-primary">42k</p>
+<p class="text-xs font-bold text-outline uppercase tracking-wider">KM Traveled</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Saved Graphs: Bento-inspired Grid -->
+<section class="mb-16">
+<div class="flex items-center justify-between mb-8">
+<div>
+<span class="text-xs font-bold text-primary uppercase tracking-[0.2em] block mb-1">Portfolio</span>
+<h3 class="font-headline text-2xl font-bold">Saved Graphs</h3>
+</div>
+<button class="flex items-center gap-2 text-primary font-bold hover:underline">
+                        View All <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Graph Card 1 -->
+<div class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col relative">
+<div class="absolute top-4 right-4 z-10 opacity-20">
+<svg class="text-primary" height="40" viewbox="0 0 40 40" width="40">
+<circle cx="10" cy="10" fill="currentColor" r="2"></circle>
+<circle cx="30" cy="15" fill="currentColor" r="2"></circle>
+<circle cx="15" cy="30" fill="currentColor" r="2"></circle>
+<line stroke="currentColor" stroke-width="0.5" x1="10" x2="30" y1="10" y2="15"></line>
+<line stroke="currentColor" stroke-width="0.5" x1="30" x2="15" y1="15" y2="30"></line>
+</svg>
+</div>
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Scenic Scandinavian fjord landscape with water" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEOJKoVE3Fg6atlz3T1bjjToK8SYxh-3xhx-BwPUkw24cELiSYfDgPhXiCk52hqUolM9h5dSj0bKjj6oLZ2DXKUt7GrJznqDNaNZusHM5NTybnHgSzr91-NHpZye2ixRec-c7jQE_yPhC2Z_ui8j_FjzQfJ2Yht0wuA8V-VYxhj0n0n-Tce9BmwZRCrsUVaDv3ZYxhcgxOno4bCrO2-qy6_eVm9ij-S4P1v5AVsxX9Lk7v5VDrRLtMmrGWXiqIuuzWFArF6-DZxbg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<span class="bg-white/20 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider mb-2 inline-block">Northern Europe</span>
+<h4 class="text-white font-headline text-lg font-bold">Scandinavian Summer</h4>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline font-bold uppercase">Estimated Budget</span>
+<span class="font-headline font-extrabold text-on-background">$4,200</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="text-[10px] text-outline font-bold uppercase">Duration</span>
+<span class="font-headline font-extrabold text-on-background">14 Days</span>
+</div>
+</div>
+<button class="w-full py-3 bg-primary text-on-primary rounded-lg font-bold text-sm flex items-center justify-center gap-2 group-hover:bg-primary-container transition-colors">
+                                Open in Planner <span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+</div>
+<!-- Graph Card 2 -->
+<div class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col relative">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Traditional Japanese temple in Kyoto with cherry blossoms" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsUV6IB7WU4-6j4eQ5hEEIW4AhnmsuRTCyGz0PDShz9wSGyjo1AeAQxlI4GPz-vE9ZXsdWA0xaUoIdRN4EeogR8SfeJAQFquIHlh83cd9heqljYyL6NXKAU4kaC8cS5855b70sUWLXE5yqc1wjv9ORHu6A9_d8Cbpglr4N499eZSadgaMkg0Z-x7qI_aeeUIpD9HHAmnoyNfatS25dx-RhFwM6ZRIasC8d18Woo6BYfOf_43PugcCaVfms_t9bjEDrBdWqDvSKsBc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<span class="bg-white/20 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider mb-2 inline-block">East Asia</span>
+<h4 class="text-white font-headline text-lg font-bold">Kyoto Zen Loop</h4>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline font-bold uppercase">Estimated Budget</span>
+<span class="font-headline font-extrabold text-on-background">$2,850</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="text-[10px] text-outline font-bold uppercase">Duration</span>
+<span class="font-headline font-extrabold text-on-background">9 Days</span>
+</div>
+</div>
+<button class="w-full py-3 bg-primary text-on-primary rounded-lg font-bold text-sm flex items-center justify-center gap-2 group-hover:bg-primary-container transition-colors">
+                                Open in Planner <span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+</div>
+<!-- Graph Card 3 -->
+<div class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col relative">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Majestic snow-capped alpine mountains under blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdA48PF0095UH1KSBMhgjpTOyxJVrJioRsAbIACpRFJrUhrQ3vLZhpTK9XoTSP5i8wwJeDplyGDeo6xEGZ9Rn0UpoafnRuUghxTUKtaJlUAVAwLpLtwg0jvrOU82D1p-yyH7-TaOLrX0C6ak-pLO0Qab5nDjwTv7KdaPKnJocQSHj3QlVsuP0pWCGyb1NmCwgjVVD6E57fBDxfmCW1j4jvCEXUNqiJa5qKhy2vgopSekDJTIklmT13clxND_Am51k_slOD4dSmm6Y"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<span class="bg-white/20 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider mb-2 inline-block">Central Europe</span>
+<h4 class="text-white font-headline text-lg font-bold">Alpine Adventure</h4>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline font-bold uppercase">Estimated Budget</span>
+<span class="font-headline font-extrabold text-on-background">$5,100</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="text-[10px] text-outline font-bold uppercase">Duration</span>
+<span class="font-headline font-extrabold text-on-background">21 Days</span>
+</div>
+</div>
+<button class="w-full py-3 bg-primary text-on-primary rounded-lg font-bold text-sm flex items-center justify-center gap-2 group-hover:bg-primary-container transition-colors">
+                                Open in Planner <span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Preferences & AI Settings: Technical Precision Module -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+<div class="lg:col-span-1">
+<span class="text-xs font-bold text-primary uppercase tracking-[0.2em] block mb-1">Configuration</span>
+<h3 class="font-headline text-2xl font-bold mb-4">Preferences</h3>
+<p class="text-sm text-outline leading-relaxed">Customize how TravelGraph interprets data for your unique travel style.</p>
+</div>
+<div class="lg:col-span-2 bg-surface-container-low rounded-2xl p-8 node-pattern">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+<!-- Left Column: Localization -->
+<div class="space-y-8">
+<div>
+<label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-3">Preferred Currency</label>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-primary text-on-primary rounded-lg font-bold text-xs">USD ($)</button>
+<button class="px-4 py-2 bg-white text-primary border border-outline-variant/30 rounded-lg font-bold text-xs hover:bg-slate-50">EUR (€)</button>
+<button class="px-4 py-2 bg-white text-primary border border-outline-variant/30 rounded-lg font-bold text-xs hover:bg-slate-50">JPY (¥)</button>
+</div>
+</div>
+<div>
+<label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-3">Measurement Units</label>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-white text-primary border border-outline-variant/30 rounded-lg font-bold text-xs hover:bg-slate-50">Imperial (mi)</button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-lg font-bold text-xs">Metric (km)</button>
+</div>
+</div>
+</div>
+<!-- Right Column: FalkorDB AI Settings -->
+<div class="space-y-8">
+<div>
+<div class="flex items-center gap-2 mb-3">
+<label class="block text-[10px] font-bold text-outline uppercase tracking-wider">AI Insight Level</label>
+<span class="text-[9px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold">FalkorDB Powered</span>
+</div>
+<div class="space-y-4">
+<input class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary" max="100" min="0" type="range" value="75"/>
+<div class="flex justify-between text-[10px] font-bold text-outline">
+<span>CONSERVATIVE</span>
+<span class="text-primary">KINETIC OPTIMIZED</span>
+<span>EXPERIMENTAL</span>
+</div>
+</div>
+</div>
+<div class="p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-white/50">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<div>
+<p class="text-[11px] font-bold text-on-background mb-1">Graph Recommendation Engine</p>
+<p class="text-[10px] text-outline leading-tight">Your current AI level prioritizes efficiency and scenic density based on your historical nodes.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only - BottomNavBar JSON) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-100 flex justify-around py-3 z-50">
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-blue-700" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree" style="font-variation-settings: 'FILL' 1;">account_tree</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Graphs</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Budget</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Settings</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TravelGraph - Tokyo Exploration</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#bbc7dd",
+              "on-secondary-container": "#00734c",
+              "surface-container-lowest": "#ffffff",
+              "error-container": "#ffdad6",
+              "outline": "#737685",
+              "on-background": "#041b3c",
+              "on-surface-variant": "#434654",
+              "surface-dim": "#cadaff",
+              "primary-fixed": "#dae2ff",
+              "on-surface": "#041b3c",
+              "on-secondary": "#ffffff",
+              "background": "#f9f9ff",
+              "surface-container": "#e8edff",
+              "error": "#ba1a1a",
+              "tertiary": "#394456",
+              "secondary-container": "#82f9be",
+              "tertiary-fixed": "#d7e3fa",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#002113",
+              "on-primary-fixed-variant": "#0040a2",
+              "on-error": "#ffffff",
+              "on-tertiary-container": "#c8d4ea",
+              "surface-container-high": "#e0e8ff",
+              "outline-variant": "#c3c6d6",
+              "secondary-fixed": "#82f9be",
+              "on-tertiary-fixed": "#101c2c",
+              "on-primary": "#ffffff",
+              "surface-container-low": "#f1f3ff",
+              "surface-bright": "#f9f9ff",
+              "on-tertiary-fixed-variant": "#3c4759",
+              "surface-variant": "#d7e2ff",
+              "tertiary-container": "#505c6f",
+              "secondary-fixed-dim": "#65dca4",
+              "on-primary-container": "#c4d2ff",
+              "surface-container-highest": "#d7e2ff",
+              "primary-fixed-dim": "#b2c5ff",
+              "on-tertiary": "#ffffff",
+              "inverse-on-surface": "#edf0ff",
+              "on-secondary-fixed-variant": "#005235",
+              "surface-tint": "#0c56d0",
+              "inverse-primary": "#b2c5ff",
+              "on-primary-fixed": "#001848",
+              "primary": "#003d9b",
+              "inverse-surface": "#1d3052",
+              "secondary": "#006c47",
+              "primary-container": "#0052cc",
+              "surface": "#f9f9ff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-nav {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+      }
+      .gradient-hero-scrim {
+        background: linear-gradient(to bottom, rgba(4, 27, 60, 0) 0%, rgba(4, 27, 60, 0.8) 100%);
+      }
+      .node-pattern {
+        background-image: radial-gradient(circle, #c3c6d6 1px, transparent 1px);
+        background-size: 24px 24px;
+        opacity: 0.1;
+      }
+    </style>
+</head>
+<body class="bg-background font-body text-on-background antialiased">
+<!-- TopNavBar (Shared Component) -->
+<nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-extrabold text-blue-700 dark:text-blue-400 tracking-tighter font-['Plus_Jakarta_Sans']">TravelGraph</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-blue-700 dark:text-blue-400 font-bold border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-['Plus_Jakarta_Sans'] tracking-tight" href="#">Explore</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 dark:hover:text-blue-300 font-['Plus_Jakarta_Sans'] tracking-tight" href="#">Plan</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-high border-none rounded-full text-sm focus:ring-2 focus:ring-primary w-64" placeholder="Search destinations..." type="text"/>
+</div>
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-full transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">account_circle</span>
+</button>
+</div>
+</div>
+<div class="bg-slate-100 dark:bg-slate-800 h-px w-full absolute bottom-0"></div>
+</nav>
+<main class="relative">
+<!-- Hero Section: Editorial Style -->
+<section class="relative h-[819px] w-full overflow-hidden">
+<img alt="Tokyo Skyline at Night" class="w-full h-full object-cover" data-alt="Cyberpunk Tokyo skyline with neon lights at dusk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZHBVktti5m0CgBZn5pjUdgtQNryiONRzN4DneXjoHy9moyoMDjUWejrkhjxG5sTaYSifQmboykc7b3f1sAxUwe2hlly7ixWoVYLRb5AtuZSj_9JMVRPp_K8GFDM3NjZ1gAIbu1lIvPJwv41m3QqeRXqEC2jIugl716fCDIrsKzqePDA-BuVUh7p9G81NHmtR56b29fpbkwgZuC1pG36HUlAOSgtdqxjTKkgEI7QowbZVUIXRmf6Xi7YUamVRF45ht0dkzfT4CQzs"/>
+<div class="absolute inset-0 gradient-hero-scrim"></div>
+<div class="absolute inset-0 flex items-end">
+<div class="max-w-screen-2xl mx-auto px-6 pb-24 w-full">
+<div class="max-w-3xl">
+<span class="inline-block px-4 py-1 rounded-full bg-secondary-container text-on-secondary-fixed font-semibold text-xs tracking-widest uppercase mb-4">Metropolis</span>
+<h1 class="font-headline font-extrabold text-7xl md:text-9xl text-white tracking-tighter mb-6">Tokyo</h1>
+<p class="text-xl md:text-2xl text-white/90 font-light leading-relaxed max-w-2xl">
+                            Where ancient tradition harmonizes with futuristic chaos. A kinetic graph of neon dreams, silent shrines, and the world's most sophisticated transit dance.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- City Info Bar (Asymmetric Bento) -->
+<section class="max-w-screen-2xl mx-auto px-6 -mt-12 relative z-10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-xl flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div>
+<p class="text-xs text-outline font-bold uppercase tracking-wider">Currency</p>
+<p class="font-bold text-on-surface">Japanese Yen (¥)</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-xl flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">translate</span>
+</div>
+<div>
+<p class="text-xs text-outline font-bold uppercase tracking-wider">Language</p>
+<p class="font-bold text-on-surface">Japanese</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-xl flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+<div>
+<p class="text-xs text-outline font-bold uppercase tracking-wider">Best Visit</p>
+<p class="font-bold text-on-surface">March – May</p>
+</div>
+</div>
+<div class="bg-primary text-white p-6 rounded-xl shadow-xl flex items-center justify-between">
+<div>
+<p class="text-xs text-white/70 font-bold uppercase tracking-wider">Current Temp</p>
+<p class="font-bold text-2xl">18°C</p>
+</div>
+<span class="material-symbols-outlined text-4xl">wb_sunny</span>
+</div>
+</div>
+</section>
+<!-- Top Tourist Spots: Intentional Asymmetry -->
+<section class="max-w-screen-2xl mx-auto px-6 py-24">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+<div>
+<span class="text-primary font-bold text-sm tracking-[0.2em] uppercase">The Nodes</span>
+<h2 class="font-headline font-extrabold text-5xl text-on-background mt-2">Essential Landmarks</h2>
+</div>
+<p class="max-w-md text-on-surface-variant text-lg">
+                    Discover the primary connection points of Tokyo's cultural graph—from the spiritual heart of Asakusa to the electric pulse of Shibuya.
+                </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Large Spot -->
+<div class="md:col-span-8 group relative overflow-hidden rounded-xl h-[600px]">
+<img alt="Senso-ji Temple" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Traditional red gate of Senso-ji temple in Asakusa" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQZl7RkJaZZfCAiW-M-TtRPVuqXaxR8LHJ5h11DcbM1WM_VRLy8bPhOPIPwqBWzVIVyuJmkcj6huw8WGiG64rQdxBSmAlwS81qdHMTNRiL1ew82GEPEHIRL6b7P2NJK9URd5F6lQMw38cKIL5XRC9oy8TjEnJge--mpUqAuURtlv8c60CrHJVkbc6_Rw24mR7IS8TdD9Y17yfaB69Am97wJJ2pDcOUj3lhPkN4HGYhZ6V2K9DFz_qNEybeZMFvAYtDartSpfr_uK8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-10">
+<h3 class="text-white font-headline font-bold text-4xl mb-2">Sensō-ji Temple</h3>
+<p class="text-white/80 max-w-lg mb-6">Tokyo's oldest temple, a vibrant center of spiritual life and traditional market stalls.</p>
+<button class="bg-white text-primary px-6 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-primary-container hover:text-white transition-colors">
+                            View Details <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Small Spot 1 -->
+<div class="md:col-span-4 space-y-8">
+<div class="group relative overflow-hidden rounded-xl h-[284px]">
+<img alt="Shibuya Crossing" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Crowds walking across the famous Shibuya Scramble" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtaEDQ1liUHjqBDtw7lEJEY0quaPMH06doRIqjYzc5u1Xu4n3kOazb5YSyJGN3TK9158JyLzVlqZPYXqTPY5Gf5JV-WjJAkIvMOWZYLsowtZQPFg0d0pVSMI3qKIRm4s1zMJZdV-XktzvDJ39NrbMvALNSxtXm_VDEp0B1Flg8V-hUDGD_GUq86-qrYh8ItY885TPWIs-V--XGn5bssbLOIic40osfb8xLNQoxSWr-RvHIraXgfCtSnIfDI6mwL2OC6T1YnjbaknA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="text-white font-headline font-bold text-xl">Shibuya Crossing</h3>
+</div>
+</div>
+<!-- Small Spot 2 -->
+<div class="group relative overflow-hidden rounded-xl h-[284px]">
+<img alt="Meiji Jingu" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="The massive wooden torii gate leading into Meiji Shrine" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7MVy0mmKi9G4syt2JSifQX2UZtbWwhbXxMrtnF8SlEExONrBatWiaS4MoQT8zhjQqK8StfzKgV8H0MRjaXOThT_yIMhraFRfsXsInxaaqcmLH-a_la4DA7E5xYv8dwu4x_HoCH6Z7fmf_mcqvnffrcP8N0lOqfQs-P9pyMWROJBgocVCMvpeV6yeLz6a38_JyDhzVYJkSJSQNljlw7DIPGM8nYvcLZ1KLnufew73s7KX5QZJ_hkTCeoNT8jRcCSrZPkDFcKV49xk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="text-white font-headline font-bold text-xl">Meiji Jingū</h3>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Building Blocks & Budget Filter -->
+<section class="bg-surface-container-low relative py-24 overflow-hidden">
+<div class="absolute inset-0 node-pattern"></div>
+<div class="max-w-screen-2xl mx-auto px-6 relative z-10">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
+<div>
+<span class="text-primary font-bold text-sm tracking-[0.2em] uppercase">Building Blocks</span>
+<h2 class="font-headline font-extrabold text-5xl text-on-background mt-2">Construct Your Trip</h2>
+</div>
+<!-- Budget Filter -->
+<div class="flex items-center bg-white p-1 rounded-full shadow-sm">
+<button class="px-6 py-2 rounded-full text-sm font-bold bg-primary text-white">All</button>
+<button class="px-6 py-2 rounded-full text-sm font-bold text-outline hover:text-primary transition-colors">¥</button>
+<button class="px-6 py-2 rounded-full text-sm font-bold text-outline hover:text-primary transition-colors">¥¥</button>
+<button class="px-6 py-2 rounded-full text-sm font-bold text-outline hover:text-primary transition-colors">¥¥¥</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Accommodation Block -->
+<div class="bg-white p-8 rounded-xl shadow-sm border-l-4 border-primary">
+<div class="flex justify-between items-start mb-6">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">hotel</span>
+</div>
+<span class="text-xs font-bold text-primary px-3 py-1 bg-primary/10 rounded-full">320+ Options</span>
+</div>
+<h3 class="font-headline font-bold text-2xl mb-2 text-on-background">Stay</h3>
+<p class="text-on-surface-variant mb-6">From capsule hotels in Shinjuku to luxury Ryokans in Chiyoda.</p>
+<button class="w-full py-3 bg-surface-container-high hover:bg-primary hover:text-white transition-all rounded-lg font-bold flex items-center justify-center gap-2">
+                            Browse Hotels <span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<!-- Activities Block -->
+<div class="bg-white p-8 rounded-xl shadow-sm border-l-4 border-secondary">
+<div class="flex justify-between items-start mb-6">
+<div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">confirmation_number</span>
+</div>
+<span class="text-xs font-bold text-secondary px-3 py-1 bg-secondary/10 rounded-full">Trending</span>
+</div>
+<h3 class="font-headline font-bold text-2xl mb-2 text-on-background">Activities</h3>
+<p class="text-on-surface-variant mb-6">Kart racing through streets, sumo practice tours, and teamLab digital art.</p>
+<button class="w-full py-3 bg-surface-container-high hover:bg-secondary hover:text-white transition-all rounded-lg font-bold flex items-center justify-center gap-2">
+                            Explore Tours <span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<!-- Food Block -->
+<div class="bg-white p-8 rounded-xl shadow-sm border-l-4 border-error">
+<div class="flex justify-between items-start mb-6">
+<div class="w-12 h-12 rounded-lg bg-error/10 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<span class="text-xs font-bold text-error px-3 py-1 bg-error/10 rounded-full">Michelin City</span>
+</div>
+<h3 class="font-headline font-bold text-2xl mb-2 text-on-background">Dining</h3>
+<p class="text-on-surface-variant mb-6">Hidden Izakayas in Golden Gai or world-class Omakase in Ginza.</p>
+<button class="w-full py-3 bg-surface-container-high hover:bg-error hover:text-white transition-all rounded-lg font-bold flex items-center justify-center gap-2">
+                            Find Tables <span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Dynamic Map Preview -->
+<section class="max-w-screen-2xl mx-auto px-6 py-24">
+<div class="bg-surface-container-highest rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-2xl">
+<div class="md:w-1/3 p-12 flex flex-col justify-center">
+<h2 class="font-headline font-extrabold text-4xl text-on-background mb-6">Kinetic Connection</h2>
+<p class="text-on-surface-variant mb-8 leading-relaxed">
+                        Visualize your Tokyo itinerary as a dynamic graph. See how your stops connect via the Yamanote line or the Chūō-Sōbu system.
+                    </p>
+<button class="bg-primary text-white px-8 py-4 rounded-lg font-bold shadow-lg shadow-primary/20 flex items-center justify-center gap-3 self-start hover:scale-105 transition-transform">
+                        Launch Graph <span class="material-symbols-outlined">account_tree</span>
+</button>
+</div>
+<div class="md:w-2/3 h-[500px] relative">
+<img alt="Map Illustration" class="w-full h-full object-cover" data-alt="Abstract stylized map of Tokyo districts with neon data points" data-location="Tokyo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCI7aCyrX0crQKyS_OsIILWgm0rRHjjQhFEe1Jm9aPgVLepBXVBmBy0Q1TDK2_GqO3SQCHaGKUWl2JuroRevgNC-MVMPEggjRb7Qi4IOHb0WLLJmeaSw_LgcYEyXhvpld6kRnXJsIqTNFJWarUV0y_dDIxrnHdLdMflZG3P4cnuGh9TzKVw1v9EP-AYNT6HQkd-Pl_nR3GXFguxXb_A18lowwo1TQj6AlAT60Ktq-_sn8wfACJcfbmgbr-HAXkbaTHHQG4iEEJD3lY"/>
+<!-- Floating Map Card -->
+<div class="absolute top-8 right-8 bg-white/90 backdrop-blur-md p-4 rounded-xl shadow-xl w-64 border border-white/20">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-xs font-bold uppercase tracking-widest">Active Node</span>
+</div>
+<p class="font-bold text-lg mb-1">Shinjuku Gyoen</p>
+<p class="text-sm text-on-surface-variant mb-4">6 connections detected within 2km radius.</p>
+<div class="h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full w-2/3"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="bg-slate-50 dark:bg-slate-950 w-full py-12 px-6 mt-auto border-t border-slate-200 dark:border-slate-800">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+<div class="flex flex-col gap-4">
+<span class="text-lg font-bold text-blue-800 dark:text-blue-300">TravelGraph</span>
+<p class="font-['Inter'] text-sm text-slate-500 dark:text-slate-400">© 2024 TravelGraph. The Intelligent Cartographer.</p>
+</div>
+<div class="flex flex-col gap-3">
+<span class="font-bold text-on-surface text-sm uppercase tracking-widest">Platform</span>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all text-sm" href="#">About</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all text-sm" href="#">Blog</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="font-bold text-on-surface text-sm uppercase tracking-widest">Support</span>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all text-sm" href="#">Contact</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-all text-sm" href="#">Privacy Policy</a>
+</div>
+<div class="flex flex-col gap-4">
+<span class="font-bold text-on-surface text-sm uppercase tracking-widest">Newsletter</span>
+<div class="flex">
+<input class="bg-white border-none rounded-l-lg text-sm focus:ring-1 focus:ring-primary w-full" placeholder="Email address" type="email"/>
+<button class="bg-primary text-white px-4 py-2 rounded-r-lg">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+</footer>
+<!-- FAB (Suppressed on Details according to rules, but present here for exploration context if required by UX goal - hiding per Rule: Contextual FAB Suppression on Details) -->
+</body></html>
