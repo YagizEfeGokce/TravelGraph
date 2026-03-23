@@ -35,17 +35,31 @@ def main() -> None:
         users.append(uid)
 
     # Destinations
-    dest_names = ["Istanbul", "Paris", "Barcelona", "Roma", "Tokyo", "New York", "Bali", "Prag", "Amsterdam", "Lizbon"]
+    dest_data = [
+        {"name": "Istanbul",  "country": "Türkiye",     "lat": 41.0082,  "lng": 28.9784},
+        {"name": "Paris",     "country": "Fransa",      "lat": 48.8566,  "lng":  2.3522},
+        {"name": "Barcelona", "country": "İspanya",     "lat": 41.3851,  "lng":  2.1734},
+        {"name": "Roma",      "country": "İtalya",      "lat": 41.9028,  "lng": 12.4964},
+        {"name": "Tokyo",     "country": "Japonya",     "lat": 35.6762,  "lng": 139.6503},
+        {"name": "New York",  "country": "ABD",         "lat": 40.7128,  "lng": -74.0060},
+        {"name": "Bali",      "country": "Endonezya",   "lat": -8.3405,  "lng": 115.0920},
+        {"name": "Prag",      "country": "Çekya",       "lat": 50.0755,  "lng": 14.4378},
+        {"name": "Amsterdam", "country": "Hollanda",    "lat": 52.3676,  "lng":  4.9041},
+        {"name": "Lizbon",    "country": "Portekiz",    "lat": 38.7223,  "lng": -9.1393},
+    ]
     destinations = []
     print("Creating 10 Destinations...")
-    for dname in dest_names:
+    for d in dest_data:
         did = create_uuid()
         db.query(
-            "CREATE (d:Destination {id: $id, name: $name, country: 'Sample Country', description: $desc, latitude: 0.0, longitude: 0.0})",
+            "CREATE (d:Destination {id: $id, name: $name, country: $country, description: $desc, lat: $lat, lng: $lng})",
             {
                 "id": did,
-                "name": dname,
-                "desc": f"The beautiful city of {dname}."
+                "name": d["name"],
+                "country": d["country"],
+                "desc": f"The beautiful city of {d['name']}.",
+                "lat": d["lat"],
+                "lng": d["lng"],
             }
         )
         destinations.append(did)

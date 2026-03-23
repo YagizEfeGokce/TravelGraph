@@ -77,11 +77,11 @@ class DestinationResponse(BaseModel):
     ) -> "DestinationResponse":
         """Build a DestinationResponse from a FalkorDB node's properties dict."""
         return cls(
-            id=properties["id"],
-            name=properties["name"],
-            country=properties["country"],
-            description=properties["description"],
-            lat=properties["lat"],
-            lng=properties["lng"],
+            id=properties.get("id", ""),
+            name=properties.get("name", ""),
+            country=properties.get("country", ""),
+            description=properties.get("description", ""),
+            lat=properties.get("lat", 0.0),
+            lng=properties.get("lng", 0.0),
             avg_rating=avg_rating,
         )
