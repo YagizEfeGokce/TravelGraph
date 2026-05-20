@@ -81,10 +81,10 @@ function HomePage() {
           <div className="bg-surface-container-low rounded-[2.5rem] p-10 flex flex-wrap justify-between items-center gap-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-full node-edge-motif pointer-events-none opacity-30" />
             {[
-              { label: "Destinations", value: "10", icon: "location_on" },
-              { label: "Entity Types", value: "14", icon: "hub" },
-              { label: "Graph DB", value: "FalkorDB", icon: "account_tree" },
-              { label: "Festivals", value: "10+", icon: "celebration", green: true },
+              { label: "Network", value: "Graph-Powered", icon: "location_on" },
+              { label: "Schema", value: "Multi-Entity", icon: "hub" },
+              { label: "Engine", value: "FalkorDB", icon: "account_tree" },
+              { label: "Routing", value: "Smart Routes", icon: "celebration", green: true },
             ].map((stat) => (
               <div key={stat.label} className="flex-1 min-w-[160px] flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">

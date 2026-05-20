@@ -6,6 +6,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
+from core.dependencies import get_current_user
 from db.connection import get_db
 
 router = APIRouter(tags=["tags_categories"])
@@ -29,7 +30,8 @@ def list_categories(db: Any = Depends(get_db)) -> list[dict]:
 def add_tag_to_activity(
     activity_id: str,
     body: TagAddRequest,
-    db: Any = Depends(get_db)
+    db: Any = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
 ) -> dict:
     """Add a tag to an activity."""
     # Verify Activity exists

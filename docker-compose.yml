@@ -16,5 +16,27 @@ services:
       timeout: 5s
       retries: 3
 
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - FALKORDB_HOST=falkordb
+      - FALKORDB_PORT=6379
+      - FALKORDB_GRAPH=travelgraph
+    depends_on:
+      - falkordb
+    env_file:
+      - backend/.env
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000/api
+    depends_on:
+      - backend
+
 volumes:
   falkordb_data:

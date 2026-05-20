@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from uuid import uuid4
 
 from core.security import hash_password
-from db.connection import get_db
+from db.connection import _connect_with_retry
 
 
 def uid() -> str:
@@ -14,7 +14,7 @@ def uid() -> str:
 
 
 def main() -> None:
-    db = next(get_db())
+    db = _connect_with_retry()
     print("Clearing existing database...")
     db.query("MATCH (n) DETACH DELETE n")
     print("Database cleared.\n")
@@ -141,14 +141,21 @@ def main() -> None:
         destinations[d["name"]] = dest_id
 
     # ── Categories ─────────────────────────────────────────────────────────────
-    cat_names = ["Museum", "Nature", "Food & Drink", "Historical", "Adventure", "Culture"]
+    cat_data = [
+        {"name": "Museum", "icon": "🏛️"},
+        {"name": "Nature", "icon": "🌿"},
+        {"name": "Food & Drink", "icon": "🍽️"},
+        {"name": "Historical", "icon": "🏛️"},
+        {"name": "Adventure", "icon": "⛰️"},
+        {"name": "Culture", "icon": "🎭"},
+    ]
     categories: list[str] = []
     print("Creating Categories...")
-    for cname in cat_names:
+    for c in cat_data:
         cid = uid()
         db.query(
-            "CREATE (c:Category {id: $id, name: $name, description: $desc})",
-            {"id": cid, "name": cname, "desc": f"{cname} experiences."},
+            "CREATE (c:Category {id: $id, name: $name, icon: $icon, description: $desc})",
+            {"id": cid, "name": c["name"], "icon": c["icon"], "desc": f"{c['name']} experiences."},
         )
         categories.append(cid)
 
@@ -162,66 +169,76 @@ def main() -> None:
         )
 
     # ── Tags ───────────────────────────────────────────────────────────────────
-    tag_names = ["UNESCO", "Hidden Gem", "Budget Friendly", "Luxury", "Family Friendly", "Adventure"]
+    tag_data = [
+        {"name": "UNESCO", "color": "#E74C3C"},
+        {"name": "Hidden Gem", "color": "#9B59B6"},
+        {"name": "Budget Friendly", "color": "#2ECC71"},
+        {"name": "Luxury", "color": "#F1C40F"},
+        {"name": "Family Friendly", "color": "#3498DB"},
+        {"name": "Adventure", "color": "#E67E22"},
+    ]
     tags: list[str] = []
+    tag_map: dict[str, str] = {}  # name -> id
     print("Creating Tags...")
-    for tname in tag_names:
+    for t in tag_data:
         tid = uid()
         db.query(
-            "CREATE (t:Tag {id: $id, name: $name})",
-            {"id": tid, "name": tname},
+            "CREATE (t:Tag {id: $id, name: $name, color: $color})",
+            {"id": tid, "name": t["name"], "color": t["color"]},
         )
         tags.append(tid)
+        tag_map[t["name"]] = tid
 
     # ── Activities (20, mapped to real destinations) ───────────────────────────
     activities_by_dest: dict[str, list[dict]] = {
         "Istanbul": [
-            {"name": "Bosphorus Cruise", "duration_minutes": 120, "price": 25.0},
-            {"name": "Hagia Sophia Tour", "duration_minutes": 90, "price": 15.0},
-            {"name": "Grand Bazaar Shopping", "duration_minutes": 180, "price": 0.0},
-            {"name": "Topkapi Palace Visit", "duration_minutes": 150, "price": 20.0},
-            {"name": "Turkish Bath (Hammam)", "duration_minutes": 90, "price": 40.0},
+            {"name": "Bosphorus Cruise", "duration_hours": 2.0, "price": 25.0},
+            {"name": "Hagia Sophia Tour", "duration_hours": 1.5, "price": 15.0},
+            {"name": "Grand Bazaar Shopping", "duration_hours": 3.0, "price": 0.0},
+            {"name": "Topkapi Palace Visit", "duration_hours": 2.5, "price": 20.0},
+            {"name": "Turkish Bath (Hammam)", "duration_hours": 1.5, "price": 40.0},
         ],
         "Cappadocia": [
-            {"name": "Hot Air Balloon Ride", "duration_minutes": 90, "price": 150.0},
-            {"name": "Underground City Tour", "duration_minutes": 120, "price": 18.0},
-            {"name": "ATV Safari", "duration_minutes": 180, "price": 45.0},
-            {"name": "Hiking in Rose Valley", "duration_minutes": 240, "price": 0.0},
-            {"name": "Pottery Workshop", "duration_minutes": 120, "price": 30.0},
+            {"name": "Hot Air Balloon Ride", "duration_hours": 1.5, "price": 150.0},
+            {"name": "Underground City Tour", "duration_hours": 2.0, "price": 18.0},
+            {"name": "ATV Safari", "duration_hours": 3.0, "price": 45.0},
+            {"name": "Hiking in Rose Valley", "duration_hours": 4.0, "price": 0.0},
+            {"name": "Pottery Workshop", "duration_hours": 2.0, "price": 30.0},
         ],
         "Antalya": [
-            {"name": "Duden Waterfalls Hike", "duration_minutes": 120, "price": 0.0},
-            {"name": "Konyaalti Beach Day", "duration_minutes": 300, "price": 0.0},
-            {"name": "Old City (Kaleici) Walking Tour", "duration_minutes": 150, "price": 10.0},
+            {"name": "Duden Waterfalls Hike", "duration_hours": 2.0, "price": 0.0},
+            {"name": "Konyaalti Beach Day", "duration_hours": 5.0, "price": 0.0},
+            {"name": "Old City (Kaleici) Walking Tour", "duration_hours": 2.5, "price": 10.0},
         ],
         "Ephesus": [
-            {"name": "Ancient Ruins Guided Tour", "duration_minutes": 180, "price": 22.0},
-            {"name": "House of the Virgin Mary Visit", "duration_minutes": 60, "price": 8.0},
+            {"name": "Ancient Ruins Guided Tour", "duration_hours": 3.0, "price": 22.0},
+            {"name": "House of the Virgin Mary Visit", "duration_hours": 1.0, "price": 8.0},
         ],
         "Pamukkale": [
-            {"name": "Thermal Pool Swimming", "duration_minutes": 180, "price": 12.0},
-            {"name": "Hierapolis Ancient City Walk", "duration_minutes": 120, "price": 10.0},
+            {"name": "Thermal Pool Swimming", "duration_hours": 3.0, "price": 12.0},
+            {"name": "Hierapolis Ancient City Walk", "duration_hours": 2.0, "price": 10.0},
         ],
         "Trabzon": [
-            {"name": "Sumela Monastery Visit", "duration_minutes": 150, "price": 12.0},
-            {"name": "Uzungol Lake Tour", "duration_minutes": 240, "price": 5.0},
+            {"name": "Sumela Monastery Visit", "duration_hours": 2.5, "price": 12.0},
+            {"name": "Uzungol Lake Tour", "duration_hours": 4.0, "price": 5.0},
         ],
         "Bodrum": [
-            {"name": "Boat Trip to Aegean Islands", "duration_minutes": 480, "price": 35.0},
-            {"name": "Bodrum Castle & Museum of Underwater Archaeology", "duration_minutes": 120, "price": 15.0},
+            {"name": "Boat Trip to Aegean Islands", "duration_hours": 8.0, "price": 35.0},
+            {"name": "Bodrum Castle & Museum of Underwater Archaeology", "duration_hours": 2.0, "price": 15.0},
         ],
         "Gaziantep": [
-            {"name": "Zeugma Mosaic Museum", "duration_minutes": 150, "price": 8.0},
-            {"name": "Baklava Making Workshop", "duration_minutes": 120, "price": 25.0},
+            {"name": "Zeugma Mosaic Museum", "duration_hours": 2.5, "price": 8.0},
+            {"name": "Baklava Making Workshop", "duration_hours": 2.0, "price": 25.0},
         ],
         "Konya": [
-            {"name": "Mevlana Museum Tour", "duration_minutes": 90, "price": 5.0},
-            {"name": "Whirling Dervishes Ceremony", "duration_minutes": 60, "price": 10.0},
+            {"name": "Mevlana Museum Tour", "duration_hours": 1.5, "price": 5.0},
+            {"name": "Whirling Dervishes Ceremony", "duration_hours": 1.0, "price": 10.0},
         ],
     }
 
     activity_ids: list[str] = []
     print("Creating 20 Activities...")
+    id_to_tag_name = {v: k for k, v in tag_map.items()}
     for dest_name, acts in activities_by_dest.items():
         dest_id = destinations.get(dest_name)
         if not dest_id:
@@ -231,30 +248,40 @@ def main() -> None:
             db.query(
                 "MATCH (d:Destination {id: $did}) "
                 "CREATE (a:Activity {id: $id, name: $name, description: $desc, "
-                "duration_minutes: $dur, price: $price}) "
-                "CREATE (d)-[:HAS_ACTIVITY]->(a)",
+                "duration_hours: $dur, price: $price, address: $addr, "
+                "destination_id: $dest_id, categories: [], tags: []}) "
+                "CREATE (d)-[:HAS_ACTIVITY]->(a) "
+                "CREATE (a)-[:LOCATED_IN]->(d)",
                 {
                     "did": dest_id,
                     "id": aid,
                     "name": act["name"],
                     "desc": f"Experience {act['name']} in {dest_name}.",
-                    "dur": act["duration_minutes"],
+                    "dur": act["duration_hours"],
                     "price": act["price"],
+                    "addr": f"{dest_name}, Turkey",
+                    "dest_id": dest_id,
                 },
             )
             activity_ids.append(aid)
             # Link random category and tags
             db.query(
                 "MATCH (a:Activity {id: $aid}), (c:Category {id: $cid}) "
-                "CREATE (a)-[:BELONGS_TO]->(c)",
+                "CREATE (a)-[:IN_CATEGORY]->(c)",
                 {"aid": aid, "cid": random.choice(categories)},
             )
-            for tid in random.sample(tags, 2):
+            chosen_tag_ids = random.sample(tags, 2)
+            chosen_tag_names = [id_to_tag_name[tid] for tid in chosen_tag_ids]
+            for tid in chosen_tag_ids:
                 db.query(
                     "MATCH (a:Activity {id: $aid}), (t:Tag {id: $tid}) "
                     "CREATE (a)-[:HAS_TAG]->(t)",
                     {"aid": aid, "tid": tid},
                 )
+            db.query(
+                "MATCH (a:Activity {id: $aid}) SET a.tags = $tags",
+                {"aid": aid, "tags": chosen_tag_names},
+            )
 
     # ── Restaurants (15, real Turkey restaurants) ──────────────────────────────
     restaurants_data = [
@@ -456,20 +483,29 @@ def main() -> None:
         )
 
     # ── Reviews (10) ───────────────────────────────────────────────────────────
+    reviewable_types: dict[str, str] = {}
+    for tid in activity_ids:
+        reviewable_types[tid] = "activity"
+    for tid in restaurant_ids:
+        reviewable_types[tid] = "restaurant"
+    for tid in accommodations:
+        reviewable_types[tid] = "accommodation"
     reviewables = activity_ids + restaurant_ids + accommodations
     print("Creating 10 Reviews...")
     for _ in range(10):
         uid_ = random.choice(users)
         tid = random.choice(reviewables)
+        target_type = reviewable_types[tid]
         db.query(
             "MATCH (u:User {id: $uid}), (t {id: $tid}) "
-            "CREATE (r:Review {id: $id, target_id: $tid, target_type: 'mixed', "
+            "CREATE (r:Review {id: $id, target_id: $tid, target_type: $tt, "
             "rating: $rating, comment: $comment, created_at: $ca}) "
             "CREATE (u)-[:WROTE]->(r) "
             "CREATE (r)-[:ABOUT]->(t)",
             {
                 "uid": uid_,
                 "tid": tid,
+                "tt": target_type,
                 "id": uid(),
                 "rating": random.randint(4, 5),
                 "comment": random.choice([
@@ -493,6 +529,40 @@ def main() -> None:
                 "MERGE (u)-[:VISITED]->(d)",
                 {"uid": user_id, "did": dest_id},
             )
+
+    # ── Transport connections ──────────────────────────────────────────────────
+    transport_routes = [
+        {"from": "Istanbul", "to": "Ankara", "name": "Istanbul-Ankara Flight", "type": "flight", "duration": 75, "price": 60.0},
+        {"from": "Istanbul", "to": "Antalya", "name": "Istanbul-Antalya Flight", "type": "flight", "duration": 80, "price": 55.0},
+        {"from": "Istanbul", "to": "Cappadocia", "name": "Istanbul-Cappadocia Flight", "type": "flight", "duration": 90, "price": 70.0},
+        {"from": "Istanbul", "to": "Trabzon", "name": "Istanbul-Trabzon Flight", "type": "flight", "duration": 95, "price": 65.0},
+        {"from": "Istanbul", "to": "Bodrum", "name": "Istanbul-Bodrum Flight", "type": "flight", "duration": 70, "price": 60.0},
+        {"from": "Ankara", "to": "Cappadocia", "name": "Ankara-Cappadocia Bus", "type": "bus", "duration": 180, "price": 15.0},
+        {"from": "Ankara", "to": "Antalya", "name": "Ankara-Antalya Bus", "type": "bus", "duration": 360, "price": 20.0},
+        {"from": "Ephesus", "to": "Istanbul", "name": "Izmir-Istanbul Flight", "type": "flight", "duration": 70, "price": 50.0},
+        {"from": "Ephesus", "to": "Antalya", "name": "Izmir-Antalya Bus", "type": "bus", "duration": 300, "price": 18.0},
+    ]
+    print("Creating Transport connections...")
+    for route in transport_routes:
+        from_id = destinations.get(route["from"])
+        to_id = destinations.get(route["to"])
+        if not from_id or not to_id:
+            continue
+        db.query(
+            "MATCH (d1:Destination {id: $from}), (d2:Destination {id: $to}) "
+            "CREATE (t:Transport {id: $id, name: $name, type: $type, duration: $dur, price: $price}) "
+            "CREATE (d1)-[:CONNECTED_BY]->(t) "
+            "CREATE (t)-[:CONNECTED_BY]->(d2)",
+            {
+                "from": from_id,
+                "to": to_id,
+                "id": uid(),
+                "name": route["name"],
+                "type": route["type"],
+                "dur": route["duration"],
+                "price": route["price"],
+            },
+        )
 
     print("\nSeed completed successfully!")
     print(f"  {len(dest_data)} destinations")

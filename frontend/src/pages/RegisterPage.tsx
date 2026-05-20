@@ -14,9 +14,15 @@ function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   async function handleRegister() {
     if (!name || !email || !password) {
       setError("Please fill in all fields.");
+      return;
+    }
+    if (!EMAIL_REGEX.test(email)) {
+      setError("Please enter a valid email address");
       return;
     }
     if (password !== confirmPassword) {
@@ -27,11 +33,15 @@ function RegisterPage() {
       setError("Password must be at least 8 characters.");
       return;
     }
+    if (!/[A-Z]/.test(password) || !/\d/.test(password)) {
+      setError("Password must contain at least one uppercase letter and one number.");
+      return;
+    }
     setLoading(true);
     setError("");
     try {
       const data = await registerUser({ name, email, password });
-      login(data.access_token, data.user);
+      login(data.user);
       navigate("/");
     } catch (err: any) {
       const detail = err?.response?.data?.detail;

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
+import { logoutUser } from "../api/auth";
 
 export type AuthUser = {
   id: string;
@@ -9,8 +10,8 @@ export type AuthUser = {
 
 type AuthContextType = {
   user: AuthUser | null;
-  token: string | null;
-  login: (token: string, user: AuthUser) => void;
+  isLoading: boolean;
+  login: (user: AuthUser) => void;
   logout: () => void;
 };
 
@@ -18,39 +19,27 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Restore session from localStorage on mount
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("auth_user");
-    if (storedToken && storedUser) {
-      try {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-      } catch {
-        localStorage.removeItem("token");
-        localStorage.removeItem("auth_user");
-      }
-    }
+    setIsLoading(false);
   }, []);
 
-  function login(newToken: string, newUser: AuthUser) {
-    localStorage.setItem("token", newToken);
-    localStorage.setItem("auth_user", JSON.stringify(newUser));
-    setToken(newToken);
+  function login(newUser: AuthUser) {
     setUser(newUser);
   }
 
-  function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("auth_user");
-    setToken(null);
+  async function logout() {
     setUser(null);
+    try {
+      await logoutUser();
+    } catch {
+      // ignore network errors on logout
+    }
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

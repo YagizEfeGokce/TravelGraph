@@ -319,9 +319,6 @@ function FestivalsPage() {
                             </span>
                           )}
                         </div>
-                        <button className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center hover:bg-primary/20 transition-colors" title="Add to route">
-                          <span className="material-symbols-outlined text-[16px]">add</span>
-                        </button>
                       </div>
 
                       {festival.is_recurring && (

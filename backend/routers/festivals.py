@@ -7,7 +7,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from core.dependencies import get_optional_user
+from core.dependencies import get_current_user, get_optional_user
 from db.connection import get_db
 from models.festival import FestivalCreate
 
@@ -79,7 +79,11 @@ def get_destination_festivals(destination_id: str, db: Any = Depends(get_db)) ->
 
 
 @router.post("/festivals", status_code=status.HTTP_201_CREATED)
-def create_festival(body: FestivalCreate, db: Any = Depends(get_db)) -> dict:
+def create_festival(
+    body: FestivalCreate,
+    db: Any = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+) -> dict:
     """Create a new festival."""
     res = db.query("MATCH (d:Destination {id: $id}) RETURN d", {"id": body.destination_id})
     if not res.result_set:

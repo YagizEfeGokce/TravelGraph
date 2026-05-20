@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 function Navbar() {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + "/");
@@ -18,9 +20,21 @@ function Navbar() {
           >
             TravelGraph
           </Link>
-          <div className="hidden md:flex items-center gap-6">
+          <button
+            className="md:hidden p-2"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className="material-symbols-outlined">
+              {menuOpen ? "close" : "menu"}
+            </span>
+          </button>
+          <div
+            className={`${menuOpen ? "flex" : "hidden"} md:flex flex-col md:flex-row items-center gap-6`}
+          >
             <Link
               to="/"
+              onClick={() => setMenuOpen(false)}
               className={`font-headline font-medium text-sm tracking-tight transition-colors ${
                 isActive("/") && location.pathname === "/"
                   ? "text-primary border-b-2 border-primary pb-1 font-bold"
@@ -31,6 +45,7 @@ function Navbar() {
             </Link>
             <Link
               to="/explore"
+              onClick={() => setMenuOpen(false)}
               className={`font-headline font-medium text-sm tracking-tight transition-colors ${
                 isActive("/explore") || isActive("/destinations")
                   ? "text-primary border-b-2 border-primary pb-1 font-bold"
@@ -41,6 +56,7 @@ function Navbar() {
             </Link>
             <Link
               to="/planner"
+              onClick={() => setMenuOpen(false)}
               className={`font-headline font-medium text-sm tracking-tight transition-colors ${
                 isActive("/planner")
                   ? "text-primary border-b-2 border-primary pb-1 font-bold"
@@ -51,6 +67,7 @@ function Navbar() {
             </Link>
             <Link
               to="/festivals"
+              onClick={() => setMenuOpen(false)}
               className={`font-headline font-medium text-sm tracking-tight transition-colors ${
                 isActive("/festivals")
                   ? "text-primary border-b-2 border-primary pb-1 font-bold"
@@ -70,6 +87,7 @@ function Navbar() {
               </span>
               <Link
                 to="/profile"
+                onClick={() => setMenuOpen(false)}
                 className="p-2 hover:bg-surface-container-low rounded-lg transition-all"
               >
                 <span className="material-symbols-outlined text-on-surface-variant">
@@ -87,12 +105,14 @@ function Navbar() {
             <>
               <Link
                 to="/login"
+                onClick={() => setMenuOpen(false)}
                 className="px-4 py-2 text-sm font-bold text-primary border border-primary/30 rounded-lg hover:bg-surface-container-low transition-all"
               >
                 Login
               </Link>
               <Link
                 to="/register"
+                onClick={() => setMenuOpen(false)}
                 className="px-4 py-2 text-sm font-bold text-on-primary bg-gradient-to-br from-primary to-primary-container rounded-lg shadow-card hover:opacity-90 transition-all"
               >
                 Register

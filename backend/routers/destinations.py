@@ -5,10 +5,11 @@ from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 
 from core.dependencies import get_current_user, get_optional_user
 from db.connection import get_db
+from main import limiter
 from models.destination import DestinationCreate, DestinationResponse
 from services.recommendation import find_route, recommend
 
@@ -100,7 +101,9 @@ def destination_route(
 
 
 @router.get("", response_model=list[DestinationResponse])
+@limiter.limit("30/minute")
 def list_destinations(
+    request: Request,
     country: str | None = Query(default=None),
     category: str | None = Query(default=None),
     season: str | None = Query(default=None),
@@ -239,7 +242,9 @@ def get_destination_festivals(
 
 
 @router.get("/{destination_id}/recommend", response_model=list[DestinationResponse])
+@limiter.limit("10/minute")
 def recommend_destinations(
+    request: Request,
     destination_id: str,
     user_id: str | None = Query(default=None),
     max_price: float = Query(default=500.0, ge=0.0),

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Cookie, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
 from core.security import decode_token
@@ -27,14 +27,23 @@ def _fetch_user_by_id(db: Any, user_id: str) -> dict | None:
 
 
 def get_current_user(
-    token: str = Depends(oauth2_scheme),
+    token_header: str | None = Depends(_optional_oauth2_scheme),
+    token_cookie: str | None = Cookie(None),
     db: Any = Depends(get_db),
 ) -> dict:
-    """Resolve the currently authenticated user from the Bearer token.
+    """Resolve the currently authenticated user from the Bearer token or cookie.
 
     Raises:
         HTTPException(401): If the token is missing, invalid, or the user no longer exists.
     """
+    token = token_header or token_cookie
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     payload = decode_token(token)
     if payload is None or payload.get("type") != "access":
         raise HTTPException(
@@ -63,7 +72,8 @@ def get_current_user(
 
 
 def get_optional_user(
-    token: str | None = Depends(_optional_oauth2_scheme),
+    token_header: str | None = Depends(_optional_oauth2_scheme),
+    token_cookie: str | None = Cookie(None),
     db: Any = Depends(get_db),
 ) -> dict | None:
     """Resolve the authenticated user if a valid token is present.
@@ -71,7 +81,8 @@ def get_optional_user(
     Returns ``None`` instead of raising when the token is absent or invalid,
     making it suitable for endpoints that behave differently for guests.
     """
-    if token is None:
+    token = token_header or token_cookie
+    if not token:
         return None
 
     payload = decode_token(token)

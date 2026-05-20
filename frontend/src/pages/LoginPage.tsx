@@ -13,16 +13,22 @@ function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   async function handleLogin() {
     if (!email || !password) {
       setError("Please enter your email and password.");
+      return;
+    }
+    if (!EMAIL_REGEX.test(email)) {
+      setError("Please enter a valid email address");
       return;
     }
     setLoading(true);
     setError("");
     try {
       const data = await loginUser({ email, password });
-      login(data.access_token, data.user);
+      login(data.user);
       const next = searchParams.get("next") || "/";
       navigate(next);
     } catch (err: any) {

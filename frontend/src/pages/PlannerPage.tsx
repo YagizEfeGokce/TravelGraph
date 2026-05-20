@@ -115,6 +115,10 @@ function PlannerPage() {
       setError("Please fill in all fields.");
       return;
     }
+    if (new Date(endDate) <= new Date(startDate)) {
+      setError("End date must be after start date.");
+      return;
+    }
     setError("");
     try {
       const created = await createItinerary({
@@ -136,6 +140,7 @@ function PlannerPage() {
   }
 
   async function handleDeleteItinerary(id: string) {
+    if (!window.confirm("Are you sure you want to delete this itinerary?")) return;
     try {
       await deleteItinerary(id);
       setItineraries((prev) => prev.filter((it) => it.id !== id));
@@ -176,6 +181,7 @@ function PlannerPage() {
 
   async function handleDeleteStop(stopId: string) {
     if (!selected) return;
+    if (!window.confirm("Are you sure you want to delete this stop?")) return;
     try {
       await deleteStop(selected.id, stopId);
       const updatedStops = selected.stops.filter((s) => s.id !== stopId);
@@ -202,6 +208,16 @@ function PlannerPage() {
       )
     : 0;
   const routeTotal = (selected?.stops.length ?? 0) * 1500;
+  const uniqueCountries = selected
+    ? new Set(
+        selected.stops
+          .map((s) => destinations.find((d) => d.id === s.destination_id)?.country)
+          .filter(Boolean),
+      ).size
+    : 0;
+  const uniqueCities = selected
+    ? new Set(selected.stops.map((s) => s.destination_name)).size
+    : 0;
 
   if (loading) {
     return (
@@ -270,16 +286,6 @@ function PlannerPage() {
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Top bar */}
         <div className="h-13 border-b border-outline-variant/30 flex items-center px-4 gap-3 bg-surface-container-lowest/60 flex-shrink-0 py-2">
-          <div className="flex-1 max-w-xs relative">
-            <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-outline text-[16px]">
-              search
-            </span>
-            <input
-              type="text"
-              placeholder="Search destinations..."
-              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-surface-container text-on-surface text-sm border border-outline-variant/30 focus:outline-none focus:border-primary transition-colors"
-            />
-          </div>
           <div className="flex gap-1">
             {(["Explore", "Plan"] as const).map((tab) => (
               <button
@@ -575,30 +581,6 @@ function PlannerPage() {
                 )}
               </div>
 
-              {/* Lunch Recommendation */}
-              <div className="bg-surface-container rounded-2xl p-4 border border-outline-variant/20">
-                <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-3 font-label">
-                  Lunch Recommendation
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                    <span className="material-symbols-outlined text-secondary text-[18px]">
-                      restaurant
-                    </span>
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-on-surface">
-                      {selected?.stops[0]?.destination_name
-                        ? `Best in ${selected.stops[0].destination_name}`
-                        : "Pick a stop first"}
-                    </p>
-                    <p className="text-[10px] text-on-surface-variant">
-                      Local cuisine · Highly rated
-                    </p>
-                  </div>
-                </div>
-              </div>
-
               {/* Graph stats */}
               {selected && (
                 <div className="bg-primary/5 rounded-2xl p-4 border border-primary/20">
@@ -609,7 +591,8 @@ function PlannerPage() {
                     {[
                       ["Nodes", selected.stops.length],
                       ["Edges", Math.max(0, selected.stops.length - 1)],
-                      ["Countries", 1],
+                      ["Countries", uniqueCountries],
+                      ["Cities", uniqueCities],
                       ["Est. Budget", `₺${routeTotal.toLocaleString()}`],
                     ].map(([label, val]) => (
                       <div key={String(label)} className="flex justify-between text-xs">
@@ -736,7 +719,7 @@ function PlannerPage() {
                   </label>
                   <input
                     type="number"
-                    min={1}
+                    min={0}
                     className="w-full px-4 py-3 rounded-xl bg-surface-container text-on-surface border border-outline-variant/30 text-sm focus:outline-none focus:border-primary transition-colors"
                     value={dayNumber}
                     onChange={(e) => setDayNumber(Number(e.target.value))}

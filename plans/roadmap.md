@@ -44,27 +44,23 @@ scope: root
 - [x] **Add 404 fallback + NotFoundPage** — Created `NotFoundPage.tsx`. Added `<Route path="*" />` in App.tsx.
 - [x] **Add mobile hamburger menu** — Added hamburger toggle to Navbar with responsive mobile drawer.
 - [x] **Add delete confirmation dialogs** — Added `window.confirm()` before itinerary and stop deletion in PlannerPage.
+- [x] **Move JWT to httpOnly cookies** — Backend sets `httponly` cookies on login/register. Dependencies read token from cookie first, then header. Frontend uses `withCredentials: true`, removed all `localStorage` usage.
+- [x] **Add input validation** — Email regex on Login/Register. Password strength check. `min={0}` on budget inputs. Date validation in PlannerPage.
+- [x] **Add `Promise.allSettled`** — DestinationDetailPage now handles partial failures gracefully instead of crashing if one of 5 requests fails.
 
 ## Pending (Remaining Defense Risks)
 
-### Critical
-1. [ ] **Move JWT from localStorage to httpOnly cookies** — XSS vulnerability (requires backend cookie support)
-
-### High
-2. [ ] **Add input validation** — Email format in frontend, negative budgets, date ranges
-3. [ ] **Add `Promise.allSettled`** — Destination detail page fails if one of 5 requests fails
-
 ### Medium
-4. [ ] **Add `maxLength` validation to query params**
-5. [ ] **Add healthcheck to docker-compose and railway.json**
-6. [ ] **Add structured logging with correlation IDs**
-7. [ ] **Fix CORS** — `allow_methods=["*"]` and `allow_headers=["*"]` too permissive
-8. [ ] **Add code splitting with React.lazy`**
-9. [ ] **Add skip-to-content link**
-10. [ ] **Add `aria-label` to icon buttons**
-11. [ ] **Add `loading="lazy"` to images**
+1. [ ] **Add `maxLength` validation to query params**
+2. [ ] **Add healthcheck to docker-compose and railway.json**
+3. [ ] **Add structured logging with correlation IDs**
+4. [ ] **Fix CORS** — `allow_methods=["*"]` and `allow_headers=["*"]` too permissive
+5. [ ] **Add code splitting with React.lazy`**
+6. [ ] **Add skip-to-content link**
+7. [ ] **Add `aria-label` to icon buttons**
+8. [ ] **Add `loading="lazy"` to images**
 
 ## Last Session
 - **Date:** 2026-05-20
-- **Left off:** 12 critical/high fixes completed. 50 files modified across backend + frontend. Rate limiting, Docker, 404, mobile menu, confirmation dialogs all done.
-- **Next:** Optionally address remaining items (JWT cookies, input validation, Promise.allSettled) or commit current changes.
+- **Left off:** All Critical and High items completed. 15 critical/high fixes applied across 50+ files. JWT cookies, input validation, Promise.allSettled, Docker, tests, CI all done.
+- **Next:** Optionally address remaining Medium items or commit current changes.

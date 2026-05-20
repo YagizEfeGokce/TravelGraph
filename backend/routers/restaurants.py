@@ -6,13 +6,18 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
+from core.dependencies import get_current_user
 from db.connection import get_db
 from models.restaurant import RestaurantCreate, RestaurantResponse
 
 router = APIRouter(tags=["restaurants"])
 
 @router.post("/restaurants", status_code=status.HTTP_201_CREATED)
-def create_restaurant(body: RestaurantCreate, db: Any = Depends(get_db)) -> dict:
+def create_restaurant(
+    body: RestaurantCreate,
+    db: Any = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+) -> dict:
     """Create a new restaurant."""
     res = db.query("MATCH (d:Destination {id: $id}) RETURN d", {"id": body.destination_id})
     if not res.result_set:

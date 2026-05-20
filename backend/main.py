@@ -69,10 +69,16 @@ def create_app() -> FastAPI:
     async def global_exception_handler(
         request: Request, exc: Exception
     ) -> JSONResponse:
-        logger.exception("Unhandled exception for %s %s", request.method, request.url)
+        logger.error(
+            "Unhandled exception for %s %s: %s",
+            request.method,
+            request.url,
+            exc,
+            exc_info=True,
+        )
         return JSONResponse(
             status_code=500,
-            content={"detail": str(exc), "type": type(exc).__name__},
+            content={"detail": "Internal server error"},
         )
 
     # ── Routers ────────────────────────────────────────────────────────────────

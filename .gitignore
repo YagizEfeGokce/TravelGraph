@@ -29,3 +29,10 @@ screenshots/*
 # OS
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Env files
+frontend/.env.production

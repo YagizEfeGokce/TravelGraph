@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Cookie, Depends, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 
@@ -19,6 +19,7 @@ from core.security import (
     verify_password,
 )
 from db.connection import get_db
+from main import limiter
 from models.user import UserCreate, UserResponse
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -68,18 +69,26 @@ def _node_to_response(db: Any, user_id: str) -> UserResponse:
 class RefreshRequest(BaseModel):
     """Body accepted by the token-refresh endpoint."""
 
-    refresh_token: str
+    refresh_token: str | None = None
 
 
 # ── Endpoints ──────────────────────────────────────────────────────────────────
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
-def register(body: UserCreate, db: Any = Depends(get_db)) -> dict:
+@limiter.limit("5/minute")
+def register(
+    request: Request,
+    body: UserCreate,
+    response: Response,
+    db: Any = Depends(get_db),
+) -> dict:
     """Register a new user.
 
     Returns the created user together with a fresh token pair.
     Raises HTTP 409 if the e-mail address is already taken.
     """
+    body.email = body.email.lower()
+
     # Email uniqueness check
     existing = db.query(
         "MATCH (u:User {email: $email}) RETURN u",
@@ -107,16 +116,23 @@ def register(body: UserCreate, db: Any = Depends(get_db)) -> dict:
     )
 
     token_data = {"sub": user_id}
+    access_token = create_access_token(token_data)
+    refresh_token = create_refresh_token(token_data)
+    response.set_cookie(key="access_token", value=access_token, httponly=True, samesite="lax")
+    response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, samesite="lax")
     return {
-        "access_token": create_access_token(token_data),
-        "refresh_token": create_refresh_token(token_data),
+        "access_token": access_token,
+        "refresh_token": refresh_token,
         "token_type": "bearer",
         "user": _node_to_response(db, user_id).model_dump(),
     }
 
 
 @router.post("/login")
+@limiter.limit("5/minute")
 def login(
+    request: Request,
+    response: Response,
     form: OAuth2PasswordRequestForm = Depends(),
     db: Any = Depends(get_db),
 ) -> dict:
@@ -125,7 +141,7 @@ def login(
     ``form.username`` is treated as the email address.
     Raises HTTP 429 after 5 consecutive failures within 15 minutes.
     """
-    email = form.username
+    email = form.username.lower()
 
     _check_lockout(email)
 
@@ -152,18 +168,34 @@ def login(
     _clear_failures(email)
 
     token_data = {"sub": user_props["id"]}
+    access_token = create_access_token(token_data)
+    refresh_token = create_refresh_token(token_data)
+    response.set_cookie(key="access_token", value=access_token, httponly=True, samesite="lax")
+    response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, samesite="lax")
     return {
-        "access_token": create_access_token(token_data),
-        "refresh_token": create_refresh_token(token_data),
+        "access_token": access_token,
+        "refresh_token": refresh_token,
         "token_type": "bearer",
         "user": UserResponse.from_node(user_props).model_dump(),
     }
 
 
 @router.post("/refresh")
-def refresh_token(body: RefreshRequest) -> dict:
+@limiter.limit("30/minute")
+def refresh_token(
+    request: Request,
+    body: RefreshRequest,
+    refresh_token_cookie: str | None = Cookie(None),
+) -> dict:
     """Issue a new access token from a valid refresh token."""
-    payload = decode_token(body.refresh_token)
+    token = refresh_token_cookie or body.refresh_token
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Refresh token missing",
+        )
+
+    payload = decode_token(token)
     if payload is None or payload.get("type") != "refresh":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -184,6 +216,15 @@ def refresh_token(body: RefreshRequest) -> dict:
 
 
 @router.get("/me")
-def me(current_user: dict = Depends(get_current_user)) -> dict:
+@limiter.limit("30/minute")
+def me(request: Request, current_user: dict = Depends(get_current_user)) -> dict:
     """Return the authenticated user's profile."""
     return UserResponse.from_node(current_user).model_dump()
+
+
+@router.post("/logout")
+def logout(response: Response) -> dict:
+    """Clear authentication cookies."""
+    response.delete_cookie("access_token")
+    response.delete_cookie("refresh_token")
+    return {"message": "Logged out successfully"}

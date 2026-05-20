@@ -120,6 +120,22 @@ ORDER BY museum_count DESC
 LIMIT 5
 ```
 
+## 🗂️ Plans Generated
+
+Implementation and documentation plans live in the [`plans/`](plans/) directory:
+
+| Plan | Covers |
+|------|--------|
+| [`plans/roadmap.md`](plans/roadmap.md) | Completed, in-progress, and pending work |
+| [`plans/architecture.md`](plans/architecture.md) | System components, data flow, tech stack |
+| [`plans/api.md`](plans/api.md) | Endpoints, contracts, auth, rate limiting |
+| [`plans/business-logic.md`](plans/business-logic.md) | Domain rules, workflows, broken features |
+| [`plans/data-model.md`](plans/data-model.md) | FalkorDB schema, indexing, seeding |
+| [`plans/security.md`](plans/security.md) | Vulnerabilities, threat model, fix roadmap |
+| [`plans/ui-ux.md`](plans/ui-ux.md) | Design system, components, accessibility |
+| [`plans/deployment.md`](plans/deployment.md) | Infrastructure, pipelines, env strategy |
+| [`plans/testing.md`](plans/testing.md) | Test pyramid, coverage, CI/CD |
+
 ## 👥 Team
 
 | Name | Role |

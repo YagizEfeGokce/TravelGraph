@@ -1,5 +1,6 @@
 import { AuthProvider } from "./contexts/AuthContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import Navbar from "./components/Navbar";
 
@@ -12,6 +13,7 @@ import FestivalsPage from "./pages/FestivalsPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -24,12 +26,13 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/explore" element={<ExplorePage />} />
               <Route path="/destinations/:id" element={<DestinationDetailPage />} />
-              <Route path="/planner" element={<PlannerPage />} />
-              <Route path="/planner/:id/budget" element={<BudgetPlannerPage />} />
+              <Route path="/planner" element={<ProtectedRoute><PlannerPage /></ProtectedRoute>} />
+              <Route path="/planner/:id/budget" element={<ProtectedRoute><BudgetPlannerPage /></ProtectedRoute>} />
               <Route path="/festivals" element={<FestivalsPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
         </div>

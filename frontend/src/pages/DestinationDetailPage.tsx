@@ -165,18 +165,18 @@ function DestinationDetailPage() {
     if (!id) return;
     setLoading(true);
     try {
-      const [dest, acts, rests, accs, fests] = await Promise.all([
+      const [destRes, actsRes, restRes, accRes, festRes] = await Promise.allSettled([
         apiClient.get(`/destinations/${id}`),
         apiClient.get(`/destinations/${id}/activities`),
         apiClient.get(`/destinations/${id}/restaurants`),
         apiClient.get(`/destinations/${id}/accommodations`),
         apiClient.get(`/destinations/${id}/festivals`),
       ]);
-      setDestination(dest.data);
-      setActivities(acts.data);
-      setRestaurants(rests.data);
-      setAccommodations(accs.data);
-      setFestivals(fests.data);
+      if (destRes.status === "fulfilled") setDestination(destRes.value.data);
+      if (actsRes.status === "fulfilled") setActivities(actsRes.value.data);
+      if (restRes.status === "fulfilled") setRestaurants(restRes.value.data);
+      if (accRes.status === "fulfilled") setAccommodations(accRes.value.data);
+      if (festRes.status === "fulfilled") setFestivals(festRes.value.data);
     } catch {
       setError("Could not load destination details.");
     } finally {

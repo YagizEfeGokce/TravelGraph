@@ -5,16 +5,32 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
-  if (token && config.headers) {
-    (config.headers as any)["Authorization"] = `Bearer ${token}`;
+    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        await axios.post(
+          `${import.meta.env.VITE_API_URL ?? "http://localhost:8000"}/api/auth/refresh`,
+          {},
+          { withCredentials: true }
+        );
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
   }
-
-  return config;
-});
+);
 
 export default apiClient;
