@@ -58,7 +58,7 @@ type Review = {
 
 function StarRow({ rating }: { rating: number }) {
   return (
-    <span className="text-amber-400 text-sm">
+    <span className="text-amber-400 text-sm" aria-label={`${rating} out of 5 stars`}>
       {"★".repeat(rating)}{"☆".repeat(5 - rating)}
     </span>
   );
@@ -328,7 +328,10 @@ function DestinationDetailPage() {
                     {acc.name}
                   </h3>
                   <p className="text-sm text-on-surface-variant mb-2 capitalize">
-                    {acc.type.replace("_", " ")} {"★".repeat(acc.star_rating)}
+                    {acc.type.replace("_", " ")}{" "}
+                    <span aria-label={`${acc.star_rating} out of 5 stars`}>
+                      {"★".repeat(acc.star_rating)}
+                    </span>
                   </p>
                   <p className="text-lg font-black text-primary font-headline">
                     ₺{acc.price_per_night.toFixed(0)}{" "}

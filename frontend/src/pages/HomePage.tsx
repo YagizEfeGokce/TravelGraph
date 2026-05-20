@@ -50,6 +50,8 @@ function HomePage() {
               <img
                 src={ISTANBUL_IMG}
                 alt="Istanbul"
+                width={800}
+                height={1000}
                 loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover"
               />
