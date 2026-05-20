@@ -1,6 +1,4 @@
 """Authentication routes: register, login, token refresh, and current-user lookup."""
-from __future__ import annotations
-
 import time
 from datetime import datetime, timezone
 from typing import Any
@@ -19,7 +17,7 @@ from core.security import (
     verify_password,
 )
 from db.connection import get_db
-from main import limiter
+from core.limiter import limiter
 from models.user import UserCreate, UserResponse
 
 router = APIRouter(prefix="/auth", tags=["auth"])

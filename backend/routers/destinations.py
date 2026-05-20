@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 
 from core.dependencies import get_current_user, get_optional_user
 from db.connection import get_db
-from main import limiter
+from core.limiter import limiter
 from models.destination import DestinationCreate, DestinationResponse
 from services.recommendation import find_route, recommend
 
