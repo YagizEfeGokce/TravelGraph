@@ -9,14 +9,13 @@ scope: root
 
 ## Current State
 
-**Zero automated tests exist.**
+**Tests exist and CI is configured.**
 
-- No backend unit tests (pytest)
-- No backend integration tests (httpx / TestClient)
-- No frontend unit tests (Vitest / Jest)
-- No frontend component tests
-- No end-to-end tests (Playwright / Cypress)
-- Only manual testing file: `backend/api_test.http`
+- Backend: `pytest` + `httpx` + `TestClient` — 10 tests collected (3 pass without DB, 7 require FalkorDB)
+- CI: `.github/workflows/ci.yml` runs pytest with FalkorDB service container
+- Frontend: No automated tests yet (Vitest not configured)
+- E2E: None
+- Manual testing file: `backend/api_test.http`
 
 ## Why This Matters for Defense
 
@@ -120,11 +119,11 @@ jobs:
 
 ## Testing Roadmap
 
-| Phase | Deliverable | Effort |
-|-------|-------------|--------|
-| 1 | Add pytest + TestClient, test auth endpoints | 2 hours |
-| 2 | Add tests for all routers | 4 hours |
-| 3 | Add GitHub Actions CI | 1 hour |
-| 4 | Add Vitest + test auth context | 2 hours |
-| 5 | Add Playwright E2E for 3 critical journeys | 3 hours |
-| 6 | Add linting configs (ruff, mypy, ESLint) | 1 hour |
+| Phase | Deliverable | Status | Commit |
+|-------|-------------|--------|--------|
+| 1 | Add pytest + TestClient, test auth endpoints | **DONE** | `1e1feba` |
+| 2 | Add tests for all routers | **PARTIAL** | `1e1feba` (destinations + health + auth) |
+| 3 | Add GitHub Actions CI | **DONE** | `1e1feba` |
+| 4 | Add Vitest + test auth context | **PENDING** | — |
+| 5 | Add Playwright E2E for 3 critical journeys | **PENDING** | — |
+| 6 | Add linting configs (ruff, mypy, ESLint) | **PENDING** | — |

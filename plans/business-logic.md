@@ -55,16 +55,16 @@ scope: root
 3. Exclude already-visited destinations with `NOT (u)-[:VISITED]->(d)`
 4. Order by match score DESC, limit 5
 
-**Current Issue:** The frontend `useRecommendations` hook exists but is **never used** in any page. The "Best Next Stop" in Planner is just `.find()` on the destination list.
+**FIXED:** The frontend `useRecommendations` hook is now used in PlannerPage for the "Best Next Stop" feature.
 
 ### Itinerary Planning
 1. Authenticated user creates Itinerary with title, dates, visibility
 2. User adds ItineraryStops with destination, day, order, notes
 3. Stops ordered by (day_number, order)
-4. User can delete or reorder stops
+4. User can delete or reorder stops (with `window.confirm()`)
 5. Public itineraries viewable without auth
 
-**Current Issue:** PlannerPage "Graph Analysis" shows hardcoded stats (`"Countries", 1`) regardless of actual data.
+**FIXED:** PlannerPage "Graph Analysis" now counts unique countries and cities dynamically.
 
 ### Budget Planning
 **Intended Flow:**
@@ -73,7 +73,7 @@ scope: root
 3. Sum of line items must not exceed total_budget
 4. BudgetPlan is fetched and updated via API
 
-**Current Issue:** BudgetPlannerPage is a **complete mockup**. It ignores the `:id` URL param, never calls `getBudget` or `createBudget`, and the "Save Budget" button has zero `onClick` handler.
+**FIXED:** BudgetPlannerPage now reads `:id` from URL, calls `getBudget`, and Save button triggers `createBudget` or `updateBudget`.
 
 ### Review System
 1. Authenticated user submits Review with target_id, target_type, rating, comment
@@ -81,16 +81,16 @@ scope: root
 3. Review linked to User via WROTE edge and to target via ABOUT edge
 4. Reviews displayed on destination detail page
 
-**Current Issue:** ReviewCard component exists but is never imported. Reviews are rendered inline in DestinationDetailPage.
+**FIXED:** ReviewCard component was deleted; reviews rendered inline is the intended pattern.
 
 ## Known Broken Features
 
 | Feature | Status | Evidence |
 |---------|--------|----------|
-| Budget Planner | **100% fake** | No API calls, no `onClick` on Save |
-| Search in Planner | **Decorative only** | Input exists but no state/filter logic |
-| "Add to route" on Festivals | **Decorative only** | Button with no `onClick` |
-| Recommendations (UI) | **Not connected** | `useRecommendations` hook never imported |
-| Lunch Recommendation | **Hardcoded** | "Local cuisine · Highly rated" is static text |
-| Currency Preference | **Local state only** | Not persisted to API or localStorage |
-| AI Insight Slider | **Placebo** | Changes no behavior anywhere |
+| Budget Planner | **FIXED** | Wired to real API; Save functional |
+| Search in Planner | **REMOVED** | Decorative input removed |
+| "Add to route" on Festivals | **REMOVED** | Decorative button removed |
+| Recommendations (UI) | **FIXED** | Hook used in PlannerPage |
+| Lunch Recommendation | **REMOVED** | Hardcoded panel removed |
+| Currency Preference | Local state only | Not persisted — acceptable |
+| AI Insight Slider | **REMOVED** | Placebo component removed |

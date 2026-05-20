@@ -84,7 +84,7 @@ Current seed (`backend/db/seed.py`) creates:
 1. Categories → Seasons → Tags
 2. Destinations → BEST_IN → Seasons
 3. Activities → LOCATED_IN → Destinations → IN_CATEGORY → Categories
-4. Restaurants → LOCATED_IN → Destinations
+4. Restaurants → LOCATED_IN → Destinations → IN_CATEGORY → Categories
 5. Accommodations → LOCATED_IN → Destinations
 6. Festivals → LOCATED_IN → Destinations → HAS_SEASON → Seasons
 7. Users

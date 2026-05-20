@@ -40,21 +40,21 @@ scope: root
 |--------|------|------|--------|
 | GET | `/` | Optional | Working |
 | GET | `/destinations/{id}/restaurants` | Optional | Working |
-| POST | `/` | **None** | **BROKEN — Missing auth** |
+| POST | `/` | Bearer | **FIXED** |
 
 ### Festivals (`/api/festivals`)
 | Method | Path | Auth | Status |
 |--------|------|------|--------|
 | GET | `/` | Optional | Working |
 | GET | `/destinations/{id}/festivals` | Optional | Working |
-| POST | `/` | **None** | **BROKEN — Missing auth** |
+| POST | `/` | Bearer | **FIXED** |
 
 ### Tags & Categories (`/api/tags`, `/api/categories`)
 | Method | Path | Auth | Status |
 |--------|------|------|--------|
 | GET | `/tags` | Optional | Working |
 | POST | `/tags` | Bearer | Working |
-| POST | `/activities/{id}/tags` | **None** | **BROKEN — Missing auth** |
+| POST | `/activities/{id}/tags` | Bearer | **FIXED** |
 | DELETE | `/activities/{id}/tags/{tag_id}` | Bearer | Working |
 | GET | `/categories` | Optional | Working |
 | GET | `/categories/{id}/activities` | Optional | Working |
@@ -117,17 +117,17 @@ Authorization: Bearer <eyJhbGciOiJIUzI1NiIs...>
 
 | Route Group | Limit | Current Status |
 |-------------|-------|----------------|
-| Auth (register, login) | 5 / minute | **NOT ENFORCED** |
-| Auth (refresh, me) | 30 / minute | **NOT ENFORCED** |
-| Graph queries (recommend, route) | 10 / minute | **NOT ENFORCED** |
-| General read | 60 / minute | **NOT ENFORCED** |
+| Auth (register, login) | 5 / minute | **ENFORCED** |
+| Auth (refresh, me) | 30 / minute | **ENFORCED** |
+| Graph queries (recommend, route) | 10 / minute | **ENFORCED** |
+| General read | 60 / minute | Default active |
 
-**CRITICAL:** slowapi `Limiter` is instantiated in `main.py` but **zero** routes carry `@limiter.limit(...)` decorators. Rate limiting is purely decorative.
+**FIXED:** `@limiter.limit(...)` decorators applied to auth routes (5/min) and destination routes (30/min, recommend 10/min).
 
 ## Known API Issues
 
-1. **Unauthenticated POST endpoints** — `POST /restaurants`, `POST /festivals`, `POST /activities/{id}/tags` allow anonymous data mutation.
-2. **No pagination** — `GET /destinations`, `GET /activities` return unbounded lists.
-3. **No versioning** — API URL is `/api` with no version prefix.
-4. **No OpenAPI tags** — Swagger UI groups all endpoints under "default".
-5. **Error responses leak internals** — Global exception handler returns `str(exc)` to clients.
+1. ~~**Unauthenticated POST endpoints**~~ — **FIXED** All POST endpoints now require `get_current_user`
+2. **No pagination** — `GET /destinations`, `GET /activities` return unbounded lists. **PENDING**
+3. **No versioning** — API URL is `/api` with no version prefix. **PENDING**
+4. **No OpenAPI tags** — Swagger UI groups all endpoints under "default". **PENDING**
+5. ~~**Error responses leak internals**~~ — **FIXED** Global handler returns generic `"Internal server error"`

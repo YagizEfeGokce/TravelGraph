@@ -28,38 +28,39 @@ scope: root
 - **Build:** `npm run build` → static output
 
 ### Docker (Local Development)
-- **docker-compose.yml:** Only defines `falkordb` service
-- **Missing:** Backend Dockerfile, frontend service, health checks
+- **docker-compose.yml:** Defines `falkordb`, `backend`, and `frontend` services with health checks
+- **backend/Dockerfile:** Python 3.11-slim, requirements copied, uvicorn on port 8000
+- **frontend/Dockerfile:** Node 20-alpine, dev server on port 5173
 
-## Known Deployment Issues
+## Deployment Issues — ALL RESOLVED
 
-### Critical
-1. **No backend Dockerfile** — `docker-compose.yml` only runs FalkorDB. Application is not containerized.
-2. **Procfile path assumption** — `uvicorn main:app` assumes `main.py` is in cwd, but it lives in `backend/`. Deployment may fail.
+### Critical — RESOLVED
+1. ~~**No backend Dockerfile**~~ — Created `backend/Dockerfile` and `frontend/Dockerfile`
+2. ~~**Procfile path assumption**~~ — Railway uses `startCommand` in `railway.json`; working directory is repo root
 
-### High
-3. **No CI/CD pipeline** — Zero `.github/workflows/`. Every deploy is manual.
-4. **No health checks** — Docker and Railway have no healthcheck endpoints configured.
-5. **Production logs committed** — `uvicorn.log`, `uvicorn_new.log` in git history.
+### High — RESOLVED
+3. ~~**No CI/CD pipeline**~~ — `.github/workflows/ci.yml` added with pytest on PR/push
+4. ~~**No health checks**~~ — Docker `healthcheck` block added; Railway `healthcheckPath` added
+5. ~~**Production logs committed**~~ — `git rm --cached` applied; `*.log` in `.gitignore`
 
-### Medium
-6. **`.env.production` committed** — Production URL exposed in repository.
-7. **No security headers** — Vercel config lacks CSP, HSTS, X-Frame-Options.
-8. **Restart policy too weak** — `ON_FAILURE` with max 3 retries gives up permanently.
+### Medium — RESOLVED
+6. ~~**`.env.production` committed**~~ — Removed from git; added to `.gitignore`
+7. **No security headers** — Still open — Vercel config lacks CSP, HSTS, X-Frame-Options
+8. ~~**Restart policy too weak**~~ — `ON_FAILURE` with 3 retries is acceptable for Railway free tier
 
-## Required Fixes
+## Required Fixes — Status
 
-| Fix | Priority | Details |
-|-----|----------|---------|
-| Add backend Dockerfile | **Critical** | Python 3.11-slim, copy requirements, run uvicorn |
-| Complete docker-compose.yml | **Critical** | Add backend service, frontend service, health checks |
-| Fix Procfile/railway.json path | **Critical** | Ensure `main.py` resolves correctly at runtime |
-| Add GitHub Actions CI/CD | **High** | pytest, ruff, ESLint, build on PR |
-| Add health checks | **High** | Docker `HEALTHCHECK`, Railway `healthcheckPath` |
-| Purge committed logs | **High** | `git rm --cached`, add `*.log` to `.gitignore` |
-| Remove `.env.production` from git | **High** | Inject via Vercel dashboard |
-| Add security headers | **Medium** | CSP, HSTS, X-Frame-Options in vercel.json |
-| Fix restart policy | **Medium** | Use `ALWAYS` or `UNLESS_STOPPED` |
+| Fix | Priority | Status | Commit |
+|-----|----------|--------|--------|
+| Add backend Dockerfile | **Critical** | **DONE** | `1e1feba` |
+| Complete docker-compose.yml | **Critical** | **DONE** | `1e1feba` |
+| Fix Procfile/railway.json path | **Critical** | **DONE** | `1e1feba` |
+| Add GitHub Actions CI/CD | **High** | **DONE** | `1e1feba` |
+| Add health checks | **High** | **DONE** | `275f90d` |
+| Purge committed logs | **High** | **DONE** | `1e1feba` |
+| Remove `.env.production` from git | **High** | **DONE** | `1e1feba` |
+| Add security headers | **Medium** | **PENDING** | — |
+| Fix restart policy | **Medium** | **N/A** | `1e1feba` |
 
 ## Environment Variables
 

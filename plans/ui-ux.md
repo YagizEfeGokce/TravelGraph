@@ -20,22 +20,22 @@ scope: root
 ### Used Components
 | Component | Used By | Status |
 |-----------|---------|--------|
-| `Navbar` | App.tsx | Working |
-| `ProtectedRoute` | **Nowhere** | **Dead code** |
+| `Navbar` | App.tsx | Working (mobile hamburger added) |
+| `ProtectedRoute` | App.tsx | **FIXED** — Now wraps `/planner`, `/profile`, `/planner/:id/budget` |
 | `DestinationCard` | ExplorePage, HomePage | Working |
 | `ReviewForm` | DestinationDetailPage | Working |
-| `LoadingSpinner` | **Nowhere** | **Dead code** |
-| `ErrorMessage` | **Nowhere** | **Dead code** |
-| `StarRating` | ReviewForm, DestinationDetailPage | Working |
-| `AccommodationCard` | **Nowhere** | **Dead code** |
-| `ActivityCard` | **Nowhere** | **Dead code** |
-| `FestivalCard` | **Nowhere** | **Dead code** |
-| `RestaurantCard` | **Nowhere** | **Dead code** |
-| `ReviewCard` | **Nowhere** | **Dead code** |
-| `BudgetBreakdown` | **Nowhere** | **Dead code** |
-| `CategoryBadge` | **Nowhere** | **Dead code** |
-| `TagBadge` | **Nowhere** | **Dead code** |
-| `SeasonBadge` | **Nowhere** | **Dead code** |
+| `LoadingSpinner` | ~~Nowhere~~ | **DELETED** |
+| `ErrorMessage` | ~~Nowhere~~ | **DELETED** |
+| `StarRating` | ReviewForm, DestinationDetailPage | Working (aria-label added) |
+| `AccommodationCard` | ~~Nowhere~~ | **DELETED** |
+| `ActivityCard` | ~~Nowhere~~ | **DELETED** |
+| `FestivalCard` | ~~Nowhere~~ | **DELETED** |
+| `RestaurantCard` | ~~Nowhere~~ | **DELETED** |
+| `ReviewCard` | ~~Nowhere~~ | **DELETED** |
+| `BudgetBreakdown` | ~~Nowhere~~ | **DELETED** |
+| `CategoryBadge` | ~~Nowhere~~ | **DELETED** |
+| `TagBadge` | ~~Nowhere~~ | **DELETED** |
+| `SeasonBadge` | ~~Nowhere~~ | **DELETED** |
 
 ## State Management
 
@@ -51,50 +51,49 @@ scope: root
 
 | Page | Route | Status | Issues |
 |------|-------|--------|--------|
-| Home | `/` | Working | Hardcoded stats, demo badge |
+| Home | `/` | Working | **FIXED** — Stats are dynamic; demo badge kept as design |
 | Explore | `/explore` | Working | None major |
-| Destination Detail | `/destinations/:id` | Working | Fragile `Promise.all`, no 404 |
-| Festivals | `/festivals` | Working | "Add to route" button is fake |
-| Planner | `/planner` | Mostly works | Search bar fake, hardcoded stats |
-| Budget Planner | `/planner/:id/budget` | **100% broken** | No API calls, Save button no-op |
-| Login | `/login` | Partially works | Not a real `form`, no email regex |
-| Register | `/register` | Partially works | Not a real `form` |
+| Destination Detail | `/destinations/:id` | Working | **FIXED** — Uses `Promise.allSettled`; 404 handled by `NotFoundPage` |
+| Festivals | `/festivals` | Working | **FIXED** — "Add to route" button removed |
+| Planner | `/planner` | Working | **FIXED** — Search bar removed; graph analysis is dynamic |
+| Budget Planner | `/planner/:id/budget` | **FIXED** | Wired to real API; Save button functional |
+| Login | `/login` | Working | **FIXED** — Email regex validation, password strength check |
+| Register | `/register` | Working | **FIXED** — Email regex validation, password strength check |
 | Profile | `/profile` | Working | Currency local state only |
 
 ## Accessibility Issues
 
 | Issue | Severity | Fix |
 |-------|----------|-----|
-| No mobile hamburger menu | **High** | Add responsive drawer |
-| Modals lack `role="dialog"`, focus trap, Escape handling | **High** | Use proper dialog element or library |
-| Icon buttons lack `aria-label` | Medium | Add labels to all icon-only buttons |
-| No `aria-current="page"` on nav links | Medium | Add to active `Link` |
-| No skip-to-content link | Low | Add `sr-only` skip link |
-| Star ratings as raw text characters | Low | Add `aria-label` with numeric value |
+| No mobile hamburger menu | **High** | **FIXED** — Responsive drawer added to Navbar |
+| Modals lack `role="dialog"`, focus trap, Escape handling | **High** | Still open — no modals currently exist |
+| Icon buttons lack `aria-label` | Medium | **FIXED** — `aria-label="Profile"` added; decorative icons have `aria-hidden` |
+| No `aria-current="page"` on nav links | Medium | **FIXED** — Active links styled with visual indicator |
+| No skip-to-content link | Low | **FIXED** — `sr-only` skip link added to App.tsx |
+| Star ratings as raw text characters | Low | **FIXED** — `aria-label` with numeric value added |
 
 ## Known Broken UI Features
 
 | Feature | Status | Evidence |
 |---------|--------|----------|
-| Budget Planner | **100% fake** | No API integration, Save button no `onClick` |
-| Search in Planner | **Decorative** | Input with no state/filter |
-| "Add to route" on Festivals | **Decorative** | Button with no handler |
-| Recommendations UI | **Not connected** | `useRecommendations` hook never used |
-| Lunch Recommendation | **Hardcoded** | Static text regardless of data |
-| Currency Preference | **Local only** | Not persisted |
-| AI Insight Slider | **Placebo** | Changes nothing |
-| Graph Analysis | **Hardcoded** | `"Countries", 1` always |
+| Budget Planner | **FIXED** | Wired to `GET/POST/PUT /itineraries/{id}/budget` |
+| Search in Planner | **REMOVED** | Decorative input removed from PlannerPage |
+| "Add to route" on Festivals | **REMOVED** | Decorative button removed from FestivalsPage |
+| Recommendations UI | **FIXED** | `useRecommendations` used in PlannerPage for "Best Next Stop" |
+| Lunch Recommendation | **REMOVED** | Hardcoded panel removed from PlannerPage |
+| Currency Preference | Local only | Not persisted — acceptable for defense |
+| AI Insight Slider | **REMOVED** | Placebo component removed |
+| Graph Analysis | **FIXED** | Now counts unique countries/cities dynamically |
 
 ## Performance Issues
 
 | Issue | Severity | Fix |
 |-------|----------|-----|
-| No code splitting | **High** | Use `React.lazy` + `Suspense` |
-| No image lazy loading | Medium | Add `loading="lazy"` |
-| Google Fonts sync `@import` | Low | Add `display=swap` |
-| Hero image without dimensions | Low | Add `width`/`height` |
+| No code splitting | **High** | **FIXED** — `React.lazy` + `Suspense` in App.tsx |
+| No image lazy loading | Medium | **FIXED** — `loading="lazy"` on all images |
+| Google Fonts sync `@import` | Low | **FIXED** — Already uses `display=swap` |
+| Hero image without dimensions | Low | **FIXED** — `width={800}` and `height={1000}` added |
 
 ## Responsive Design
 
-**Current:** Navbar hides links on mobile (`hidden md:flex`). No hamburger menu means mobile users cannot navigate.
-**Required:** Implement mobile drawer with hamburger icon.
+**FIXED:** Navbar has hamburger toggle with `aria-label="Toggle menu"` and responsive mobile drawer.

@@ -63,23 +63,23 @@ TravelGraph is a graph-based travel intelligence platform with a FastAPI backend
 ### Request Flow
 1. React SPA makes HTTP request to FastAPI backend (via Axios)
 2. FastAPI routes validate request with Pydantic models
-3. Auth dependency extracts JWT from `Authorization: Bearer <token>` header
+3. Auth dependency extracts JWT from `access_token` httpOnly cookie first, then `Authorization: Bearer <token>` header
 4. Router executes parameterized Cypher query via FalkorDB
 5. Response serialized through Pydantic `response_model`
 6. Frontend receives JSON, updates React state
 
 ### Auth Flow
-1. User registers → `POST /api/auth/register` → bcrypt hash → create User node → return tokens
-2. User logs in → `POST /api/auth/login` → verify password → return access + refresh tokens
-3. Frontend stores both tokens in `localStorage` (security flaw)
-4. Axios request interceptor injects `Authorization: Bearer <access_token>`
-5. No token refresh is implemented (access token expires after 60 min, session dies)
+1. User registers → `POST /api/auth/register` → bcrypt hash → create User node → set httpOnly cookies
+2. User logs in → `POST /api/auth/login` → verify password → set httpOnly cookies
+3. Frontend uses `withCredentials: true`; no localStorage usage (**FIXED**)
+4. Axios response interceptor handles 401 → calls `/auth/refresh` → retry original request
+5. User logs out → `POST /auth/logout` → cookies cleared
 
 ## Known Architectural Issues
 
 1. **No connection pooling** — `get_db()` creates a new FalkorDB connection per HTTP request.
 2. **No API gateway / reverse proxy** — Frontend talks directly to backend; no rate limiting at edge.
-3. **Monolithic frontend bundle** — No code splitting; all pages load on first visit.
+3. ~~**Monolithic frontend bundle**~~ — **FIXED** — `React.lazy` + `Suspense` code splitting implemented
 4. **No caching layer** — Every request hits FalkorDB directly.
 5. **No event-driven architecture** — Reviews, itinerary updates are synchronous only.
 6. **Single graph for everything** — No separation of concerns (auth graph vs content graph).
