@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import uuid
 from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
 
@@ -42,6 +43,15 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
+    # ── Correlation ID middleware ──────────────────────────────────────────────
+    @app.middleware("http")
+    async def correlation_id_middleware(request: Request, call_next):
+        cid = request.headers.get("X-Request-ID") or str(uuid.uuid4())[:12]
+        request.state.correlation_id = cid
+        response = await call_next(request)
+        response.headers["X-Request-ID"] = cid
+        return response
+
     # ── Rate limiting ──────────────────────────────────────────────────────────
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
@@ -51,8 +61,8 @@ def create_app() -> FastAPI:
         CORSMiddleware,
         allow_origins=settings.cors_origins_list,
         allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
     )
 
     # ── Exception handlers ─────────────────────────────────────────────────────
@@ -69,8 +79,10 @@ def create_app() -> FastAPI:
     async def global_exception_handler(
         request: Request, exc: Exception
     ) -> JSONResponse:
+        cid = getattr(request.state, "correlation_id", "unknown")
         logger.error(
-            "Unhandled exception for %s %s: %s",
+            "[%s] Unhandled exception for %s %s: %s",
+            cid,
             request.method,
             request.url,
             exc,
@@ -79,6 +91,7 @@ def create_app() -> FastAPI:
         return JSONResponse(
             status_code=500,
             content={"detail": "Internal server error"},
+            headers={"X-Request-ID": cid},
         )
 
     # ── Routers ────────────────────────────────────────────────────────────────

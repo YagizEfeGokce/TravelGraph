@@ -48,19 +48,21 @@ scope: root
 - [x] **Add input validation** — Email regex on Login/Register. Password strength check. `min={0}` on budget inputs. Date validation in PlannerPage.
 - [x] **Add `Promise.allSettled`** — DestinationDetailPage now handles partial failures gracefully instead of crashing if one of 5 requests fails.
 
+### Medium Fixes Applied
+- [x] **Add `maxLength` validation to query params** — Added `max_length=100` (or 20 for price_range) to all string Query params in destinations, activities, festivals, restaurants routers.
+- [x] **Add healthcheck to docker-compose and railway.json** — Added `healthcheck` block to backend service in docker-compose with `condition: service_healthy` dependencies. Added `healthcheckPath` and `healthcheckTimeout` to railway.json.
+- [x] **Add structured logging with correlation IDs** — Added `X-Request-ID` middleware that generates or forwards correlation IDs. Exception handler now logs with `[cid]` prefix and returns `X-Request-ID` header.
+- [x] **Fix CORS** — Restricted `allow_methods` to `GET, POST, PUT, DELETE, OPTIONS` and `allow_headers` to `Authorization, Content-Type, X-Request-ID`.
+- [x] **Add code splitting with React.lazy** — Wrapped all page components except HomePage in `lazy()` and `Suspense` in App.tsx.
+- [x] **Add skip-to-content link** — Added visually-hidden skip link that appears on focus, targeting `#main-content`.
+- [x] **Add `aria-label` to icon buttons** — Added `aria-label="Profile"` to Navbar profile link. Added `aria-hidden="true"` to decorative icons.
+- [x] **Add `loading="lazy"` to images** — Added to hero image, festival cards, planner suggested destination, and profile itinerary cards.
+
 ## Pending (Remaining Defense Risks)
 
-### Medium
-1. [ ] **Add `maxLength` validation to query params**
-2. [ ] **Add healthcheck to docker-compose and railway.json**
-3. [ ] **Add structured logging with correlation IDs**
-4. [ ] **Fix CORS** — `allow_methods=["*"]` and `allow_headers=["*"]` too permissive
-5. [ ] **Add code splitting with React.lazy`**
-6. [ ] **Add skip-to-content link**
-7. [ ] **Add `aria-label` to icon buttons**
-8. [ ] **Add `loading="lazy"` to images**
+No remaining items. All Critical, High, and Medium issues from the audit have been resolved.
 
 ## Last Session
 - **Date:** 2026-05-20
-- **Left off:** All Critical and High items completed. 15 critical/high fixes applied across 50+ files. JWT cookies, input validation, Promise.allSettled, Docker, tests, CI all done.
-- **Next:** Optionally address remaining Medium items or commit current changes.
+- **Left off:** All audit items completed. 23 fixes applied across 60+ files. Roadmap fully up to date.
+- **Next:** Optionally run the test suite to verify nothing is broken, then commit.

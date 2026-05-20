@@ -104,9 +104,9 @@ def destination_route(
 @limiter.limit("30/minute")
 def list_destinations(
     request: Request,
-    country: str | None = Query(default=None),
-    category: str | None = Query(default=None),
-    season: str | None = Query(default=None),
+    country: str | None = Query(default=None, max_length=100),
+    category: str | None = Query(default=None, max_length=100),
+    season: str | None = Query(default=None, max_length=100),
     min_rating: float | None = Query(default=None, ge=0.0, le=5.0),
     limit: int = Query(default=20, ge=1, le=100),
     db: Any = Depends(get_db),
@@ -246,9 +246,9 @@ def get_destination_festivals(
 def recommend_destinations(
     request: Request,
     destination_id: str,
-    user_id: str | None = Query(default=None),
+    user_id: str | None = Query(default=None, max_length=100),
     max_price: float = Query(default=500.0, ge=0.0),
-    season: str | None = Query(default=None),
+    season: str | None = Query(default=None, max_length=100),
     db: Any = Depends(get_db),
     _user: dict | None = Depends(get_optional_user),
 ) -> list[DestinationResponse]:

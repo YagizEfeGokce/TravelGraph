@@ -549,6 +549,7 @@ function PlannerPage() {
                       <img
                         src={suggestedDest.image_url}
                         alt={suggestedDest.name}
+                        loading="lazy"
                         className="w-full h-24 object-cover rounded-xl mb-3"
                       />
                     )}

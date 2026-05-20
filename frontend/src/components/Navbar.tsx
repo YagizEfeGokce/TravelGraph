@@ -89,6 +89,7 @@ function Navbar() {
                 to="/profile"
                 onClick={() => setMenuOpen(false)}
                 className="p-2 hover:bg-surface-container-low rounded-lg transition-all"
+                aria-label="Profile"
               >
                 <span className="material-symbols-outlined text-on-surface-variant">
                   account_circle

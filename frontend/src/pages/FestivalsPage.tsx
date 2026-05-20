@@ -263,6 +263,7 @@ function FestivalsPage() {
                       <img
                         src={getCityImage(festival.city)}
                         alt={festival.city}
+                        loading="lazy"
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />

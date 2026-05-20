@@ -45,8 +45,8 @@ def create_restaurant(
 
 @router.get("/restaurants", response_model=list[RestaurantResponse])
 def get_restaurants(
-    cuisine_type: str | None = Query(default=None),
-    price_range: str | None = Query(default=None),
+    cuisine_type: str | None = Query(default=None, max_length=100),
+    price_range: str | None = Query(default=None, max_length=20),
     db: Any = Depends(get_db),
 ) -> list[dict]:
     """Get all restaurants, optionally filtered."""

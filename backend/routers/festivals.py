@@ -18,8 +18,8 @@ router = APIRouter(tags=["festivals"])
 def list_festivals(
     start_after: date | None = Query(default=None),
     end_before: date | None = Query(default=None),
-    season: str | None = Query(default=None),
-    city: str | None = Query(default=None),
+    season: str | None = Query(default=None, max_length=100),
+    city: str | None = Query(default=None, max_length=100),
     db: Any = Depends(get_db),
     _user: dict | None = Depends(get_optional_user),
 ) -> list[dict]:

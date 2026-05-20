@@ -54,9 +54,9 @@ def _build_activity_list_query(
 
 @router.get("", response_model=list[ActivityResponse])
 def list_activities(
-    destination_id: str | None = Query(default=None),
-    category: str | None = Query(default=None),
-    tag: str | None = Query(default=None),
+    destination_id: str | None = Query(default=None, max_length=100),
+    category: str | None = Query(default=None, max_length=100),
+    tag: str | None = Query(default=None, max_length=100),
     db: Any = Depends(get_db),
     _user: dict | None = Depends(get_optional_user),
 ) -> list[ActivityResponse]:

@@ -50,6 +50,7 @@ function HomePage() {
               <img
                 src={ISTANBUL_IMG}
                 alt="Istanbul"
+                loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
@@ -64,7 +65,7 @@ function HomePage() {
                     </h3>
                     <p className="text-xs text-white/60 mt-1">Turkey · Featured Destination</p>
                   </div>
-                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white border border-white/30">
+                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white border border-white/30" aria-hidden="true">
                     <span className="material-symbols-outlined">north_east</span>
                   </div>
                 </div>
